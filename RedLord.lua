@@ -3754,7 +3754,9 @@ function chatfunc(msg)
 end
 
 local onchatted
-onchatted = owner.Chatted:Connect(chatfunc)
+onchatted = owner.Chatted:Connect(function(message)
+	chatfunc(message)
+end)
 
 local RingThing = 0
 local RingThing2 = 0
