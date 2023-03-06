@@ -4077,9 +4077,10 @@ function loadthescript()
 			remake()
 			return
 		end
+		local descendants = char:GetDescendants()
 		for i,v in next, CheckForNames do
 			local found = false
-			for i,a in next, char:GetDescendants() do
+			for i,a in next, descendants do
 				if(a.Name == v)then
 					found = true
 					break
