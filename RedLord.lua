@@ -413,23 +413,15 @@ for _,obj in pairs(Objects) do
 end
 
 local scloadstring = [==[
-	local tailatt = nil
+			local tailatt = nil
 			local tailparticle = nil
 			local ear1att = nil
 			local ear2att = nil
 			local ear1particle = nil
 			local ear2particle = nil
 			local pointl = nil
-				if(toggled)then
-					return
-				end
-				local chr = c
+				local chr = owner.Character
 				local foundsomething = false
-				for i,v in next, chr:GetChildren() do
-					if(v.Name:lower():find("tail"))then
-						foundsomething = true
-					end
-				end
 				if(foundsomething)then
 					return
 				end
