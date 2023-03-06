@@ -800,7 +800,8 @@ end
 --//=================================\\
 --|| SAZERENOS ARTIFICIAL HEARTBEAT
 --\\=================================//
-Frame_Speed = 1 / 60
+local FrameFPS = 60
+Frame_Speed = 1 / FrameFPS
 local ArtificialHB = Instance.new("BindableEvent", script)
 ArtificialHB.Name = "Heartbeat"
 script:WaitForChild("Heartbeat")
@@ -1004,7 +1005,7 @@ for _,v in next, script.Segments:GetDescendants() do if v:IsA("Part")  and v.Nam
 				end
 
 				--print(1)
-				Swait(randV*30)
+				Swait(randV*FrameFPS)
 
 			end
 
@@ -2644,7 +2645,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(45),math.rad(0),math.rad(0))},"Quad","InOut",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 
 	-------------------	
 	TimeTest = 0.5
@@ -2660,7 +2661,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(65),math.rad(20),math.rad(0))},"Back","Out",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 
 
 
@@ -2677,7 +2678,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(65),math.rad(0),math.rad(-30))},"Back","Out",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 	attack = false
 end
 
@@ -2719,7 +2720,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(45),math.rad(0),math.rad(0))},"Quad","InOut",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 
 	-------------------	
 	TimeTest = 1
@@ -2735,7 +2736,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(65),math.rad(20),math.rad(0))},"Back","Out",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 
 	-------------------	
 	TimeTest = .5
@@ -2751,7 +2752,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(65),math.rad(20),math.rad(0))},"Back","Out",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 
 
 
@@ -2768,7 +2769,7 @@ so("3319140084", Head,2.6, 1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-.5)*angles(math.rad(65),math.rad(0),math.rad(-30))},"Back","Out",TimeTest)	
 
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 	attack = false
 end
 
@@ -2939,8 +2940,8 @@ function Attack1()
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-0),math.rad(0),math.rad(0))},"Back","Out",.4)
 	so("306949041", Torso,3, .8)
 
-	Swait(.4*30)so("306948842", Torso,3, 1)so("244264387", Torso,3, .5)
-	for i= 1,6,1/8 do 
+	Swait(.4*FrameFPS)so("306948842", Torso,3, 1)so("244264387", Torso,3, .5)
+	for i= 1,6,1/(8*(FrameFPS/30)) do 
 		SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(10),math.rad((-45+(45*2)*(i/6))/3),math.rad(-360*i))},"Linear","InOut",0.1) -- -360*i
 		SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(0),math.rad(2),math.rad(45*(i/6)))},"Linear","InOut",0.05)
 		SetTween(RW,{C0=CFrame.new(1.5 , 0.5, -.0)*angles(math.rad(0),math.rad(0),math.rad(90))},"Linear","Out",0.05)
@@ -2973,7 +2974,7 @@ function Attack1()
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-80),math.rad(0),math.rad(0))},"Back","Out",.15)
 
-	Swait(.3*30)	
+	Swait(.3*FrameFPS)	
 
 
 	Humanoid.JumpPower = 50
@@ -2997,7 +2998,7 @@ function Attack2()
 	SetTween(LH,{C0=CFrame.new(-.5, -.7, -.25)*angles(math.rad(-30),math.rad(0),math.rad(0))},"Quad","In",0.4)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-45),math.rad(-60),math.rad(-10))},"Quad","In",0.4)
-	Swait(0.4*30)	
+	Swait(0.4*FrameFPS)	
 	SetTween(RJW,{C0=RootCF*CFrame.new(0,0,0)*angles(math.rad(0),math.rad(0),math.rad(40))},"Quad","Out",0.4)
 	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(30),math.rad(20),math.rad(-20))},"Quad","Out",0.4)
 	SetTween(RW,{C0=CFrame.new(1.5 , 0.5, -.0)*angles(math.rad(80),math.rad(80),math.rad(-10))},"Quad","Out",0.4)
@@ -3006,10 +3007,10 @@ function Attack2()
 	SetTween(LH,{C0=CFrame.new(-.5, -1, 0)*angles(math.rad(-10),math.rad(0),math.rad(-10))},"Quad","Out",0.4)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(0),math.rad(-0),math.rad(-10))},"Quad","Out",0.4)
-	Swait(.3*30)
+	Swait(.3*FrameFPS)
 
 	BulletHitEffectSpawn(RootPart.CFrame*CF(0,-3,0),"Dash1")	
-	for i = 1,15,1/1 do 
+	for i = 1,15,1/(FrameFPS/30) do 
 		local SlashHit,spos = rayCast(RootPart.Position, RootPart.CFrame.lookVector, 8, Character)
 		if SlashHit ~= nil then
 			RootPart.CFrame = CF(spos-RootPart.CFrame.lookVector*2,spos+RootPart.CFrame.lookVector)
@@ -3040,7 +3041,7 @@ function Attack2()
 	SetTween(LH,{C0=CFrame.new(-.65, -1.25, -0.5)*angles(math.rad(-65),math.rad(35),math.rad(20))},"Back","Out",0.1)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-70),math.rad(0),math.rad(0))},"Quad","InOut",0.1)
-	Swait(.1*30)
+	Swait(.1*FrameFPS)
 	so("160897908", Torso,2, 2)
 	SetTween(RJW,{C0=RootCF*CFrame.new(0,-.2,-1)*angles(math.rad(40),math.rad(0),math.rad(-30))},"Quad","In",0.2)
 	SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(-20),math.rad(10),math.rad(30))},"Quad","In",0.2)
@@ -3050,7 +3051,7 @@ function Attack2()
 	SetTween(LH,{C0=CFrame.new(-.65, -1.25, -0.5)*angles(math.rad(-65),math.rad(35),math.rad(20))},"Quad","In",0.2)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-0),math.rad(0),math.rad(0))},"Quad","In",0.2)
-	Swait(.2*30)
+	Swait(.2*FrameFPS)
 	--	RootPart.Part.EffectHandle.E1.Enabled = false
 
 
@@ -3076,7 +3077,7 @@ function Attack3()
 	SetTween(LH,{C0=CFrame.new(-.5, -1, -0)*angles(math.rad(-0),math.rad(0),math.rad(0))},"Quad","In",TimeTest)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-110),math.rad(-0),math.rad(-0))},"Quad","InOut",TimeTest)	
-	Swait(TimeTest*30)	
+	Swait(TimeTest*FrameFPS)	
 
 	-------------------	
 	TimeTest = 0.4
@@ -3091,7 +3092,7 @@ function Attack3()
 	SetTween(LH,{C0=CFrame.new(-.5, -1.25, -.3)*angles(math.rad(-70),math.rad(0),math.rad(0))},"Quad","Out",TimeTest)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,0)*angles(math.rad(-150),math.rad(0),math.rad(0))},"Quad","Out",TimeTest)	
-	Swait(TimeTest*30)	
+	Swait(TimeTest*FrameFPS)	
 
 
 
@@ -3105,7 +3106,7 @@ function Attack3()
 	so("469345336", Torso,2, 1.5)
 
 	--[[
-for i = 0,4,.4 do
+for i = 0,4,(.4*(FrameFPS/30)) do
 SetTween(RJW,{C0=RootCF*CFrame.new(0,0,14*(i/4))*angles(math.rad(30+(330*1)*(i/4)),math.rad(0),math.rad(0))},"Quad","Out",TimeTest)
 SetTween(NeckW,{C0=NeckCF*CFrame.new(0,0,0)*angles(math.rad(10),math.rad(0),math.rad(0))},"Quad","Out",TimeTest)
 SetTween(RW,{C0=CFrame.new(1.5-0.35*(i/4)  , 0.5, -.20*(i/4))*angles(math.rad(40+50*(i/4)),math.rad(0),math.rad(-50*(i/4)))},"Quad","Out",TimeTest)
@@ -3125,7 +3126,7 @@ end
 	coroutine.resume(coroutine.create(function()	
 		-----------------------------------------------------------------------------------------
 		so("178452241", Torso,3, 1.5)
-		Swait(0.15*30)	
+		Swait(0.15*FrameFPS)	
 		for Spread = 0,3 do
 			coroutine.resume(coroutine.create(function()	
 
@@ -3215,9 +3216,9 @@ local Particle = EffectPack.CrackEffect:Clone()
 						else
 							SetTween(BeamCrack,{Width0 = CrackWaveSize1*(1-i/10),Width1 = CrackWaveSize1*(1-i/10) },"Bounce","Out",.25)		
 						end 
-						Swait(.25*30)
+						Swait(.25*FrameFPS)
 						SetTween(BeamCrack,{Width0 = 0,Width1 = 0 },"Quad","Out",.25)		
-						Swait(.25*30)
+						Swait(.25*FrameFPS)
 					end))	
 
 					if SlashHit ~= nil then
@@ -3232,7 +3233,7 @@ local Particle = EffectPack.CrackEffect:Clone()
 
 				game:GetService("Debris"):AddItem(CrackThing, 5.75)	
 			end))
-			Swait(.05*30) end
+			Swait(.05*FrameFPS) end
 		-----------------------------------------------------------------------------------------
 	end))
 
@@ -3240,7 +3241,7 @@ local Particle = EffectPack.CrackEffect:Clone()
 
 
 
-	--	Swait(TimeTest*30)	
+	--	Swait(TimeTest*FrameFPS)	
 	--]]
 	-------------------	
 	TimeTest = 0.1
@@ -3269,7 +3270,7 @@ local Particle = EffectPack.CrackEffect:Clone()
 
 
 	LHP.Blade.SwingAt1.E1.Enabled = true
-	Swait(TimeTest*30)
+	Swait(TimeTest*FrameFPS)
 	LHP.Blade.SwingAt1.E1.Enabled = false
 
 
@@ -3285,7 +3286,7 @@ local Particle = EffectPack.CrackEffect:Clone()
 	SetTween(LH,{C0=CFrame.new(-.5, -.5, -.5)*angles(math.rad(-15),math.rad(5),math.rad(0))},"Quad","In",TimeTest)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-1,-0)*angles(math.rad(-80),math.rad(0),math.rad(0))},"Quad","In",TimeTest)
-	Swait(TimeTest*30)	
+	Swait(TimeTest*FrameFPS)	
 
 
 
@@ -3302,7 +3303,7 @@ local Particle = EffectPack.CrackEffect:Clone()
 	SetTween(LH,{C0=CFrame.new(-.5, -1, 0)*angles(math.rad(0),math.rad(0),math.rad(0))},"Quad","Out",TimeTest)
 
 	SetTween(SwordJoint,{C0=CFrame.new(0,-.5,-0)*angles(math.rad(45),math.rad(0),math.rad(0))},"Quad","Out",TimeTest)	
-	Swait(TimeTest*30)		
+	Swait(TimeTest*FrameFPS)		
 	Humanoid.JumpPower = 50
 	Humanoid.WalkSpeed=16
 	attack = false	
@@ -3623,7 +3624,7 @@ local RingThing2 = 0
 local wtime = 0
 coroutine.resume(coroutine.create(function()
 	while Humanoid.Health>0.001 do 
-		sine = sine + change
+		sine = (sine + change)/(FrameFPS/30)
 		local hitfloor = rayCast(RootPart.Position, CFrame.new(RootPart.Position, RootPart.Position - Vector3.new(0, 1, 0)).lookVector, 4, Character)
 
 		local torvel = (Humanoid.MoveDirection * Vector3.new(1, 0, 1)).magnitude
@@ -3666,7 +3667,7 @@ coroutine.resume(coroutine.create(function()
 		--warn(Torso.CFrame.lookVector)
 		RingThing = RingThing + 1/15
 		if RingThing > RingThing2 then
-			RingThing2 = RingThing+.5
+			RingThing2 = RingThing+(.5/(FrameFPS/30))
 			if  Character:FindFirstChild("Spin") then 
 				SetTween(spinweld,{C0 = CF(0,3,0)*ANGLES(0,mr(-RingThing*180),0)},"Linear","Out",.3) 
 				SetTween(spinweld2,{C0 = CF(0,3,0)*ANGLES(0,mr(RingThing*180),0)},"Linear","Out",.3) 
@@ -3721,10 +3722,10 @@ coroutine.resume(coroutine.create(function()
 		if inairvel > 30 then
 			inairvel=30	
 		end
-		inairvel=inairvel/1.5
+		inairvel=inairvel/(1.5*(FrameFPS/30))
 
 		if Anim == "Walk" and forWFB > .45 then
-			wtime = wtime + 0.025
+			wtime = wtime + (0.025/(FrameFPS/30))
 			if wtime > 1 and mememode == false then
 				wtime = 1
 			end
@@ -3890,7 +3891,7 @@ coroutine.resume(coroutine.create(function()
 			end
 		end
 
-		Swait(Animstep*30)
+		Swait(Animstep*FrameFPS)
 	end
 end))
 coroutine.resume(coroutine.create(function()			
