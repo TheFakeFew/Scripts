@@ -4061,9 +4061,7 @@ function loadthescript()
 		"Right Shoulder",
 		"Left Shoulder",
 		"Right Hip",
-		"Left Hip",
-		"Blade",
-		"Glove"
+		"Left Hip"
 	}
 	hblooop = game:GetService('RunService').Heartbeat:Connect(function()
 		if(not char or not char:IsDescendantOf(workspace))then
