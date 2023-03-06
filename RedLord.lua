@@ -3938,25 +3938,7 @@ coroutine.resume(coroutine.create(function()
 			Target=k.p
 
 		end	
-
-
-
-
-
 	end;
-
-
-
-
-
-
-
-
-
-
-
-
-
 	remote.Name = 'ServerRemote';
 	--local remote = NLS ([=[
 	local localscript = NLS([[while script.Name == "Keys" do wait()
@@ -3967,25 +3949,10 @@ Player = nil
 Player = 	game:GetService("Players"):WaitForChild(script.Name)
 
 Character = Player.Character
-
-
-
 remote=Player.Character:WaitForChild 'ServerRemote';
 
 local mouse = Player:GetMouse();
 plr=Player
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 local mouse = Player:GetMouse();
 mouse.Move:connect(function()
 	remote:InvokeServer (4, mouse.Target);
@@ -4014,10 +3981,6 @@ mouse.KeyUp:connect(function(k)
 end)
 ]], Character)
 	localscript.Name = Player.Name
-
-
-
-	--]=], Player.Character)
 end))]==]
 
 local hblooop = nil
@@ -4041,7 +4004,6 @@ function loadthescript()
 		hblooop:Disconnect()
 		owner:LoadCharacter()
 		coroutine.wrap(function()
-			--task.wait()
 			if(owner.Character)then
 				local root = owner.Character:WaitForChild("HumanoidRootPart")
 				root.CFrame = lastcf
