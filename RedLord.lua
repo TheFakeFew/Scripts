@@ -3825,7 +3825,7 @@ coroutine.resume(coroutine.create(function()
 				s2.Name = "BGMusic"
 				s2.SoundId = lastid
 				s2.Pitch = 1
-				s2.Volume = .5
+				s2.Volume = .8
 				s2.Looped = true
 				s2.archivable = false
 				s2.TimePosition = lastsongpos
@@ -3839,7 +3839,7 @@ coroutine.resume(coroutine.create(function()
 			else
 				lastsongpos=s2.TimePosition		
 				s2.Pitch = 1
-				s2.Volume = .5
+				s2.Volume = .8
 				s2.Looped = true
 				s2.SoundId = lastid
 				s2.EmitterSize = 30
