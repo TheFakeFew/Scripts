@@ -3665,7 +3665,7 @@ coroutine.resume(coroutine.create(function()
 
 		--print(Humanoid.MoveDirection)
 		--warn(Torso.CFrame.lookVector)
-		RingThing = RingThing + 1/15
+		RingThing = RingThing + ((1/15)/(FrameFPS/30))
 		if RingThing > RingThing2 then
 			RingThing2 = RingThing+(.5/(FrameFPS/30))
 			if  Character:FindFirstChild("Spin") then 
