@@ -2219,7 +2219,7 @@ ShowDamage = function(Pos, Text, Time, Color)
 	EffectPart.Anchored = true
 	local BillboardGui = Create("BillboardGui")({Size = UDim2.new(2, 0, 2, 0), Adornee = EffectPart, Parent = EffectPart})
 	local TextLabel = Create("TextLabel")({BackgroundTransparency = 1, Size = UDim2.new(1, 0, 1, 0), Text = "DMG: "..Text.."", TextColor3 = Color, TextScaled = true, Font = Enum.Font.ArialBold, Parent = BillboardGui})
-	game.Debris:AddItem(EffectPart, Time + 0.1)
+	game:GetService("Debris"):AddItem(EffectPart, Time + 0.1)
 	EffectPart.Parent = game:GetService("Workspace")
 	delay(0, function()
 
