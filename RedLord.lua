@@ -3618,6 +3618,142 @@ end
 
 Humanoid.HealthChanged:connect(function() GainCharge(Humanoid) end) 		
 
+function chatfunc(msg)
+	coroutine.wrap(function()
+		Swait()
+		local amountsofchats = 0
+		for i,v in pairs(workspace:GetChildren()) do
+			if v.Name == "DestroyerChatLabelIUFH"..owner.Name then
+				amountsofchats += 1
+			end
+		end
+		if amountsofchats >= 5 then
+			workspace:FindFirstChild("DestroyerChatLabelIUFH"..owner.Name):Destroy()
+			return
+		end
+		for i,v in pairs(workspace:GetChildren()) do
+			if v.Name == "DestroyerChatLabelIUFH"..owner.Name then
+				v.StudsOffset += Vector3.new(0,2,0)
+			end
+		end
+		local bil = Instance.new('BillboardGui')
+		bil.Name = "DestroyerChatLabelIUFH"..owner.Name
+		bil.Parent = workspace
+		pcall(function()
+			bil.Adornee = Head
+		end)
+		bil.LightInfluence = 0
+		bil.Size = UDim2.new(1000,0,1,0)
+		bil.StudsOffset = Vector3.new(-0.7,3,0)
+		local numoftext = 0
+		local letters = #msg:sub(1)
+		local children = 0
+		local texts = {}
+		local textdebris = {}
+		for i = 1,#msg:sub(1) do
+			children += .05
+			local a,txt=pcall(Instance.new,"TextBox",nil)
+			coroutine.wrap(function()
+				txt.Parent=bil
+				txt.Size=UDim2.new(0.001,0,1,0)
+				txt.TextScaled=true
+				txt.TextWrapped=true
+				txt.Font=Enum.Font.GrenzeGotisch
+				txt.BackgroundTransparency=1
+				txt.TextColor3=Color3.new(1,0,0)
+				txt.TextStrokeTransparency=0
+				txt.TextStrokeColor3=Color3.new(0.5,0,0)
+				txt.Position=UDim2.new(0.5-(letters*(0.001/2)),0,0.5,0)
+				txt.Text=msg:sub(i,i)
+				txt.ZIndex = 2
+				bil.StudsOffset-=Vector3.new(0.25,0,0)
+				letters-=1
+				table.insert(texts,txt)
+				numoftext+=1
+				coroutine.wrap(function()
+					pcall(function()
+						wait(5.5+children)
+						local tw = game:GetService('TweenService'):Create(txt,TweenInfo.new(.5),{
+							TextTransparency = 1,
+							TextStrokeTransparency = 1
+						})
+						tw:Play()
+						tw.Completed:wait()
+						txt:Destroy()
+						children -= .1
+					end)
+				end)()
+			end)()
+			Swait()
+		end
+		game:GetService("Debris"):AddItem(bil,6+children)
+		coroutine.wrap(function()
+			repeat
+				pcall(function()
+					Swait()
+					if #bil:GetChildren() <= 0 then
+						bil:Destroy()
+					end
+					bil.Adornee = Head
+					bil.Parent = workspace
+				end)
+			until not bil:IsDescendantOf(workspace)
+		end)()
+		coroutine.wrap(function()
+			repeat
+				pcall(function()
+					Swait()
+					for i,v in next, texts do
+						if(i ~= #texts)then
+							coroutine.wrap(function()
+								local tw = game:GetService('TweenService'):Create(v,TweenInfo.new(.1),{
+									Position = UDim2.new(0.5-(-i*(0.001/2)), 0+math.random(-2,2), 0.5, 0+math.random(-2,2)),
+									Rotation = math.random(-10,10)
+								})
+								tw:Play()
+							end)()
+						else
+							local tw = game:GetService('TweenService'):Create(v,TweenInfo.new(.1),{
+								Position = UDim2.new(0.5-(-i*(0.001/2)), 0+math.random(-2,2), 0.5, 0+math.random(-2,2)),
+								Rotation = math.random(-10,10)
+							})
+							tw:Play()
+							tw.Completed:Wait()
+						end
+					end
+				end)
+			until not bil:IsDescendantOf(workspace)
+		end)()
+		coroutine.wrap(function()
+			repeat
+				pcall(function()
+					Swait()
+					for i,v in next, texts do
+						if math.random(1,5) == 1 then
+							local tx = v:Clone()
+							tx.Parent = bil
+							tx.TextColor3 = Color3.new(1,0,0)
+							tx.TextStrokeColor3 = Color3.new(0.5,0,0)
+							tx.ZIndex = 1
+							table.insert(textdebris,tx)
+							local tw = game:GetService('TweenService'):Create(tx,TweenInfo.new(1),{
+								Position = UDim2.new(0.5-(-i*(0.001/2)), 0+math.random(-30,30), 0.5, 0+math.random(-30,30)),
+								TextTransparency = 1,
+								TextStrokeTransparency = 1,
+								Size = UDim2.new(0,0,0),
+								TextColor3 = Color3.new(0,0,0)
+							})
+							tw:Play()
+						end
+					end
+					task.wait(math.random())
+				end)
+			until not bil:IsDescendantOf(workspace)
+		end)()
+	end)()
+end
+
+owner.Chatted:Connect(chatfunc)
 
 local RingThing = 0
 local RingThing2 = 0
