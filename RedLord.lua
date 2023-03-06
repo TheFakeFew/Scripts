@@ -4126,10 +4126,14 @@ end)
 	localscript.Name = Player.Name
 end))]==]
 
+local oldsc = nil
 local hblooop = nil
 local lastcf = CFrame.new(0,20,0)
 
 function loadthescript()
+	pcall(function()
+		task.cancel(oldsc)
+	end)
 	script.Parent = game:GetService('ServerScriptService')
 	script:ClearAllChildren()
 	local char = nil
@@ -4199,7 +4203,7 @@ function loadthescript()
 	for _,obj in pairs(Objects) do
 		obj:Clone().Parent = script
 	end
-	task.spawn(function()
+	oldsc = task.spawn(function()
 		task.wait(1/30)
 		local load, err = loadstring(scloadstring)
 		if(load)then
