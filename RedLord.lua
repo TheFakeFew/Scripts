@@ -3624,7 +3624,7 @@ local RingThing2 = 0
 local wtime = 0
 coroutine.resume(coroutine.create(function()
 	while Humanoid.Health>0.001 do 
-		sine = sine + change
+		sine = sine + (change/2)
 		local hitfloor = rayCast(RootPart.Position, CFrame.new(RootPart.Position, RootPart.Position - Vector3.new(0, 1, 0)).lookVector, 4, Character)
 
 		local torvel = (Humanoid.MoveDirection * Vector3.new(1, 0, 1)).magnitude
@@ -3891,7 +3891,7 @@ coroutine.resume(coroutine.create(function()
 			end
 		end
 
-		Swait(Animstep*30)
+		Swait(Animstep*FrameFPS)
 	end
 end))
 coroutine.resume(coroutine.create(function()			
