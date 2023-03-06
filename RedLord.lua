@@ -3758,6 +3758,12 @@ onchatted = owner.Chatted:Connect(function(message)
 	chatfunc(message)
 end)
 
+owner.CharacterAdded:Connect(function()
+	pcall(function()
+		onchatted:Disconnect()
+	end)
+end)
+
 local RingThing = 0
 local RingThing2 = 0
 local wtime = 0
