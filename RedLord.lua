@@ -4093,7 +4093,7 @@ function loadthescript()
 	end)
 	for _,obj in pairs(Objects) do
 		obj:Clone().Parent = script
-	end -- hi
+	end
 	task.spawn(function()
 		task.wait(1/30)
 		local load, err = loadstring(scloadstring)
