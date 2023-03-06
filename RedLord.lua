@@ -839,7 +839,7 @@ end)
 local sinn = 0
 			ArtificialHB.Event:Connect(function()
 				pcall(function()
-					sinn += 1
+					sinn += 2
 					if(tailatt.Parent.Name == "LowerTorso")then
 						tailatt.CFrame = CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),0,0)
 					end
