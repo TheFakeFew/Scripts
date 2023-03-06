@@ -4038,6 +4038,7 @@ function loadthescript()
 		hblooop:Disconnect()
 	end)
 	local function remake()
+		hblooop:Disconnect()
 		owner:LoadCharacter()
 		coroutine.wrap(function()
 			--task.wait()
@@ -4046,7 +4047,6 @@ function loadthescript()
 				root.CFrame = lastcf
 			end
 		end)()
-		hblooop:Disconnect()
 	end
 	local CheckForNames = {
 		"Torso",
