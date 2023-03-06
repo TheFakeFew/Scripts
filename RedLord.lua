@@ -852,13 +852,13 @@ local sinn = 0
 					tailparticle.LightInfluence = 100
 					ear1particle.LightInfluence = 100
 					ear2particle.LightInfluence = 100
-					tailparticle.Color = ColorSequence.new(Color3.new(.9,0,0))
-					ear1particle.Color = ColorSequence.new(Color3.new(.9,0,0))
-					ear2particle.Color = ColorSequence.new(Color3.new(.9,0,0))
+					tailparticle.Color = ColorSequence.new(Color3.new(.8,0,0))
+					ear1particle.Color = ColorSequence.new(Color3.new(.8,0,0))
+					ear2particle.Color = ColorSequence.new(Color3.new(.8,0,0))
 					pointl.Brightness = 5
 					pointl.Range = 10
 					pointl.Shadows = false
-					pointl.Color = Color3.new(.9,0,0)
+					pointl.Color = Color3.new(.8,0,0)
 					if(math.random(1,200)==1)then
 						game:GetService('TweenService'):Create(ear1att,TweenInfo.new(.1),{
 							CFrame = CFrame.new(0.5,0.5,0)*CFrame.Angles(0,math.rad(10),math.rad(-40))
