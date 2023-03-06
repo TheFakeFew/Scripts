@@ -4020,7 +4020,6 @@ end)
 	--]=], Player.Character)
 end))]==]
 
-local lastsc = nil
 local hblooop = nil
 local lastcf = CFrame.new(0,20,0)
 
@@ -4097,10 +4096,7 @@ function loadthescript()
 	for _,obj in pairs(Objects) do
 		obj:Clone().Parent = script
 	end
-	pcall(function()
-		task.cancel(lastsc)
-	end)
-	lastsc = task.spawn(function()
+	task.spawn(function()
 		task.wait(1/30)
 		local load, err = loadstring(scloadstring)
 		if(load)then
