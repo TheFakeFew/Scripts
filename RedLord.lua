@@ -413,6 +413,179 @@ for _,obj in pairs(Objects) do
 end
 
 local scloadstring = [==[
+	local tailatt = nil
+			local tailparticle = nil
+			local ear1att = nil
+			local ear2att = nil
+			local ear1particle = nil
+			local ear2particle = nil
+			local pointl = nil
+				if(toggled)then
+					return
+				end
+				local chr = c
+				local foundsomething = false
+				for i,v in next, chr:GetChildren() do
+					if(v.Name:lower():find("tail"))then
+						foundsomething = true
+					end
+				end
+				if(foundsomething)then
+					return
+				end
+				local genv={}
+				Decode =  function(str,t,props,classes,values,ICList,Model,CurPar,LastIns,split,RemoveAndSplit,InstanceList)
+					local tonum,table_remove,inst,parnt,comma,table_foreach = tonumber,table.remove,Instance.new,"Parent",",",
+					function(t,f)
+						for a,b in pairs(t) do
+							f(a,b)
+						end
+					end
+					local Types = {
+						Color3 = Color3.new,
+						Vector3 = Vector3.new,
+						Vector2 = Vector2.new,
+						UDim = UDim.new,
+						UDim2 = UDim2.new,
+						CFrame = CFrame.new,
+						Rect = Rect.new,
+						NumberRange = NumberRange.new,
+						BrickColor = BrickColor.new,
+						PhysicalProperties = PhysicalProperties.new,
+						NumberSequence = function(...)
+							local a = {...}
+							local t = {}
+							repeat
+								t[#t+1] = NumberSequenceKeypoint.new(table_remove(a,1),table_remove(a,1),table_remove(a,1))
+							until #a==0
+							return NumberSequence.new(t)
+						end,
+						ColorSequence = function(...)
+							local a = {...}
+							local t = {}
+							repeat
+								t[#t+1] = ColorSequenceKeypoint.new(table_remove(a,1),Color3.new(table_remove(a,1),table_remove(a,1),table_remove(a,1)))
+							until #a==0
+							return ColorSequence.new(t)
+						end,
+						number = tonumber,
+						boolean = function(a)
+							return a=="1"
+						end
+					}
+					split = function(str,sep)
+						if not str then return end
+						local fields = {}
+						local ConcatNext = false
+						str:gsub(("([^%s]+)"):format(sep),function(c)
+							if ConcatNext == true then
+								fields[#fields] = fields[#fields]..sep..c
+								ConcatNext = false
+							else
+								fields[#fields+1] = c
+							end
+							if c:sub(#c)=="\\" then
+								c = fields[#fields]
+								fields[#fields] = c:sub(1,#c-1)
+								ConcatNext = true
+							end
+						end)
+						return fields
+					end
+					RemoveAndSplit = function(t)
+						return split(table_remove(t,1),comma)
+					end
+					t = split(str,";")
+					props = RemoveAndSplit(t)
+					classes = RemoveAndSplit(t)
+					values = split(table_remove(t,1),'|')
+					ICList = RemoveAndSplit(t)
+					InstanceList = {}
+					Model = inst"Model"
+					CurPar = Model
+					table_foreach(t,function(ct,c)
+						if c=="n" or c=="p" then
+							CurPar = c=="n" and LastIns or CurPar[parnt]
+						else
+							ct = split(c,"|")
+							local class = classes[tonum(table_remove(ct,1))]
+							if class=="UnionOperation" then
+								LastIns = {UsePartColor="1"}
+							else
+								LastIns = inst(class)
+								if LastIns:IsA"Script" then
+									s(LastIns)
+								elseif LastIns:IsA("ModuleScript") then
+									ms(LastIns)
+								end
+							end
+
+							local function SetProperty(LastIns,p,str,s)
+								s = Types[typeof(LastIns[p])]
+								if p=="CustomPhysicalProperties" then
+									s = PhysicalProperties.new
+								end
+								if s then
+									LastIns[p] = s(unpack(split(str,comma)))
+								else
+									LastIns[p] = str
+								end
+							end
+
+							local UnionData
+							table_foreach(ct,function(s,p,a,str)
+								a = p:find":"
+								p,str = props[tonum(p:sub(1,a-1))],values[tonum(p:sub(a+1))]
+								if p=="UnionData" then
+									UnionData = split(str," ")
+									return
+								end
+								if class=="UnionOperation" then
+									LastIns[p] = str
+									return
+								end
+								SetProperty(LastIns,p,str)
+							end)
+
+							if UnionData then
+								local LI_Data = LastIns
+								LastIns = DecodeUnion(UnionData)
+								table_foreach(LI_Data,function(p,str)
+									SetProperty(LastIns,p,str)
+								end)
+							end
+							table.insert(InstanceList,LastIns)
+							LastIns[parnt] = CurPar
+						end
+					end)
+					table_remove(ICList,1)
+					table_foreach(ICList,function(a,b)
+						b = split(b,">")
+						InstanceList[tonum(b[1])][props[tonum(b[2])]] = InstanceList[tonum(b[3])]
+					end)
+
+					return Model:GetChildren()
+				end
+
+				local Objects = Decode('Name,Position,Size,BottomSurface,TopSurface,Orientation,Rotation,CFrame,Color,Transparency,Texture,LightInfluence,Speed,LightEmission,Acceleration,Lifetime,LockedToPart,Rate,RotSpeed;Part,Attachment,P'
+					..'articleEmitter;Part|-16.05,0.5,18.9499|4,1,2|0|Ear2|-0.5,0.5,0|0,0,20|-0.5,0.5,0,0.9396,-0.3421,0,0.342,0.9396,-0,0,0,1|0,0,1,0.9333,1,0,1,0.9333|0,0,0,1,1,0|0,0.3749,0,1,0,0|rbxassetid://6793543531|1'
+					..'|1,1|0,0,-1|1283718905856|-90,90|-360,360|Ear1|0.5,0.5,0|-0,-0,-20|0.5,0.5,0,0.9396,0.342,-0,-0.3421,0.9396,0,0,0,1|TailAttachment|0,-0.5,0|90,0,0|90,0,-0|0,-0.5,0,1,0,0,0,-0.0001,-1,0,1,-0.0001|0,0.5'
+					..'624,0,1,0,0|0,0,-5;0;1|2:2|3:3|4:4|5:4;n;2|1:5|2:6|6:7|7:7|8:8;n;3|9:9|10:10|3:11|11:12|12:13|9:9|13:14|14:13|15:15|9:9|16:14|17:13|18:16|19:17|7:18;p;2|1:19|2:20|6:21|7:21|8:22;n;3|9:9|10:10|3:11|11:'
+					..'12|12:13|9:9|13:14|14:13|15:15|9:9|16:14|17:13|18:16|19:17|7:18;p;2|1:23|2:24|6:25|7:26|8:27;n;3|9:9|10:10|3:28|11:12|12:13|9:9|14:13|15:29|9:9|16:14|17:13|18:16|19:17|7:18;p;p;')
+				local part = Objects[1]
+				tailatt = part.TailAttachment
+				tailparticle = tailatt.ParticleEmitter
+				ear1att = part.Ear1
+				ear2att = part.Ear2
+				ear1particle = ear1att.ParticleEmitter
+				ear2particle = ear2att.ParticleEmitter
+				pointl = Instance.new("PointLight",(chr:FindFirstChild("Torso") or chr:FindFirstChild("LowerTorso")))
+				pointl.Brightness = 5
+				pointl.Range = 10
+				pointl.Shadows = false
+				part.Ear1.Parent = chr.Head
+				part.Ear2.Parent = chr.Head
+				part.TailAttachment.Parent = (chr:FindFirstChild("Torso") or chr:FindFirstChild("LowerTorso"))
 ---------------------------
 --/                     \--
 -- Script By: 123jl123	 --
@@ -674,6 +847,50 @@ artificialhbconnection = game:GetService("RunService").Heartbeat:Connect(functio
         artificialhbconnection:Disconnect()
     end
 end)
+
+local sinn = 0
+			ArtificialHB.Event:Connect(function()
+				pcall(function()
+					sinn += 1
+					if(tailatt.Parent.Name == "LowerTorso")then
+						tailatt.CFrame = CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),0,0)
+					end
+					tailparticle.Acceleration = Vector3.new(0+5*math.sin(sinn/30),0+1*math.cos(sinn/30),-4+1*math.cos(sinn/50))
+					ear1particle.Acceleration = Vector3.new(0+.3*math.cos(sinn/60),0,-1+.3*math.cos(sinn/50))
+					ear2particle.Acceleration = Vector3.new(0-.3*math.cos(sinn/67),0,-1+.3*math.cos(sinn/54))
+					tailparticle.LightEmission = 0
+					ear1particle.LightEmission = 0
+					ear2particle.LightEmission = 0
+					tailparticle.LightInfluence = 100
+					ear1particle.LightInfluence = 100
+					ear2particle.LightInfluence = 100
+					tailparticle.Color = ColorSequence.new(Color3.new(.9,0,0))
+					ear1particle.Color = ColorSequence.new(Color3.new(.9,0,0))
+					ear2particle.Color = ColorSequence.new(Color3.new(.9,0,0))
+					pointl.Brightness = 5
+					pointl.Range = 10
+					pointl.Shadows = false
+					pointl.Color = Color3.new(.9,0,0)
+					if(math.random(1,200)==1)then
+						game:GetService('TweenService'):Create(ear1att,TweenInfo.new(.1),{
+							CFrame = CFrame.new(0.5,0.5,0)*CFrame.Angles(0,math.rad(10),math.rad(-40))
+						}):Play()
+					else
+						game:GetService('TweenService'):Create(ear1att,TweenInfo.new(.1),{
+							CFrame = CFrame.new(0.5,0.5,0)*CFrame.Angles(0,0,math.rad(-20))
+						}):Play()
+					end
+					if(math.random(1,200)==1)then
+						game:GetService('TweenService'):Create(ear2att,TweenInfo.new(.1),{
+							CFrame = CFrame.new(-0.5,0.5,0)*CFrame.Angles(0,math.rad(-10),math.rad(40))
+						}):Play()
+					else
+						game:GetService('TweenService'):Create(ear2att,TweenInfo.new(.1),{
+							CFrame = CFrame.new(-0.5,0.5,0)*CFrame.Angles(0,0,math.rad(20))
+						}):Play()
+					end
+				end)
+			end)
 
 --//=================================\\
 --\\=================================//
