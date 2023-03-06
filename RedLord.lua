@@ -660,7 +660,7 @@ ABS = math.abs
 MRANDOM = math.random
 FLOOR = math.floor
 
-local lastid= "rbxassetid://1842801942"
+local lastid= "rbxassetid://12704437218"
 local s2=it("Sound",Torso)
 local CurId = 1
 s2.EmitterSize = 30
@@ -3532,7 +3532,7 @@ KeyDownF=function(key)
 			mememode=false
 			CurId=CurId-1
 			KeyDownF("n")
-			lastid= "rbxassetid://1842801942"
+			lastid= "rbxassetid://12704437218"
 
 			SetTween(Torso.WingHolder.R.Beam,{Width0 = 0,Width1 = 0},"Quad","InOut",.5)
 			SetTween(Torso.WingHolder.R.Beam2,{Width0 = 0,Width1 = 0},"Quad","InOut",.5)
