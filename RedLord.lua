@@ -3757,10 +3757,17 @@ local onchatted
 onchatted = owner.Chatted:Connect(function(message)
 	chatfunc(message)
 end)
+local charadded
 
-owner.CharacterAdded:Connect(function()
+charadded = owner.CharacterAdded:Connect(function()
 	pcall(function()
 		onchatted:Disconnect()
+	end)
+	pcall(function()
+		charadded:Disconnect()
+	end)
+	pcall(function()
+		artificialhbconnection:Disconnect()
 	end)
 end)
 
