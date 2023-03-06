@@ -421,10 +421,6 @@ local scloadstring = [==[
 			local ear2particle = nil
 			local pointl = nil
 				local chr = owner.Character
-				local foundsomething = false
-				if(foundsomething)then
-					return
-				end
 				local genv={}
 				Decode =  function(str,t,props,classes,values,ICList,Model,CurPar,LastIns,split,RemoveAndSplit,InstanceList)
 					local tonum,table_remove,inst,parnt,comma,table_foreach = tonumber,table.remove,Instance.new,"Parent",",",
