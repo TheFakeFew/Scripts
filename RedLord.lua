@@ -3633,7 +3633,7 @@ function chatfunc(msg)
 		end
 		for i,v in pairs(workspace:GetChildren()) do
 			if v.Name == "DestroyerChatLabelIUFH"..owner.Name then
-				v.StudsOffset += Vector3.new(0,1.5,0)
+				v.StudsOffset += Vector3.new(0,1,0)
 			end
 		end
 		local bil = Instance.new('BillboardGui')
@@ -3644,7 +3644,7 @@ function chatfunc(msg)
 		end)
 		bil.LightInfluence = 0
 		bil.Size = UDim2.new(1000,0,1,0)
-		bil.StudsOffset = Vector3.new(-0.7,2,0)
+		bil.StudsOffset = Vector3.new(-0.7,2.5,0)
 		local numoftext = 0
 		local letters = #msg:sub(1)
 		local children = 0
