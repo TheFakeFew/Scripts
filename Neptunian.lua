@@ -80,8 +80,8 @@ function EZConvert()
 			return fakeEvent;
 		end
 		local fakeEvent = FakeEvent();
-		local sc = getfenv(2).script
-		local owner = getfenv(2).owner
+		local sc = getfenv().script
+		local owner = getfenv().owner
 		if(game:service'RunService':IsServer())then
 			repeat wait() until sc.Parent and (sc.Parent:IsA'PlayerGui' or sc.Parent:IsA'Model' or sc.Parent.Parent:IsA'Model')
 			local Player;
@@ -462,9 +462,9 @@ me.Character.DescendantAdded:connect(regSound)
 			fakes[fakeGame]=game
 			fakes[fakePlayer]=Player
 
-			getfenv(2).game=fakeGame
-			getfenv(2).Instance=fakeInstance;
-			getfenv(2).LoadLibrary=function(lib)
+			getfenv().game=fakeGame
+			getfenv().Instance=fakeInstance;
+			getfenv().LoadLibrary=function(lib)
 				if(lib:lower()=="rbxutility")then
 					return setmetatable({
 						Create=function(inst)
@@ -487,11 +487,11 @@ me.Character.DescendantAdded:connect(regSound)
 			end
 
 			--getfenv(2).workspace = services.Workspace
-			getfenv(2).Camera=FakeCam
-			getfenv(2).Wrap=wrapObject; -- lets you wrap your instances manually so that you have access to .PlaybackLoudness on sounds, etc.
-			getfenv(2).math=math;
-			getfenv(2).Vector3=Vector3
-			getfenv(2).CFrame=CFrame
+			getfenv().Camera=FakeCam
+			getfenv().Wrap=wrapObject; -- lets you wrap your instances manually so that you have access to .PlaybackLoudness on sounds, etc.
+			getfenv().math=math;
+			getfenv().Vector3=Vector3
+			getfenv().CFrame=CFrame
 
 			event.OnServerEvent:connect(function(self,data)
 				local type = data.Type;
