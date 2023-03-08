@@ -800,7 +800,7 @@ end
 --//=================================\\
 --|| SAZERENOS ARTIFICIAL HEARTBEAT
 --\\=================================//
-local FrameFPS = 15
+local FrameFPS = 60
 Frame_Speed = 1 / FrameFPS
 local ArtificialHB = Instance.new("BindableEvent", script)
 ArtificialHB.Name = "Heartbeat"
