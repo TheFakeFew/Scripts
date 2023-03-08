@@ -1,5 +1,8 @@
 function EZConvert()
 	task.wait(1/60)
+	if(getfenv().owner and getfenv().owner.Character)then
+		script.Parent = getfenv().owner.Character
+	end
 	return function()
 		local function FakeEvent()
 			local function Signal()
