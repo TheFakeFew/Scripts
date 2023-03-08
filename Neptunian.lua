@@ -124,7 +124,7 @@ function EZConvert()
 				CoordinateFrame=CFrame.new();
 				CFrame=CFrame.new();	
 			}
-			local FakeMouse = NLS([[local me = game:service'Players'.localPlayer;
+			local FakeMouse = NLS([[task.wait() local me = game:service'Players'.localPlayer;
 local pg = me:FindFirstChildOfClass'PlayerGui'
 local mouse = me:GetMouse();
 local UIS = game:service'UserInputService'
