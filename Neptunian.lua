@@ -1,8 +1,5 @@
 function EZConvert()
 	task.wait(1/60)
-	script.Parent=nil
-	local fakeEvent = script:WaitForChild'FakeEvent'	
-	fakeEvent.Parent = nil
 	return function()
 		local function FakeEvent()
 			local function Signal()
