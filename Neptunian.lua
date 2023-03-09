@@ -7329,7 +7329,7 @@ function superjump()
 	swait()
 	hum.JumpPower = 0
 	local bv = Instance.new("BodyVelocity", root)
-	bv.MaxForce = Vector3.new(1e9,1e9,1e9)
+	bv.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
 	bv.Velocity = vt(0,250,0) + root.CFrame.lookVector*250
 	game:GetService("Debris"):AddItem(bv, 0.2)
 	sphere2(5,"Add",root.CFrame*CFrame.Angles(math.rad(-45),0,0),vt(25,1,25),0.3,5,0.3,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
@@ -7365,7 +7365,7 @@ function superjump()
 		LW.C0=clerp(LW.C0,cf(-1.45,0.5,0.1)*angles(math.rad(-30),math.rad(0),math.rad(-20)),.4)
 	end
 	coroutine.resume(coroutine.create(function()
-		for i = 0, 99 do
+		for i = 0, 100 do
 			swait()
 			wng1a.Transparency = wng1a.Transparency + 0.01
 			wng1b.Transparency = wng1b.Transparency + 0.01
