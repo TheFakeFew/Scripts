@@ -469,7 +469,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		fakes[fakeGame]=game
 		fakes[fakePlayer]=Player
 		getfenv().game=fakeGame
-		getfenv().Instance=fakeInstance;
+		--getfenv().Instance=fakeInstance;
 		getfenv().LoadLibrary=function(lib)
 			if(lib:lower()=="rbxutility")then
 				return setmetatable({
@@ -813,7 +813,7 @@ module["2DCollision"] = function(shape1, shape2)
 end
 
 module["2DRaycast"] = function(From, To, Parameters)
-	local DetectCollision = module["2DCollision"]()
+	local DetectCollision = module["2DCollision"]
 	local function CanCollide(Object)
 		return (Object:FindFirstChild("CanCollide") and true or false)
 	end
