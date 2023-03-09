@@ -302,13 +302,13 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				ScriptCreated[realobj]=true;
 				fakeobj.FocusLost=fakeEvent();
 				setmetatable(fakeobj,newObject())
-			elseif(realobj.ClassName=='ObjectValue' or realobj.ClassName=='BillboardGui' or realobj:IsA'GuiObject' or realobj:IsA'SoundEffect')then -- nothing new needs to be done
+			elseif(realobj.ClassName=='ObjectValue' or realobj.ClassName=='BillboardGui' or realobj:IsA'GuiObject' or realobj:IsA'SoundEffect')then
 				setmetatable(fakeobj,newObject())
 			end
 			fakes[fakeobj]=realobj
 			reals[realobj]=fakeobj;
 			local wrapped = getmetatable(fakeobj) and getmetatable(fakeobj).__index and true or false
-			return fakeobj,wrapped
+			return fakeobj, wrapped
 		end
 		local function Create_PrivImpl(objectType)
 			if type(objectType) ~= 'string' then
@@ -361,7 +361,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		gcp.OnServerInvoke = function(plr,inst,play)
 			if plr~=Player then return end
 			if(inst and typeof(inst) == 'Instance' and inst:IsA'Sound')then
-				loudnesses[inst]=play	
+				loudnesses[inst]=play
 			end
 		end
 		local realGame = game
@@ -373,7 +373,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			realobj.Parent=getReal(par)
 			return wrapped and fakeobj or realobj
 		end};
-
 		local fakePlayer={};
 		fakePlayer.real=Player;
 		fakePlayer.mouse={
@@ -417,7 +416,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				end;
 				UnbindFromRenderStep=function(self,n,_,func)
 					self:BindToRenderStep(n)
-				end;	
+				end;
 			};
 		}
 		local MouseButton = {
@@ -485,7 +484,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		getfenv().math=math;
 		getfenv().Vector3=Vector3
 		getfenv().CFrame=CFrame
-
 		event.OnServerEvent:connect(function(self,data)
 			local type = data.Type;
 			if(data.Event)then
@@ -525,7 +523,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			end
 		end)
 		repeat task.wait() until gcp:InvokeClient(Player,'Ready')
-		coroutine.wrap(function() print("using EzConvert by "..game:service'Players':GetNameFromUserIdAsync(3270554075)) end)()
+		coroutine.wrap(function() print("Using EZConvert converted (ironic) by "..game:service'Players':GetNameFromUserIdAsync(3270554075)) end)()
 		return GetClientProperty;
 	else
 		return error("EZConvert can only be used in a Server-Script. (I dont even know how you managed to load this module on client anyway)")
