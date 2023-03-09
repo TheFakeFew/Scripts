@@ -445,7 +445,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		end)
 		local function getService(self,name)
 			if(self==fakeGame)then
-				return services[name] or game:service(name)
+				return services[name] or realGame:service(name)
 			end
 		end
 		services.RunService.RenderStepped:connect(function()
@@ -459,6 +459,9 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		end)
 		fakeGame.service=getService;
 		fakeGame.GetService=getService;
+		fakeGame.getService=getService;
+		fakeGame.FindService=getService;
+		fakeGame.findService=getService;
 		for i,v in next, services do 
 			fakes[v]=v.real
 			fakeGame[v.real.Name]=v
