@@ -164,7 +164,9 @@ mouse.Button2Up:connect(function()
 	UserEvent:FireServer{Type='Mouse',Event='Button2Up',Args={}}
 end)
 UIS.TextBoxFocusReleased:connect(function(inst)
-	UserEvent:FireServer{Type='TextboxReplication',TextBox=inst,Text=inst.Text}
+    pcall(function()
+	    UserEvent:FireServer{Type='TextboxReplication',TextBox=inst,Text=inst.Text}
+    end)
 end)
 local ClientProp = ch:WaitForChild('GetClientProperty'..UserEvent.Name,30)
 local sounds = {}
