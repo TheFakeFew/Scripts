@@ -7328,7 +7328,10 @@ function superjump()
 	hum.Jump = true
 	swait()
 	hum.JumpPower = 0
-	root.Velocity = vt(0,250,0) + root.CFrame.lookVector*250
+	local bv = Instance.new("BodyVelocity", root)
+	bv.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+	bv.Velocity = vt(0,250,0) + root.CFrame.lookVector*250
+	game:GetService("Debris"):AddItem(bv, 0.2)
 	sphere2(5,"Add",root.CFrame*CFrame.Angles(math.rad(-45),0,0),vt(25,1,25),0.3,5,0.3,BrickColor.new("Royal purple"),BrickColor.new("Royal purple").Color)
 	sphere2(5,"Add",root.CFrame*CFrame.Angles(math.rad(-45),0,0),vt(25,1,25),0.2,4,0.2,BrickColor.new("Cyan"),BrickColor.new("Cyan").Color)
 	for i = 0, 49 do
