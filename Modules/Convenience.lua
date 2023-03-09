@@ -310,7 +310,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		end
 
 		function wrapObject(realobj)
-			print('a')
 			local fakeobj = {real=realobj}
 			if(realobj.ClassName=='Sound')then
 				local needsLoudness=false;
@@ -399,10 +398,11 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				loudnesses[inst]=play	
 			end
 		end
-
-		local fakeGame={real=game};
+		local realGame = game
+		local fakeGame={real=realGame};
+		local realInstance = Instance
 		local fakeInstance={new=function(objName,par)
-			local realobj = Instance.new(objName)
+			local realobj = realInstance.new(objName)
 			local fakeobj,wrapped = wrapObject(realobj)
 			realobj.Parent=getReal(par)
 			return wrapped and fakeobj or realobj
