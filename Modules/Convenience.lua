@@ -70,7 +70,7 @@ function module.EZConvert()
 		function fakeEvent:wait()
 			local guid = tostring(function() end):sub(13)
 			self._yield[guid]=true;
-			repeat wait() until self._yield[guid]~=true
+			repeat task.wait() until self._yield[guid]~=true
 			self._yield[guid]=nil;
 		end
 
@@ -86,7 +86,7 @@ function module.EZConvert()
 	local sc = getfenv().script
 	local owner = getfenv().owner
 	if(game:service'RunService':IsServer())then
-		repeat wait() until sc.Parent and (sc.Parent:IsA'PlayerGui' or sc.Parent:IsA'Model' or sc.Parent.Parent:IsA'Model')
+		repeat task.wait() until sc.Parent and (sc.Parent:IsA'PlayerGui' or sc.Parent:IsA'Model' or sc.Parent.Parent:IsA'Model')
 		local Player;
 		local function check()
 			if(sc.Parent:IsA'PlayerGui')then
@@ -136,7 +136,7 @@ local sentMouseData = {}
 
 local UserEvent = (function()
 	local Ret;
-	repeat wait() Ret = script:WaitForChild'Remote'.Value until Ret
+	repeat task.wait() Ret = script:WaitForChild'Remote'.Value until Ret
 	return Ret
 end)()
 
@@ -233,7 +233,7 @@ function matching(a,b)
 end
 
 coroutine.wrap(function()
-	while true do
+	while task.wait() do
 		local mData = {Target=mouse.Target,Hit=mouse.Hit,X=mouse.X,Y=mouse.Y}
 		local cData = {CFrame=cam.CFrame;CoordinateFrame=cam.CFrame;}
 		if(not matching(sentMouseData,mData))then
@@ -244,7 +244,6 @@ coroutine.wrap(function()
 			sentCamData=cData
 			UserEvent:FireServer({Type='Camera',Variables=sentCamData})
 		end
-		wait()
 	end	
 end)()
 
@@ -326,7 +325,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				end
 				setmetatable(fakeobj,meta)
 				coroutine.wrap(function()
-					repeat wait() until needsLoudness;
+					repeat task.wait() until needsLoudness;
 					GetClientProperty(realobj,'PlaybackLoudness')
 				end)()
 			elseif(realobj:IsA'TextBox')then
@@ -531,7 +530,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				end
 			end
 		end)
-		repeat wait() until gcp:InvokeClient(Player,'Ready')
+		repeat task.wait() until gcp:InvokeClient(Player,'Ready')
 		coroutine.wrap(function() print("using EzConvert by "..game:service'Players':GetNameFromUserIdAsync(5719877)) end)()
 		return GetClientProperty;
 	else
