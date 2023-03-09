@@ -1,3 +1,25 @@
+local realreq = require
+local function require(name)
+	local success, returned = pcall(function()
+		return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/main/Modules/"..name..".lua")
+	end)
+	if(success)then
+		local succ, load, err = pcall(function()
+			return loadstring(returned)
+		end)
+		if(not succ)then
+			error(load)
+		end
+		if(not load and err)then
+			error(err)
+		end
+		return load()
+	else
+		return realreq(name)
+	end
+end
+local Convenience = require("Convenience")
+Convenience.EZConvert()
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
 Model0 = Instance.new("Model")
@@ -5085,30 +5107,6 @@ SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
 SpecialMesh476.MeshType = Enum.MeshType.Brick
 
-local realreq = require
-local function require(name)
-	local success, returned = pcall(function()
-		return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/main/Modules/"..name..".lua")
-	end)
-	if(success)then
-		local succ, load, err = pcall(function()
-			return loadstring(returned)
-		end)
-		if(not succ)then
-			error(load)
-		end
-		if(not load and err)then
-			error(err)
-		end
-		return load()
-	else
-		return realreq(name)
-	end
-end
-local Convenience = require("Convenience")
-Convenience.EZConvert()
-
-
 plr = game:GetService("Players").LocalPlayer
 char = plr.Character
 for i,v in pairs(mas:GetChildren()) do
@@ -5153,7 +5151,6 @@ local ORPIT = 1.01
 local kan = Instance.new("Sound", t)
 kan.Volume = 1.15
 kan.TimePosition = 0
-kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
 kan.SoundId = "rbxassetid://12578363577" --525289865,1873219898,381991270
 kan.Name = "nepnepnep"
@@ -5412,7 +5409,7 @@ CFuncs = {
 					SoundId = id,
 					Parent = par or workspace,
 				}
-				wait() 
+				task.wait() 
 				S:play() 
 				game:GetService("Debris"):AddItem(S, 10)
 			end))
@@ -5428,7 +5425,7 @@ CFuncs = {
 					SoundId = id,
 					Parent = par or workspace,
 				}
-				wait() 
+				task.wait() 
 				S:play() 
 				game:GetService("Debris"):AddItem(S, 30)
 			end))
@@ -5979,11 +5976,6 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 		if hit.Parent:findFirstChild("DebounceHit") ~= nil and hit.Parent.DebounceHit.Value == true then
 			return
 		end
-		local c = Create("ObjectValue")({
-			Name = "creator",
-			Value = game:service("Players").LocalPlayer,
-			Parent = h
-		})
 		game:GetService("Debris"):AddItem(c, 0.5)
 		if HitSound ~= nil and HitPitch ~= nil then
 			CFuncs.Sound.Create(HitSound, hit, 1, HitPitch)
@@ -5994,7 +5986,6 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 		if block ~= nil and block.className == "IntValue" and block.Value > 0 then
 			blocked = true
 			block.Value = block.Value - 1
-			print(block.Value)
 		end
 		if blocked == false then
 			HitHealth = h.Health
@@ -6004,10 +5995,10 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 				print("gained kill")
 				dmg(h.Parent)
 			end
-			ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z / 2).p + Vector3.new(0, 1.5, 0), -Damage, 1.5, Part.BrickColor.Color)
+			ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z / 2).Position + Vector3.new(0, 1.5, 0), -Damage, 1.5, Part.BrickColor.Color)
 		else
 			h.Health = h.Health - Damage / 2
-			ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z / 2).p + Vector3.new(0, 1.5, 0), -Damage, 1.5, Part.BrickColor.Color)
+			ShowDamage(Part.CFrame * CFrame.new(0, 0, Part.Size.Z / 2).Position + Vector3.new(0, 1.5, 0), -Damage, 1.5, Part.BrickColor.Color)
 		end
 		if Type == "Knockdown" then
 			local hum = hit.Parent.Humanoid
@@ -6149,10 +6140,6 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 			Value = true
 		})
 		game:GetService("Debris"):AddItem(debounce, Delay)
-		c = Instance.new("ObjectValue")
-		c.Name = "creator"
-		c.Value = Player
-		c.Parent = h
 		game:GetService("Debris"):AddItem(c, 0.5)
 	end
 end
