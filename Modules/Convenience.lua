@@ -481,9 +481,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		end
 		getfenv().Camera=FakeCam
 		getfenv().Wrap=wrapObject;
-		getfenv().math=math;
-		getfenv().Vector3=Vector3
-		getfenv().CFrame=CFrame
 		event.OnServerEvent:connect(function(self,data)
 			local type = data.Type;
 			if(data.Event)then
@@ -787,7 +784,7 @@ module["2DCollision"] = function(shape1, shape2)
 		axis[4] = (c2[4] - c2[1]).unit
 		return axis
 	end
-	
+
 	local c1, c2 = getCorners(shape1), getCorners(shape2)
 	local axis = getAxis(c1, c2)
 	local scalars, mtv = {}, Vector2.new(math.huge, math.huge)
