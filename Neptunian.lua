@@ -1,26 +1,3 @@
-local realreq = require
-local function require(name)
-	local success, returned = pcall(function()
-		return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/main/Modules/"..name..".lua")
-	end)
-	if(success)then
-		local succ, load, err = pcall(function()
-			return loadstring(returned)
-		end)
-		if(not succ)then
-			error(load)
-		end
-		if(not load and err)then
-			error(err)
-		end
-		return load()
-	else
-		return realreq(name)
-	end
-end
-local Convenience = require("Convenience")
-Convenience.EZConvert()
-
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
 Model0 = Instance.new("Model")
@@ -5107,6 +5084,30 @@ Part475.brickColor = BrickColor.new("Mid gray")
 SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
 SpecialMesh476.MeshType = Enum.MeshType.Brick
+
+local realreq = require
+local function require(name)
+	local success, returned = pcall(function()
+		return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/main/Modules/"..name..".lua")
+	end)
+	if(success)then
+		local succ, load, err = pcall(function()
+			return loadstring(returned)
+		end)
+		if(not succ)then
+			error(load)
+		end
+		if(not load and err)then
+			error(err)
+		end
+		return load()
+	else
+		return realreq(name)
+	end
+end
+local Convenience = require("Convenience")
+Convenience.EZConvert()
+
 
 plr = game:GetService("Players").LocalPlayer
 char = plr.Character

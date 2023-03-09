@@ -342,7 +342,56 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			local wrapped = getmetatable(fakeobj) and getmetatable(fakeobj).__index and true or false
 			return fakeobj,wrapped
 		end
-
+		
+		local function Create_PrivImpl(objectType)
+			if type(objectType) ~= 'string' then
+				error("Argument of Create must be a string", 2)
+			end
+			return function(dat)
+				dat = dat or {}
+				local obj = Instance.new(objectType)
+				local parent = nil
+				local ctor = nil
+				for k, v in pairs(dat) do
+					if type(k) == 'string' then
+						if k == 'Parent' then
+							parent = v
+						else
+							obj[k] = v
+						end
+					elseif type(k) == 'number' then
+						if type(v) ~= 'userdata' then
+							error("Bad entry in Create body: Numeric keys must be paired with children, got a: "..type(v), 2)
+						end
+						v.Parent = obj
+					elseif type(k) == 'table' and k.__eventname then
+						if type(v) ~= 'function' then
+							error("Bad entry in Create body: Key `[Create.E\'"..k.__eventname.."\']` must have a function value\
+						got: "..tostring(v), 2)
+						end
+						obj[k.__eventname]:connect(v)
+					elseif k == t.Create then
+						if type(v) ~= 'function' then
+							error("Bad entry in Create body: Key `[Create]` should be paired with a constructor function, \
+						got: "..tostring(v), 2)
+						elseif ctor then
+							error("Bad entry in Create body: Only one constructor function is allowed", 2)
+						end
+						ctor = v
+					else
+						error("Bad entry ("..tostring(k).." => "..tostring(v)..") in Create body", 2)
+					end
+				end
+				if ctor then
+					ctor(obj)
+				end
+				if parent then
+					obj.Parent = parent
+				end
+				return obj
+			end
+		end
+		
 		gcp.OnServerInvoke = function(plr,inst,play)
 			if plr~=Player then return end
 			if(inst and typeof(inst) == 'Instance' and inst:IsA'Sound')then
@@ -464,19 +513,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		getfenv().LoadLibrary=function(lib)
 			if(lib:lower()=="rbxutility")then
 				return setmetatable({
-					Create=function(inst)
-						--local instance = Instance.new(inst)
-						local instance = Instance.new(inst)
-						return function(tab)
-							if(tab)then
-								for i,v in next, tab do
-									instance[i]=getReal(v)
-								end
-							end
-							local fakeobj,wrapped = wrapObject(instance)
-							return wrapped and fakeobj or instance
-						end
-					end
+					Create=setmetatable({}, {__call = function(tb, ...) return Create_PrivImpl(...) end})
 				},{__index=function(_,v) return ({})[v] end})
 			else
 				return {}
