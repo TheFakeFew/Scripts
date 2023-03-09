@@ -310,6 +310,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		end
 
 		function wrapObject(realobj)
+			print('a')
 			local fakeobj = {real=realobj}
 			if(realobj.ClassName=='Sound')then
 				local needsLoudness=false;
