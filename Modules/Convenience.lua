@@ -32,7 +32,6 @@ function module.EZConvert()
 		end
 		local signal = Signal().new
 		local fakeEvent = {}
-
 		function fakeEvent.new()
 			local conn = {
 				_connections={};
@@ -41,7 +40,6 @@ function module.EZConvert()
 			setmetatable(conn,{__index=fakeEvent})
 			return conn;
 		end
-
 		function fakeEvent:fire(...)
 			self._yield={};
 			for i = 1,#self._connections do
@@ -50,9 +48,8 @@ function module.EZConvert()
 					local succ,err = pcall(function(...) connection.Function(#connection.Args>0 and unpack(connection.Args) or ...) end,...)
 					assert(succ,err)
 				end)(...)
-			end	
+			end
 		end
-
 		function fakeEvent:disconnect(event)
 			for i = 1,#self._connections do
 				if(self._connections[i]==event)then
@@ -60,25 +57,21 @@ function module.EZConvert()
 				end
 			end
 		end
-
 		function fakeEvent:connect(func,...)
 			local obj = signal(self,func,...)
 			table.insert(self._connections,obj)
 			return obj
 		end
-
 		function fakeEvent:wait()
 			local guid = tostring(function() end):sub(13)
 			self._yield[guid]=true;
 			repeat task.wait() until self._yield[guid]~=true
 			self._yield[guid]=nil;
 		end
-
 		fakeEvent.Fire=fakeEvent.fire;
 		fakeEvent.Connect=fakeEvent.connect;
 		fakeEvent.Wait=fakeEvent.wait;
 		fakeEvent.Disconnect=fakeEvent.disconnect;
-
 		setmetatable(fakeEvent,{__call=fakeEvent.new})
 		return fakeEvent;
 	end
@@ -130,67 +123,51 @@ local mouse = me:GetMouse();
 local UIS = game:service'UserInputService'
 local ch = me.Character;
 local cam = workspace.CurrentCamera
-
 local sentCamData = {}
 local sentMouseData = {}
-
 local UserEvent = (function()
 	local Ret;
 	repeat task.wait() Ret = script:WaitForChild'Remote'.Value until Ret
 	return Ret
 end)()
-
-
 UIS.InputChanged:connect(function(io,gpe)
 	if(gpe)then return end
 	local fakeIo = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,Delta=io.Delta,Position=io.Position,UserInputState=io.UserInputState}
 	UserEvent:FireServer{Type='UserInput',Event='InputChanged',Args={fakeIo,gpe and true or false}}
 end)
-
 UIS.InputBegan:connect(function(io,gpe)
 	if(gpe)then return end
 	local fakeIo = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,Delta=io.Delta,Position=io.Position,UserInputState=io.UserInputState}
 	UserEvent:FireServer{Type='UserInput',Event='InputBegan',Args={fakeIo,gpe and true or false}}
 end)
-
 UIS.InputEnded:connect(function(io,gpe)
 	if(gpe)then return end
 	local fakeIo = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,Delta=io.Delta,Position=io.Position,UserInputState=io.UserInputState}
 	UserEvent:FireServer{Type='UserInput',Event='InputEnded',Args={fakeIo,gpe and true or false}}
 end)
-
 mouse.KeyDown:connect(function(k)
 	UserEvent:FireServer{Type='Mouse',Event='KeyDown',Args={k}}
 end)
-
 mouse.KeyUp:connect(function(k)
 	UserEvent:FireServer{Type='Mouse',Event='KeyUp',Args={k}}
 end)
-
 mouse.Button1Down:connect(function()
 	UserEvent:FireServer{Type='Mouse',Event='Button1Down',Args={}}
 end)
-
 mouse.Button1Up:connect(function()
 	UserEvent:FireServer{Type='Mouse',Event='Button1Up',Args={}}
 end)
-
 mouse.Button2Down:connect(function()
 	UserEvent:FireServer{Type='Mouse',Event='Button2Down',Args={}}
 end)
-
 mouse.Button2Up:connect(function()
 	UserEvent:FireServer{Type='Mouse',Event='Button2Up',Args={}}
 end)
-
 UIS.TextBoxFocusReleased:connect(function(inst)
 	UserEvent:FireServer{Type='TextboxReplication',TextBox=inst,Text=inst.Text}
 end)
-
-
 local ClientProp = ch:WaitForChild('GetClientProperty'..UserEvent.Name,30)
 local sounds = {}
-
 function regSound(o)
 	if(o:IsA'Sound')then
 		local lastLoudness = o.PlaybackLoudness
@@ -199,7 +176,6 @@ function regSound(o)
 		--ClientProp:FireServer(o,o.PlaybackLoudness)
 	end
 end
-
 ClientProp.OnClientInvoke = function(inst,prop)
 	if(inst == 'RegSound')then
 		regSound(prop)
@@ -216,8 +192,6 @@ ClientProp.OnClientInvoke = function(inst,prop)
 		return inst[prop]
 	end
 end
-
-
 function matching(a,b)
 	for i,v in next, a do
 		if(b[i]~=v)then
@@ -231,7 +205,6 @@ function matching(a,b)
 	end
 	return true;
 end
-
 coroutine.wrap(function()
 	while task.wait() do
 		local mData = {Target=mouse.Target,Hit=mouse.Hit,X=mouse.X,Y=mouse.Y}
@@ -246,7 +219,6 @@ coroutine.wrap(function()
 		end
 	end	
 end)()
-
 game:service'RunService'.Stepped:connect(function()
 	for i = 1, #sounds do
 		local tab = sounds[i]
@@ -257,7 +229,6 @@ game:service'RunService'.Stepped:connect(function()
 		end
 	end
 end)
-
 for _,v in next, workspace:GetDescendants() do regSound(v) end
 workspace.DescendantAdded:connect(regSound)
 me.Character.DescendantAdded:connect(regSound)]], Player.Character)
@@ -308,7 +279,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			end
 			return object
 		end
-
 		function wrapObject(realobj)
 			local fakeobj = {real=realobj}
 			if(realobj.ClassName=='Sound')then
@@ -335,14 +305,11 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			elseif(realobj.ClassName=='ObjectValue' or realobj.ClassName=='BillboardGui' or realobj:IsA'GuiObject' or realobj:IsA'SoundEffect')then -- nothing new needs to be done
 				setmetatable(fakeobj,newObject())
 			end
-
 			fakes[fakeobj]=realobj
 			reals[realobj]=fakeobj;
-
 			local wrapped = getmetatable(fakeobj) and getmetatable(fakeobj).__index and true or false
 			return fakeobj,wrapped
 		end
-		
 		local function Create_PrivImpl(objectType)
 			if type(objectType) ~= 'string' then
 				error("Argument of Create must be a string", 2)
@@ -391,7 +358,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				return obj
 			end
 		end
-		
 		gcp.OnServerInvoke = function(plr,inst,play)
 			if plr~=Player then return end
 			if(inst and typeof(inst) == 'Instance' and inst:IsA'Sound')then
@@ -431,8 +397,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		getmetatable(fakePlayer.PlayerScripts).__index=function()
 			return {{Disabled=true,Name="GONE"}}
 		end
-
-		--setmetatable(FakeCam,newObject())
 		local players = game:service'Players'
 		local services = {
 			Players={real=game:service'Players',LocalPlayer=fakePlayer,localPlayer=fakePlayer,GetPlayerFromCharacter=function(self,c)local plr = players:GetPlayerFromCharacter(c)if(plr==self.localPlayer.real)then return self.localPlayer else return plr end end};
@@ -443,7 +407,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				end
 				self.real:AddItem(item,timer)
 			end};
-			--Workspace={CurrentCamera=FakeCam,real=workspace};
 			RunService={
 				_bound={},
 				_lastCall=tick();
@@ -481,7 +444,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				services.UserInputService._mb[k.UserInputType]=false
 			end
 		end)
-
 		local function getService(self,name)
 			if(self==fakeGame)then
 				return services[name] or game:service(name)
@@ -503,12 +465,10 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			fakeGame[v.real.Name]=v
 			setmetatable(v,newObject())
 		end
-
 		setmetatable(fakeGame,newObject())
 		setmetatable(fakePlayer,newObject())
 		fakes[fakeGame]=game
 		fakes[fakePlayer]=Player
-
 		getfenv().game=fakeGame
 		getfenv().Instance=fakeInstance;
 		getfenv().LoadLibrary=function(lib)
@@ -520,10 +480,8 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				return {}
 			end
 		end
-
-		--getfenv(2).workspace = services.Workspace
 		getfenv().Camera=FakeCam
-		getfenv().Wrap=wrapObject; -- lets you wrap your instances manually so that you have access to .PlaybackLoudness on sounds, etc.
+		getfenv().Wrap=wrapObject;
 		getfenv().math=math;
 		getfenv().Vector3=Vector3
 		getfenv().CFrame=CFrame
@@ -539,8 +497,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 					event:fire(unpack(data.Args))
 				end
 			elseif(type=='Mouse')then
-				--fakePlayer.mouse.Target=data.Target
-				--fakePlayer.mouse.Hit=data.Hit
 				for i,v in next, data.Variables do
 					local eventIsFake = pcall(function()
 						return fakePlayer.mouse[i]._connections~=nil
@@ -569,10 +525,10 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			end
 		end)
 		repeat task.wait() until gcp:InvokeClient(Player,'Ready')
-		coroutine.wrap(function() print("using EzConvert by "..game:service'Players':GetNameFromUserIdAsync(5719877)) end)()
+		coroutine.wrap(function() print("using EzConvert by "..game:service'Players':GetNameFromUserIdAsync(3270554075)) end)()
 		return GetClientProperty;
 	else
-		return error("Make sure you're using a server-script!")
+		return error("EZConvert can only be used in a Server-Script. (I dont even know how you managed to load this module on client anyway)")
 	end
 end
 
@@ -955,4 +911,4 @@ module["2DRaycast"] = function(From, To, Parameters)
 	return nil
 end
 
-return module 
+return module
