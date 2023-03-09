@@ -21,21 +21,6 @@ end
 local Convenience = require("Convenience")
 Convenience.EZConvert()
 
---Converted with ttyyuu12345's model to script plugin v4
-function sandbox(var,func)
-	local env = getfenv(func)
-	local newenv = setmetatable({},{
-		__index = function(self,k)
-			if k=="script" then
-				return var
-			else
-				return env[k]
-			end
-		end,
-	})
-	setfenv(func,newenv)
-	return func
-end
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
 Model0 = Instance.new("Model")
@@ -5122,16 +5107,14 @@ Part475.brickColor = BrickColor.new("Mid gray")
 SpecialMesh476.Parent = Part475
 SpecialMesh476.Scale = Vector3.new(0.349999994, 1.04999995, 0.5)
 SpecialMesh476.MeshType = Enum.MeshType.Brick
+
+plr = game:GetService("Players").LocalPlayer
+char = plr.Character
 for i,v in pairs(mas:GetChildren()) do
-	v.Parent = game:GetService("Players").LocalPlayer.Character
+	v.Parent = char
 	pcall(function() v:MakeJoints() end)
 end
 mas:Destroy()
-for i,v in pairs(cors) do
-	spawn(function()
-		pcall(v)
-	end)
-end
 for i,v in pairs(Model0:GetChildren()) do
 	if v:IsA("Part") then
 		v.Locked = true
@@ -5139,10 +5122,6 @@ for i,v in pairs(Model0:GetChildren()) do
 		v.CanCollide = false
 	end
 end
-
-
-plr = game:GetService("Players").LocalPlayer
-char = plr.Character
 hum = char.Humanoid
 local cam = game.Workspace.CurrentCamera
 t = char.Torso
@@ -5170,12 +5149,12 @@ local muter = false
 local ORGID = 1873219898
 local ORVOL = 1.15
 local ORPIT = 1.01
-local kan = Instance.new("Sound",plr.PlayerGui)
+local kan = Instance.new("Sound", t)
 kan.Volume = 1.15
 kan.TimePosition = 0
 kan.PlaybackSpeed = 1.01
 kan.Pitch = 1.01
-kan.SoundId = "rbxassetid://1873219898" --525289865,1873219898,381991270
+kan.SoundId = "rbxassetid://12578363577" --525289865,1873219898,381991270
 kan.Name = "nepnepnep"
 kan.Looped = true
 kan:Play()
@@ -7486,7 +7465,7 @@ while true do
 	kan.Pitch = ORPIT
 	kan.SoundId = "rbxassetid://" ..ORGID
 	kan.Looped = true
-	kan.Parent = plr.PlayerGui
+	kan.Parent = t
 	kan:Resume()
 	techc.Rotation = techc.Rotation + 0.1
 	imgl2.Rotation = imgl2.Rotation - kan.PlaybackLoudness/50
