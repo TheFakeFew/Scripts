@@ -287,6 +287,7 @@ function reconnect()
 				["BasePart"] = function(v) return v.Material == Enum.Material.Neon end,
 				["ParticleEmitter"] = function(v) return true end,
 				["Trail"] = function(v) return true end,
+				["Beam"] = function(v) return true end
 			}
 			local function check(v)
 				for index,key in next, types do

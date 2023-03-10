@@ -345,7 +345,7 @@ function effects(bc)
 	idle:Play()
 	local lt = templates:FindFirstChild("Love Train"):Clone()
 	lt:WaitForChild("Ground").CFrame = owner.Character.HumanoidRootPart.CFrame * CFrame.new(0, -2, 0)
-	lt.Parent = script
+	lt.Parent = owner.Character
 	local w = Instance.new("Weld", lt)
 	w.Part0 = lt.Ground
 	w.Part1 = owner.Character.HumanoidRootPart
