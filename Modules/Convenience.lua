@@ -293,7 +293,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 						return loudnesses[realobj] or 0
 					else
 						--return origIndex(s,i)
-						return function(...) origIndex(s,i)(...) end
+						return function(self, ...) if self == fakeInstance then origIndex(s,i)(realInstance, ...) else origIndex(s,i)(self, ...) end end
 					end
 				end
 				setmetatable(fakeobj,meta)
