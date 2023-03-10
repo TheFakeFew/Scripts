@@ -282,9 +282,11 @@ function reconnect()
 				end
 				if(string.lower(message) == "!charpack")then
 					toggled = not toggled
+					print(tostring(toggled))
 				end
 				if(string.lower(message) == "!neonrgb")then
 					makeneonrgb = not makeneonrgb
+					print(tostring(makeneonrgb))
 				end
 			end)
 		end
