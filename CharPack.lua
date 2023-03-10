@@ -1,5 +1,6 @@
 local toggled = false
 local makeneonrgb = false
+local fullrgb = false
 
 function wait(num)
 	local x = 0
@@ -288,18 +289,30 @@ function reconnect()
 					makeneonrgb = not makeneonrgb
 					print(tostring(makeneonrgb))
 				end
+				if(string.lower(message) == "!fullrgb")then
+					fullrgb = not fullrgb
+					print(tostring(fullrgb))
+				end
 			end)
 		end
 		do
 			game:GetService("RunService").Heartbeat:Connect(function()
-				if(makeneonrgb)then
+				if(makeneonrgb or fullrgb)then
 					if(owner and owner.Character)then
 						for i,v in next, owner.Character:GetDescendants() do
-							pcall(function()
-								if(v:IsA("BasePart") and v.Material == Enum.Material.Neon)then
-									v.Color = Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1)
+							if(v:IsA("BasePart") and v.Material == Enum.Material.Neon)then
+								v.Color = Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1)
+							end
+							if(fullrgb)then
+								if(not v:IsA("BasePart"))then
+									pcall(function()
+										v.Color = ColorSequence.new(Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1))
+									end)
+									pcall(function()
+										v.Color = Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1)
+									end)
 								end
-							end)
+							end
 						end
 					end
 				end
