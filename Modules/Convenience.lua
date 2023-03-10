@@ -351,8 +351,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 					GetClientProperty(realObject,'PlaybackLoudness')
 				end)
 			end
-			fakes[object] = object
-			reals[realobj] = object
 			object.__newindex = setProperty
 			object.__index = getProperty
 			object.__type = "Instance"
@@ -360,6 +358,8 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			object.__tostring = function()
 				return realObject.Name
 			end
+			fakes[object] = realObject
+			reals[realobj] = object
 			return setmetatable({}, object), true
 		end
 		local function Create_PrivImpl(objectType)
