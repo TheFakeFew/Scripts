@@ -342,7 +342,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				end
 				if typeof(realProperty) == "Instance" then
 					realProperty = wrapObject(realProperty)
-				end        
+				end
 				return realProperty
 			end
 			if usesPlaybackLoudness then
