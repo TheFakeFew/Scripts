@@ -284,22 +284,16 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		function wrapObject(realobj)
 			local fakeobj = {real=realobj}
 			if(realobj.ClassName=='Sound')then
-				print('this is a sound')
 				local needsLoudness=false;
 				local meta = newObject();
-				print(meta)
 				local origIndex = meta.__index
-				print(origIndex)
 				meta.__index=function(s,i)
-					print(s,i)
-					print(typeof(s),typeof(i))
-					print(debug.traceback())
 					if(i=='PlaybackLoudness')then
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
 					else
-						return origIndex(s,i)
-						--return function(self, ...) if self == fakeobj then origIndex(s,i)(realobj, ...) else origIndex(s,i)(self, ...) end end
+						local succ, returned = pcall(origIndex,s,i)
+						return returned
 					end
 				end
 				setmetatable(fakeobj,meta)
