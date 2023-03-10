@@ -287,6 +287,18 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				local needsLoudness=false;
 				local meta = newObject();
 				local origIndex = meta.__index
+				meta.play = realobj.Play
+				meta.Play = realobj.Play
+				meta.stop = realobj.Stop
+				meta.Stop = realobj.Stop
+				meta.pause = realobj.Pause
+				meta.Pause = realobj.Pause
+				meta.resume = realobj.Resume
+				meta.Resume = realobj.Resume
+				meta.destroy = realobj.Destroy
+				meta.Destroy = realobj.Destroy
+				meta.remove = realobj.Remove
+				meta.Remove = realobj.Remove
 				meta.__index=function(s,i)
 					if(i=='PlaybackLoudness')then
 						needsLoudness=true;

@@ -1,3 +1,4 @@
+wait = task.wait
 local realreq = require
 local function require(name)
 	local success, returned = pcall(function()
@@ -5155,9 +5156,7 @@ kan.Pitch = 1.01
 kan.SoundId = "rbxassetid://12578363577" --525289865,1873219898,381991270
 kan.Name = "nepnepnep"
 kan.Looped = true
-pcall(function()
-	kan:Play()
-end)
+kan:Play()
 
 --------------------------- GUI STUFF
 local basgui = it("GuiMain")
@@ -5412,9 +5411,7 @@ CFuncs = {
 					Parent = par or workspace,
 				}
 				task.wait()
-				pcall(function()
-					S:play() 
-				end)
+				S:play() 
 				game:GetService("Debris"):AddItem(S, 10)
 			end))
 		end;
@@ -5430,9 +5427,7 @@ CFuncs = {
 					Parent = par or workspace,
 				}
 				task.wait() 
-				pcall(function()
-					S:play() 
-				end)
+				S:play() 
 				game:GetService("Debris"):AddItem(S, 30)
 			end))
 		end;
@@ -5797,9 +5792,7 @@ so = function(id,par,vol,pit)
 		sou.Pitch=pit or 1
 		sou.SoundId=id
 		swait()
-		pcall(function()
-			sou:play() 
-		end)
+		sou:play() 
 		game:GetService("Debris"):AddItem(sou,6)
 	end))
 end
@@ -7442,9 +7435,7 @@ plr.Chatted:connect(function(message)
 	if message:sub(1,3) == "id/" then
 		ORGID = message:sub(4)
 		kan.TimePosition = 0
-		pcall(function()
-			kan:Play()
-		end)
+		kan:Play()
 	elseif message:sub(1,6) == "pitch/" then
 		ORPIT = message:sub(7)
 	elseif message:sub(1,4) == "vol/" then
@@ -7467,9 +7458,7 @@ while true do
 	kan.SoundId = "rbxassetid://" ..ORGID
 	kan.Looped = true
 	kan.Parent = t
-	pcall(function()
-		kan:Resume()
-	end)
+	kan:Resume()
 	techc.Rotation = techc.Rotation + 0.1
 	imgl2.Rotation = imgl2.Rotation - kan.PlaybackLoudness/50
 	imgl2.ImageColor3 = Color3.new(0.15 + kan.PlaybackLoudness/2500,0,0.6 + kan.PlaybackLoudness/1000)
