@@ -295,6 +295,7 @@ function reconnect()
 					if(v:IsA(index))then
 						if(key(v))then
 							table.insert(neonsandstuff, v)
+							break
 						end
 					end
 				end
