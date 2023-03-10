@@ -1,4 +1,3 @@
-wait = task.wait
 local realreq = require
 local function require(name)
 	local success, returned = pcall(function()
