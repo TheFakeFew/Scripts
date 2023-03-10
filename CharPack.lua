@@ -322,6 +322,9 @@ function reconnect()
 					if(owner.Character)then
 						for i,v in next, neonsandstuff do
 							pcall(function()
+								v.UsePartColor = true
+							end)
+							pcall(function()
 								v.Color = ColorSequence.new(Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1))
 							end)
 							pcall(function()
