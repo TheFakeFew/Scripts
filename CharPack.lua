@@ -1,4 +1,5 @@
 local toggled = false
+local makeneonrgb = false
 
 function wait(num)
 	local x = 0
@@ -281,6 +282,24 @@ function reconnect()
 				end
 				if(string.lower(message) == "!charpack")then
 					toggled = not toggled
+				end
+				if(string.lower(message) == "!neonrgb")then
+					makeneonrgb = not makeneonrgb
+				end
+			end)
+		end
+		do
+			game:GetService("RunService").Heartbeat:Connect(function()
+				if(makeneonrgb)then
+					if(owner and owner.Character)then
+						for i,v in next, owner.Character:GetDescendants() do
+							pcall(function()
+								if(v:IsA("BasePart") and v.Material == Enum.Material.Neon)then
+									v.Color = Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1)
+								end
+							end)
+						end
+					end
 				end
 			end)
 		end
