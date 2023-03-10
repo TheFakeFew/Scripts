@@ -5,6 +5,9 @@ function module.EZConvert()
 	if(getfenv().owner)then
 		if(getfenv().owner.Character)then
 			script.Parent = getfenv().owner.Character
+			if(getfenv().owner.Character:FindFirstChildOfClass("Humanoid"))then
+				getfenv().owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
+			end
 		end
 	else
 		return error("This is made to be ran inside a sandbox.")
