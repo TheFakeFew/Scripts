@@ -292,7 +292,9 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
 					else
-						local succ, returned = pcall(origIndex,s,i)
+						local succ, returned = pcall(function()
+							return origIndex(s,i)
+						end)
 						return returned
 					end
 				end
