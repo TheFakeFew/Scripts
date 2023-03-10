@@ -293,11 +293,12 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				meta.__index=function(s,i)
 					print(s,i)
 					print(typeof(s),typeof(i))
+					print(debug.traceback())
 					if(i=='PlaybackLoudness')then
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
 					else
-						return origIndex(realobj,i)
+						return origIndex(s,i)
 						--return function(self, ...) if self == fakeobj then origIndex(s,i)(realobj, ...) else origIndex(s,i)(self, ...) end end
 					end
 				end
