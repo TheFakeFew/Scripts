@@ -292,6 +292,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				print(origIndex)
 				meta.__index=function(s,i)
 					print(s,i)
+					print(typeof(s),typeof(i))
 					if(i=='PlaybackLoudness')then
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
