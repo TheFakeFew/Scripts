@@ -296,10 +296,27 @@ function reconnect()
 			end)
 		end
 		do
+			local neonsandstuff = {}
+			function scanthrough()
+				neonsandstuff = {}
+				if(not owner.Character)then return end
+				local types = {
+					["BasePart"] = function(v) return v.Material == Enum.Material.Neon end
+				}
+				for i,v in next, owner.Character:GetDescendants() do
+					for index,key in next, types do
+						if(v:IsA(i))then
+							if(key(v))then
+								table.insert(neonsandstuff, v)
+							end
+						end
+					end
+				end
+			end
 			game:GetService("RunService").Heartbeat:Connect(function()
 				if(makeneonrgb or fullrgb)then
-					if(owner and owner.Character)then
-						for i,v in next, owner.Character:GetDescendants() do
+					if(owner.Character)then
+						for i,v in next, neonsandstuff do
 							if(v:IsA("BasePart") and v.Material == Enum.Material.Neon)then
 								v.Color = Color3.fromHSV(math.acos(math.cos((tick()/10)*math.pi))/math.pi,1,1)
 							end
