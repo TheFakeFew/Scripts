@@ -1,5 +1,4 @@
 local toggled = false
-local makeneonrgb = false
 local fullrgb = false
 
 function wait(num)
@@ -297,27 +296,30 @@ function reconnect()
 		end
 		do
 			local neonsandstuff = {}
-			function scanthrough()
-				neonsandstuff = {}
-				if(not owner.Character)then return end
-				local types = {
-					["BasePart"] = function(v) return v.Material == Enum.Material.Neon end,
-					["ParticleEmitter"] = function(v) return true end,
-					["Trail"] = function(v) return true end,
-				}
-				local function check(v)
-					for index,key in next, types do
-						if(v:IsA(index))then
-							if(key(v))then
-								table.insert(neonsandstuff, v)
-							end
+			local types = {
+				["BasePart"] = function(v) return v.Material == Enum.Material.Neon end,
+				["ParticleEmitter"] = function(v) return true end,
+				["Trail"] = function(v) return true end,
+			}
+			local function check(v)
+				for index,key in next, types do
+					if(v:IsA(index))then
+						if(key(v))then
+							table.insert(neonsandstuff, v)
 						end
 					end
 				end
+			end
+			function scanthrough()
+				neonsandstuff = {}
+				if(not owner.Character)then return end
 				for i,v in next, owner.Character:GetDescendants() do
 					check(v)
 				end
-				owner.Character.DescendantAdded:Connect(check)
+				owner.Character.DescendantAdded:Connect(function(v)
+					task.wait()
+					check(v)
+				end)
 				owner.Character.DescendantRemoving:Connect(function(v)
 					if(table.find(neonsandstuff,v))then
 						table.remove(neonsandstuff, table.find(neonsandstuff,v))
@@ -327,7 +329,7 @@ function reconnect()
 			scanthrough()
 			owner.CharacterAdded:Connect(scanthrough)
 			game:GetService("RunService").Heartbeat:Connect(function()
-				if(makeneonrgb or fullrgb)then
+				if(fullrgb)then
 					if(owner.Character)then
 						for i,v in next, neonsandstuff do
 							pcall(function()
