@@ -317,51 +317,40 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		end]]
 		function wrapObject(realObject)
 			local object = {}
-			
 			local usesPlaybackLoudness = (realObject:IsA("Sound") and Instance.new("BindableEvent") or nil)
-			
 			if realObject:IsA("TextBox") then
 				ScriptCreated[realObject] = true
 				object.FocusLost = fakeEvent()
 				object.focusLost = object.FocusLost
 			end
-			
 			local function setProperty(self, property, value)    
 				realObject[property] = ((typeof(value) == "table" and value._REAL) or value)
 			end
-		
 			local function getProperty(self, property)
 				if property == "_REAL" then
 					return realObject
 				end
-				
 				local realProperty = realObject[property]
-				
 				if (property == "PlaybackLoudness" or property == "playbackLoudness") and usesPlaybackLoudness then
 					usesPlaybackLoudness:Fire()
 					return loudnesses[realObject] or 0
 				end
-				
 				if typeof(realProperty) == "function" then
 					return function(_, ...)
 						realProperty = realObject[property](realObject, ...)
 					end
 				end
-				
 				if typeof(realProperty) == "Instance" then
 					realProperty = wrapObject(realProperty)
 				end        
-				
 				return realProperty
 			end
-			
 			if usesPlaybackLoudness then
 				usesPlaybackLoudness.Event:Once(function()
 					usesPlaybackLoudness:Destroy()
 					GetClientProperty(realObject,'PlaybackLoudness')
 				end)
 			end
-		
 			object.__newindex = setProperty
 			object.__index = getProperty
 			object.__type = "Instance"
@@ -369,7 +358,6 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			object.__tostring = function()
 				return realObject.Name
 			end
-		
 			return setmetatable({}, object), true
 		end
 		local function Create_PrivImpl(objectType)
