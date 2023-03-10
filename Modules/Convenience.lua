@@ -297,7 +297,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
 					else
-						return origIndex(s,i)
+						return origIndex(realobj,i)
 						--return function(self, ...) if self == fakeobj then origIndex(s,i)(realobj, ...) else origIndex(s,i)(self, ...) end end
 					end
 				end
