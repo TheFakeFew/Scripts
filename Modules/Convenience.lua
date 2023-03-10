@@ -316,7 +316,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			return fakeobj, wrapped
 		end]]
 		function wrapObject(realObject)
-			local object = {}
+			local object = {real=realObject}
 			local usesPlaybackLoudness = (realObject:IsA("Sound") and Instance.new("BindableEvent") or nil)
 			if realObject:IsA("TextBox") then
 				ScriptCreated[realObject] = true
