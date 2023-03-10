@@ -294,8 +294,8 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 					if(i=='PlaybackLoudness')then
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
-					--[[else
-						return origIndex(s,i)]]
+					else
+						return origIndex(s,i)
 					end
 				end
 				setmetatable(fakeobj,meta)
@@ -477,7 +477,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		fakes[fakeGame]=game
 		fakes[fakePlayer]=Player
 		getfenv().game=fakeGame
-		getfenv().Instance=fakeInstance;
+		--getfenv().Instance=fakeInstance;
 		getfenv().LoadLibrary=function(lib)
 			if(lib:lower()=="rbxutility")then
 				return setmetatable({
