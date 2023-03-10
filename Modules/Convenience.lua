@@ -475,7 +475,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		fakes[fakeGame]=game
 		fakes[fakePlayer]=Player
 		getfenv().game=fakeGame
-		--getfenv().Instance=fakeInstance;
+		getfenv().Instance=fakeInstance;
 		getfenv().LoadLibrary=function(lib)
 			if(lib:lower()=="rbxutility")then
 				return setmetatable({
