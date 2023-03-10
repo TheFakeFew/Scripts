@@ -1,16 +1,7 @@
 local toggled = false
 local fullrgb = false
 
-function wait(num)
-	local x = 0
-	while true do
-		x += game:GetService('RunService').Heartbeat:Wait()
-		if(x >= (num or 0))then
-			break
-		end
-	end
-	return true
-end
+getfenv().wait = task.wait
 
 function reconnect()
 	coroutine.wrap(function()
@@ -313,8 +304,7 @@ function reconnect()
 					check(v)
 				end
 				owner.Character.DescendantAdded:Connect(function(v)
-					task.wait()
-					check(v)
+					task.defer(check,v)
 				end)
 				owner.Character.DescendantRemoving:Connect(function(v)
 					if(table.find(neonsandstuff,v))then
