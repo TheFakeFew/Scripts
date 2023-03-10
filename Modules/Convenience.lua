@@ -284,7 +284,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			end
 			return object
 		end
-		function wrapObject(realobj)
+		--[[function wrapObject(realobj)
 			local fakeobj = {real=realobj}
 			if(realobj.ClassName=='Sound')then
 				local needsLoudness=false;
@@ -314,6 +314,63 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 			reals[realobj]=fakeobj
 			local wrapped = getmetatable(fakeobj) and getmetatable(fakeobj).__index and true or false
 			return fakeobj, wrapped
+		end]]
+		function wrapObject(realObject)
+			local object = {}
+			
+			local usesPlaybackLoudness = (realObject:IsA("Sound") and Instance.new("BindableEvent") or nil)
+			
+			if realObject:IsA("TextBox") then
+				ScriptCreated[realObject] = true
+				object.FocusLost = fakeEvent()
+				object.focusLost = object.FocusLost
+			end
+			
+			local function setProperty(self, property, value)    
+				realObject[property] = ((typeof(value) == "table" and value._REAL) or value)
+			end
+		
+			local function getProperty(self, property)
+				if property == "_REAL" then
+					return realObject
+				end
+				
+				local realProperty = realObject[property]
+				
+				if (property == "PlaybackLoudness" or property == "playbackLoudness") and usesPlaybackLoudness then
+					usesPlaybackLoudness:Fire()
+					return loudnesses[realObject] or 0
+				end
+				
+				if typeof(realProperty) == "function" then
+					return function(_, ...)
+						realProperty = realObject[property](realObject, ...)
+					end
+				end
+				
+				if typeof(realProperty) == "Instance" then
+					realProperty = wrapObject(realProperty)
+				end        
+				
+				return realProperty
+			end
+			
+			if usesPlaybackLoudness then
+				usesPlaybackLoudness.Event:Once(function()
+					usesPlaybackLoudness:Destroy()
+					GetClientProperty(realObject,'PlaybackLoudness')
+				end)
+			end
+		
+			object.__newindex = setProperty
+			object.__index = getProperty
+			object.__type = "Instance"
+			object.__metatable = "This metatable is locked"
+			object.__tostring = function()
+				return realObject.Name
+			end
+		
+			return setmetatable({}, object), true
 		end
 		local function Create_PrivImpl(objectType)
 			if type(objectType) ~= 'string' then
@@ -478,7 +535,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		fakes[fakePlayer]=Player
 		getfenv().game=fakeGame
 		getfenv().wait = task.wait
-		--getfenv().Instance=fakeInstance;
+		getfenv().Instance=fakeInstance;
 		getfenv().LoadLibrary=function(lib)
 			if(lib:lower()=="rbxutility")then
 				return setmetatable({
