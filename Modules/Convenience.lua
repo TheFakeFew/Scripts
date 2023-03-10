@@ -117,7 +117,7 @@ function module.EZConvert()
 			CoordinateFrame=CFrame.new();
 			CFrame=CFrame.new();	
 		}
-		local FakeMouse = NLS([[local me = game:service'Players'.localPlayer;
+		local FakeMouse = NLS([[task.wait() local me = game:service'Players'.localPlayer;
 local pg = me:FindFirstChildOfClass'PlayerGui'
 local mouse = me:GetMouse();
 local UIS = game:service'UserInputService'
@@ -127,7 +127,7 @@ local sentCamData = {}
 local sentMouseData = {}
 local UserEvent = (function()
 	local Ret;
-	repeat task.wait() Ret = script:WaitForChild'Remote'.Value until Ret
+	repeat task.wait() Ret = script:WaitForChild('Remote').Value until Ret
 	return Ret
 end)()
 UIS.InputChanged:connect(function(io,gpe)
