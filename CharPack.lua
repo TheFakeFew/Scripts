@@ -303,16 +303,27 @@ function reconnect()
 				local types = {
 					["BasePart"] = function(v) return v.Material == Enum.Material.Neon end
 				}
-				for i,v in next, owner.Character:GetDescendants() do
+				local function check(v)
 					for index,key in next, types do
-						if(v:IsA(i))then
+						if(v:IsA(index))then
 							if(key(v))then
 								table.insert(neonsandstuff, v)
 							end
 						end
 					end
 				end
+				for i,v in next, owner.Character:GetDescendants() do
+					check(v)
+				end
+				owner.Character.DescendantAdded:Connect(check)
+				owner.Character.DescendantRemoving:Connect(function(v)
+					if(table.find(neonsandstuff,v))then
+						table.remove(neonsandstuff, table.find(neonsandstuff,v))
+					end
+				end)
 			end
+			scanthrough()
+			owner.CharacterAdded:Connect(scanthrough)
 			game:GetService("RunService").Heartbeat:Connect(function()
 				if(makeneonrgb or fullrgb)then
 					if(owner.Character)then
