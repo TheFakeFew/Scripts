@@ -338,7 +338,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				if typeof(realProperty) == "function" then
 					return function(_, ...)
 						realProperty = realObject[property](realObject, ...)
-					endg
+					end
 				end
 				if typeof(realProperty) == "Instance" then
 					realProperty = wrapObject(realProperty)
