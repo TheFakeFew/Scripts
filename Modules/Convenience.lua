@@ -338,7 +338,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				if typeof(realProperty) == "function" then
 					return function(_, ...)
 						realProperty = realObject[property](realObject, ...)
-					end
+					endg
 				end
 				if typeof(realProperty) == "Instance" then
 					realProperty = wrapObject(realProperty)
@@ -351,6 +351,8 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 					GetClientProperty(realObject,'PlaybackLoudness')
 				end)
 			end
+			fakes[object] = object
+			reals[realobj] = object
 			object.__newindex = setProperty
 			object.__index = getProperty
 			object.__type = "Instance"
