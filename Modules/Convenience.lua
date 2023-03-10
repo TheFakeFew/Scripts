@@ -117,7 +117,7 @@ function module.EZConvert()
 			CoordinateFrame=CFrame.new();
 			CFrame=CFrame.new();	
 		}
-		local FakeMouse = NLS([[task.wait() local me = game:service'Players'.localPlayer;
+		local FakeMouse = NLS([[local me = game:service'Players'.localPlayer;
 local pg = me:FindFirstChildOfClass'PlayerGui'
 local mouse = me:GetMouse();
 local UIS = game:service'UserInputService'
@@ -292,7 +292,8 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 						needsLoudness=true;
 						return loudnesses[realobj] or 0
 					else
-						return origIndex(s,i)
+						--return origIndex(s,i)
+						return function(...) origIndex(s,i)(...) end
 					end
 				end
 				setmetatable(fakeobj,meta)
@@ -308,7 +309,7 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				setmetatable(fakeobj,newObject())
 			end
 			fakes[fakeobj]=realobj
-			reals[realobj]=fakeobj;
+			reals[realobj]=fakeobj
 			local wrapped = getmetatable(fakeobj) and getmetatable(fakeobj).__index and true or false
 			return fakeobj, wrapped
 		end
