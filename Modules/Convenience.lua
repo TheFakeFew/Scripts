@@ -288,15 +288,12 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 				local meta = newObject();
 				local origIndex = meta.__index
 				meta.__index=function(s,i)
-					local succ, returned, returned2 = pcall(function()
-						if(i=='PlaybackLoudness')then
-							needsLoudness=true;
-							return loudnesses[realobj] or 0
-						else
-							return origIndex(s,i)
-						end
-					end)
-					return returned, returned2
+					if(i=='PlaybackLoudness')then
+						needsLoudness=true;
+						return loudnesses[realobj] or 0
+					else
+						return origIndex(s,i)
+					end
 				end
 				setmetatable(fakeobj,meta)
 				coroutine.wrap(function()
