@@ -28,7 +28,7 @@ part.Anchored = true
 part.CanCollide = false
 part.Transparency = .5
 part.Size = Vector3.new(size,1,1)
-part.Position = Vector3.new(0,5,0)
+part.Position = owner.Character:WaitForChild("HumanoidRootPart").Position
 
 function start()
 	part:ClearAllChildren()
