@@ -288,7 +288,7 @@ function reconnect()
 				["ParticleEmitter"] = function(v) return true end,
 				["Trail"] = function(v) return true end,
 				["Beam"] = function(v) return true end,
-				["PointLight"] = function(v) return true end
+				["Light"] = function(v) return true end
 			}
 			local function check(v)
 				for index,key in next, types do
