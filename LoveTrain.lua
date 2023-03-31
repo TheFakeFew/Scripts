@@ -343,6 +343,7 @@ function effects(bc)
 	local idle = templates.LovetrainIdle:Clone()
 	idle.Parent = owner.Character.HumanoidRootPart
 	idle:Play()
+	local mus = Instance.new("Sound", owner.Character.HumanoidRootPart) mus.SoundId = "rbxassetid://12704426010" mus.Volume = 4 mus.Pitch = .5 mus.Looped = true mus:Play()
 	local lt = templates:FindFirstChild("Love Train"):Clone()
 	lt:WaitForChild("Ground").CFrame = owner.Character.HumanoidRootPart.CFrame * CFrame.new(0, -2, 0)
 	lt.Parent = owner.Character
@@ -426,6 +427,7 @@ function effects(bc)
 		end
 	end
 	pcall(game.Destroy,idle)
+	pcall(game.Destroy, mus)
 	pcall(function()
 		ondam:Disconnect()
 	end)
