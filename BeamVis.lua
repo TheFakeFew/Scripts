@@ -191,7 +191,7 @@ owner.Chatted:Connect(function(message)
 		mus.TimePosition = tonumber(string.split(message,"!")[2])
 	elseif(message:sub(1,5) == "sync!")then
 		repeat task.wait() until mus.IsLoaded
-		mus.TimePosition = timepos
+		mus.TimePosition = tpos
 	end
 end)
 ArtificialHB.Event:Connect(function()
@@ -206,7 +206,7 @@ ArtificialHB.Event:Connect(function()
 		mus.Looped = true
 		mus:Play()
 	end
-	timepos = mus.TimePosition
+	tpos = mus.TimePosition
 	soundcheck()
 	local rootpart = owner.Character:FindFirstChild("HumanoidRootPart")
 	if(rootpart)then
