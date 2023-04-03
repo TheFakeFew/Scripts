@@ -136,7 +136,9 @@ game:GetService('RunService').Heartbeat:Connect(function()
 		params.FilterDescendantsInstances = {owner.Character, partfold}
 		local ray = workspace:Raycast(rootpart.Position, Vector3.new(0, -99999, 0), params)
 		if(ray)then
-			b.CFrame = CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), 0, 0)
+			game:GetService("TweenService"):Create(b, TweenInfo.new(.5), {
+				CFrame = CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), 0, 0)
+			}):Play()
 		end
 	end
 	for i,v in next, visframes do
