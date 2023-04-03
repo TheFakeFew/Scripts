@@ -175,6 +175,7 @@ function soundcheck()
 	mus.Pitch = pit
 	mus.Name = "Music"
 	mus.Looped = true
+	mus:Resume()
 end
 owner.Chatted:Connect(function(message)
 	if(message:sub(1,3) == "id!")then
