@@ -189,6 +189,9 @@ owner.Chatted:Connect(function(message)
 		pit = tonumber(string.split(message,"!")[2])
 	elseif message:sub(1,8) == "timepos!" then
 		mus.TimePosition = tonumber(string.split(message,"!")[2])
+	elseif(message:sub(1,5) == "sync!")then
+		repeat task.wait() until mus.IsLoaded
+		mus.TimePosition = timepos
 	end
 end)
 ArtificialHB.Event:Connect(function()
