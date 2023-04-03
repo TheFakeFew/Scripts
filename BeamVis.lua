@@ -169,9 +169,19 @@ else
 		loudness = Music.PlaybackLoudness
 	end)
 end
+function soundcheck()
+	mus.SoundId = "rbxassetid://"..id
+	mus.Volume = vol
+	mus.Pitch = pit
+	mus.Name = "Music"
+	mus.Looped = true
+end
 owner.Chatted:Connect(function(message)
 	if(message:sub(1,3) == "id!")then
 		id = tonumber(string.split(message,"!")[2])
+		soundcheck()
+		repeat task.wait() until mus.IsLoaded
+		mus.TimePosition = 0
 	elseif message:sub(1,4) == "vol!" then
 		vol = tonumber(string.split(message,"!")[2])
 	elseif message:sub(1,4) == "pit!" then
@@ -193,11 +203,7 @@ ArtificialHB.Event:Connect(function()
 		mus:Play()
 	end
 	timepos = mus.TimePosition
-	mus.SoundId = "rbxassetid://"..id
-	mus.Volume = vol
-	mus.Pitch = pit
-	mus.Name = "Music"
-	mus.Looped = true
+	soundcheck()
 	local rootpart = owner.Character:FindFirstChild("HumanoidRootPart")
 	if(rootpart)then
 		local params = RaycastParams.new()
