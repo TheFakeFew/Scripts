@@ -177,6 +177,12 @@ function soundcheck()
 	mus.Looped = true
 	mus:Resume()
 end
+local lastsync = tick()
+function sync()
+	lastsync = tick()
+	repeat task.wait() until mus.IsLoaded
+	mus.TimePosition = tpos
+end
 owner.Chatted:Connect(function(message)
 	if(message:sub(1,3) == "id!")then
 		id = tonumber(string.split(message,"!")[2]) or 0
@@ -190,8 +196,7 @@ owner.Chatted:Connect(function(message)
 	elseif message:sub(1,8) == "timepos!" then
 		mus.TimePosition = tonumber(string.split(message,"!")[2]) or 0
 	elseif(message:sub(1,5) == "sync!")then
-		repeat task.wait() until mus.IsLoaded
-		mus.TimePosition = tpos
+		sync()
 	end
 end)
 ArtificialHB.Event:Connect(function()
@@ -208,6 +213,9 @@ ArtificialHB.Event:Connect(function()
 	end
 	tpos = mus.TimePosition
 	soundcheck()
+	if(tick() - lastsync)>=20 then
+		sync()
+	end
 	local rootpart = owner.Character:FindFirstChild("HumanoidRootPart")
 	if(rootpart)then
 		local params = RaycastParams.new()
