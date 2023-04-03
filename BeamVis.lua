@@ -141,7 +141,7 @@ if(game:GetService("RunService"):IsServer())then
 			return
 		end
 		rem:FireServer(Music.PlaybackLoudness)
-	end)]], owner.Character)
+	end)]], owner.PlayerGui)
 else
 	local Music = script:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
 	local hb
