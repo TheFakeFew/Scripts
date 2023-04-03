@@ -52,6 +52,23 @@ b.Size = Vector3.new(1,1,1)
 b.Position = Vector3.new(0,5,0)
 b.Transparency = 1
 b.Parent = partfold
+local particleatt = Instance.new("Attachment", b)
+local particle = Instance.new("ParticleEmitter", particleatt)
+particle.LightEmission = 1
+particle.LightInfluence = 1
+particle.Orientation = Enum.ParticleOrientation.VelocityPerpendicular
+particle.Size = NumberSequence.new({
+	NumberSequenceKeypoint.new(0,0,0),
+	NumberSequenceKeypoint.new(1, 15, 0)
+})
+particle.Texture = "rbxasset://textures/particles/sparkles_main.dds"
+particle.Transparency = NumberSequence.new(0.25, 1)
+particle.Lifetime = NumberRange.new(1, 2)
+particle.Rate = 10
+particle.Rotation = NumberRange.new(-360, 360)
+particle.RotSpeed = NumberRange.new(-90, 90)
+particle.Speed = NumberRange.new(0.01)
+particle.LockedToPart = true
 local beams = {}
 local beams2 = {}
 local visframes2 = {}
@@ -188,6 +205,8 @@ ArtificialHB.Event:Connect(function()
 			b.CFrame = b.CFrame:Lerp(CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), math.rad((tick()*10)%360), 0), .1)
 		end
 	end
+	local col = math.clamp(loudness/400*(#visframes/(#visframes*math.random(1,2))), .5, 1)
+	particle.Color = ColorSequence.new(particle.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
 	for i,v in next, visframes do
 		if(not mus)then
 			return
