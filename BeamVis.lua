@@ -64,8 +64,8 @@ beam.Attachment0 = visframes[#visframes].self
 beam.Attachment1 = visframes2[1].self
 beam.LightEmission = 1
 beam.LightInfluence = 1
-beam.Width0 = .1
-beam.Width1 = .1
+beam.Width0 = .15
+beam.Width1 = .15
 beams2[#beams+1] = beam
 local mus = Instance.new("Sound", b)
 mus.SoundId = "rbxassetid://"..id
@@ -75,32 +75,41 @@ mus.TimePosition = tpos
 mus.Name = "Music"
 mus.Looped = true
 mus:Play()
-if(game:GetService('ReplicatedStorage'):FindFirstChild(owner.Name.."FunnyVis"))then
-	game:GetService('ReplicatedStorage')[owner.Name.."FunnyVis"]:Destroy()
-end
 local loudness = 0
-local rem = Instance.new("RemoteEvent",game:GetService('ReplicatedStorage'))
-rem.Name = owner.Name.."FunnyVis"
-rem.OnServerEvent:Connect(function(player,pl)
-	loudness = pl
-end)
-NLS([[if(not owner)then
-	getfenv().owner = script:FindFirstAncestorOfClass("Player") and script:FindFirstAncestorOfClass("Player") or game:GetService('Players'):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))
-end
-local rem = game:GetService('ReplicatedStorage'):WaitForChild(owner.Name.."FunnyVis")
-local Music = workspace:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
-local hb
-hb = game:GetService('RunService').Heartbeat:Connect(function()
-	Music = workspace:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
-	rem = game:GetService('ReplicatedStorage'):WaitForChild(owner.Name.."FunnyVis")
-	if(not rem or not rem:IsDescendantOf(game:GetService('ReplicatedStorage')))then
-		hb:Disconnect()
-		script.Disabled = true
-		script:Destroy()
-		return
+if(game:GetService("RunService"):IsServer())then
+	if(game:GetService('ReplicatedStorage'):FindFirstChild(owner.Name.."FunnyVis"))then
+		game:GetService('ReplicatedStorage')[owner.Name.."FunnyVis"]:Destroy()
 	end
-	rem:FireServer(Music.PlaybackLoudness)
-end)]], owner.Character)
+	local rem = Instance.new("RemoteEvent",game:GetService('ReplicatedStorage'))
+	rem.Name = owner.Name.."FunnyVis"
+	rem.OnServerEvent:Connect(function(player,pl)
+		loudness = pl
+	end)
+	NLS([[if(not owner)then
+		getfenv().owner = script:FindFirstAncestorOfClass("Player") and script:FindFirstAncestorOfClass("Player") or game:GetService('Players'):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))
+	end
+	local rem = game:GetService('ReplicatedStorage'):WaitForChild(owner.Name.."FunnyVis")
+	local Music = workspace:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
+	local hb
+	hb = game:GetService('RunService').Heartbeat:Connect(function()
+		Music = workspace:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
+		rem = game:GetService('ReplicatedStorage'):WaitForChild(owner.Name.."FunnyVis")
+		if(not rem or not rem:IsDescendantOf(game:GetService('ReplicatedStorage')))then
+			hb:Disconnect()
+			script.Disabled = true
+			script:Destroy()
+			return
+		end
+		rem:FireServer(Music.PlaybackLoudness)
+	end)]], owner.Character)
+else
+	local Music = workspace:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
+	local hb
+	hb = game:GetService('RunService').Heartbeat:Connect(function()
+		Music = workspace:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
+		loudness = Music.PlaybackLoudness
+	end)
+end
 owner.Chatted:Connect(function(message)
 	if(message:sub(1,3) == "id!")then
 		id = tonumber(string.split(message,"!")[2])
@@ -137,7 +146,7 @@ game:GetService('RunService').Heartbeat:Connect(function()
 		local ray = workspace:Raycast(rootpart.Position, Vector3.new(0, -99999, 0), params)
 		if(ray)then
 			game:GetService("TweenService"):Create(b, TweenInfo.new(.5), {
-				CFrame = CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), 0, 0)
+				CFrame = CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), math.rad((tick()*10)%360), 0)
 			}):Play()
 		end
 	end
