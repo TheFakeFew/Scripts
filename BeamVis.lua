@@ -2,6 +2,37 @@ if(not owner)then
 	getfenv().owner = script:FindFirstAncestorOfClass("Player") and script:FindFirstAncestorOfClass("Player") or game:GetService('Players'):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))
 end
 if(game:GetService("RunService"):IsServer())then script.Parent = workspace end
+local ArtificialHB = Instance.new("BindableEvent", script)
+ArtificialHB.Name = "Heartbeat"
+
+script:WaitForChild("Heartbeat")
+
+local tf = 0
+local allowframeloss = false
+local tossremainder = false
+local lastframe = tick()
+local frame = 1/120
+ArtificialHB:Fire()
+
+game:GetService("RunService").Heartbeat:connect(function(s, p)
+	tf = tf + s
+	if tf >= frame then
+		if allowframeloss then
+			ArtificialHB:Fire()
+			lastframe = tick()
+		else
+			for i = 1, math.floor(tf / frame) do
+				ArtificialHB:Fire()
+			end
+			lastframe = tick()
+		end
+		if tossremainder then
+			tf = 0
+		else
+			tf = tf - frame * math.floor(tf / frame)
+		end
+	end
+end)
 local visframes = {}
 local numberofframes = 100
 local partfold = Instance.new("Folder", workspace)
@@ -121,7 +152,7 @@ owner.Chatted:Connect(function(message)
 		mus.TimePosition = tonumber(string.split(message,"!")[2])
 	end
 end)
-game:GetService('RunService').Heartbeat:Connect(function()
+ArtificialHB.Event:Connect(function()
 	if(not mus or not mus:IsDescendantOf(b))then
 		pcall(game.Destroy, mus)
 		mus = Instance.new("Sound", b)
