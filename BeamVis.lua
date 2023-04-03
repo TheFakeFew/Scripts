@@ -11,7 +11,7 @@ local tf = 0
 local allowframeloss = false
 local tossremainder = false
 local lastframe = tick()
-local frame = 1/120
+local frame = 1/60
 ArtificialHB:Fire()
 
 game:GetService("RunService").Heartbeat:connect(function(s, p)
