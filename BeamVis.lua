@@ -179,16 +179,16 @@ function soundcheck()
 end
 owner.Chatted:Connect(function(message)
 	if(message:sub(1,3) == "id!")then
-		id = tonumber(string.split(message,"!")[2])
+		id = tonumber(string.split(message,"!")[2]) or 0
 		soundcheck()
 		repeat task.wait() until mus.IsLoaded
 		mus.TimePosition = 0
 	elseif message:sub(1,4) == "vol!" then
-		vol = tonumber(string.split(message,"!")[2])
+		vol = tonumber(string.split(message,"!")[2]) or 1
 	elseif message:sub(1,4) == "pit!" then
-		pit = tonumber(string.split(message,"!")[2])
+		pit = tonumber(string.split(message,"!")[2]) or 1
 	elseif message:sub(1,8) == "timepos!" then
-		mus.TimePosition = tonumber(string.split(message,"!")[2])
+		mus.TimePosition = tonumber(string.split(message,"!")[2]) or 0
 	elseif(message:sub(1,5) == "sync!")then
 		repeat task.wait() until mus.IsLoaded
 		mus.TimePosition = tpos
