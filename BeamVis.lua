@@ -124,6 +124,7 @@ game:GetService('RunService').Heartbeat:Connect(function()
 		mus.Looped = true
 		mus:Play()
 	end
+	timepos = mus.TimePosition
 	mus.SoundId = "rbxassetid://"..id
 	mus.Volume = vol
 	mus.Pitch = pit
