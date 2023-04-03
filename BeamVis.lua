@@ -1,7 +1,7 @@
 if(not owner)then
 	getfenv().owner = script:FindFirstAncestorOfClass("Player") and script:FindFirstAncestorOfClass("Player") or game:GetService('Players'):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))
 end
-script.Parent = workspace
+if(game:GetService("RunService"):IsServer())then script.Parent = workspace end
 local visframes = {}
 local numberofframes = 100
 local partfold = Instance.new("Folder", workspace)
