@@ -39,10 +39,14 @@ local function DecodeUnion(Values,Flags,Parse,data)
 	end
 	local first = table.remove(Union,1)
 	if #Union>0 then
-		first = first:UnionAsync(Union)
+		pcall(function()
+			first = first:UnionAsync(Union)
+		end)
 	end
 	if #Subtract>0 then
-		first = first:SubtractAsync(Subtract)
+		pcall(function()
+			first = first:SubtractAsync(Subtract)
+		end)
 	end
 	m:Destroy()
 	return first
