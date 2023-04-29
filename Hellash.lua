@@ -1,7 +1,7 @@
 task.wait()
 script.Parent = owner.PlayerGui
 local loaded = LoadAssets(13233384945)
-local assets = loaded:Get("HellashAssets"):Clone()
+local assets = loaded:Get("HellashAssets")
 local data = Instance.new("Folder", script)
 data.Name = "Data"
 for i,v in next, assets.BloodAssets:GetChildren() do

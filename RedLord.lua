@@ -2,7 +2,7 @@ local loaded = LoadAssets(13233384945)
 local Objects = {}
 local assets = loaded:Get("RedlordAssets")
 for i,v in next, assets:GetChildren() do
-	table.insert(Objects, v:Clone())
+	table.insert(Objects, v)
 end
 
 local scloadstring = [==[
