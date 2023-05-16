@@ -736,7 +736,7 @@ for i = 1, #ATTACKS do
 	SKILLTEXT.TextStrokeColor3 = C3(0, 0, 0)
 end
 local BMUSIC = IT("Sound", Torso)
-local VOLUME = 5
+local VOLUME = 3
 local PITCH = 0.666
 local SONGID = 13463129977
 local EYE = CreatePart(3, Head, "Neon", 0, 0, "Gold", "Eyeball", VT(0.1, 0.4, 0.1), false)
