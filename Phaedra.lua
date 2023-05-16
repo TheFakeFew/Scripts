@@ -906,7 +906,7 @@ for _, c in pairs(Character:GetChildren()) do
 end
 local BODY = {}
 for _, c in pairs(Character:GetDescendants()) do
-	if c:IsA("BasePart") and c.Name ~= "Handle" then
+	if c:IsA("BasePart") and c.Name ~= "Handle" and not c:IsDescendantOf(script) then
 		if c ~= RootPart and c ~= Torso and c ~= Head and c ~= RightArm and c ~= LeftArm and c ~= RightLeg and c ~= LeftLeg then
 			c.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
 		end
