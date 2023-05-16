@@ -735,10 +735,10 @@ for i = 1, #ATTACKS do
 	SKILLTEXT.TextXAlignment = "Right"
 	SKILLTEXT.TextStrokeColor3 = C3(0, 0, 0)
 end
-local BMUSIC = IT("Sound", Character)
+local BMUSIC = IT("Sound", Torso)
 local VOLUME = 5
-local PITCH = 1
-local SONGID = 1418800825
+local PITCH = 0.666
+local SONGID = 13463129977
 local EYE = CreatePart(3, Head, "Neon", 0, 0, "Gold", "Eyeball", VT(0.1, 0.4, 0.1), false)
 MakeForm(EYE, "Ball")
 EYE.CFrame = Head.CFrame * CF(0.2, 0.1, -0.72)
@@ -2717,10 +2717,10 @@ while true do
 	BMUSIC.Pitch = PITCH
 	BMUSIC.Volume = 10
 	BMUSIC.Playing = true
-	BMUSIC.EmitterSize = 35
-	if BMUSIC.Parent ~= Character then
+	BMUSIC.EmitterSize = 25
+	if BMUSIC.Parent ~= Torso then
 		print("Fixing music")
-		BMUSIC = IT("Sound", Character)
+		BMUSIC = IT("Sound", Torso)
 		BMUSIC.SoundId = "rbxassetid://" .. SONGID
 		BMUSIC.Looped = true
 		BMUSIC.Pitch = PITCH
