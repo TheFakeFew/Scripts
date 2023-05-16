@@ -1,6 +1,6 @@
 local loaded = LoadAssets(13233384945)
 local assets = loaded:Get("PhaedraAssets")
-for i,v in next, assets do
+for i,v in next, assets:GetChildren() do
 	v.Parent = script
 end
 
