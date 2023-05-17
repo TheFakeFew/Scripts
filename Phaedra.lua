@@ -737,7 +737,7 @@ for i = 1, #ATTACKS do
 end
 local BMUSIC = IT("Sound", Torso)
 local VOLUME = 3
-local PITCH = 0.666
+local PITCH = 0.667
 local SONGID = 13463129977
 local EYE = CreatePart(3, Head, "Neon", 0, 0, "Gold", "Eyeball", VT(0.1, 0.4, 0.1), false)
 MakeForm(EYE, "Ball")
