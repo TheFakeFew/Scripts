@@ -130,6 +130,7 @@ local ch = me.Character;
 local cam = workspace.CurrentCamera
 local sentCamData = {}
 local sentMouseData = {}
+local sentUISData = {}
 local UserEvent = (function()
 	local Ret;
 	repeat task.wait() Ret = script:WaitForChild('Remote').Value until Ret
@@ -216,6 +217,7 @@ coroutine.wrap(function()
 	while task.wait() do
 		local mData = {Target=mouse.Target,Hit=mouse.Hit,X=mouse.X,Y=mouse.Y}
 		local cData = {CFrame=cam.CFrame;CoordinateFrame=cam.CFrame;}
+		local uisData = {isFocused = UIS:GetFocusedTextBox()}
 		if(not matching(sentMouseData,mData))then
 			sentMouseData=mData
 			UserEvent:FireServer({Type='Mouse',Variables=sentMouseData})
@@ -223,6 +225,10 @@ coroutine.wrap(function()
 		if(not matching(sentCamData,cData))then
 			sentCamData=cData
 			UserEvent:FireServer({Type='Camera',Variables=sentCamData})
+		end
+		if(not matching(sentUISData, uisData))then
+			sentUISData=uisData
+			UserEvent:FireServer({Type='UIS',Variables=uisData})
 		end
 	end	
 end)()
@@ -403,10 +409,13 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 		getmetatable(fakePlayer.PlayerScripts).__index=function()
 			return {{Disabled=true,Name="GONE"}}
 		end
+		local isTextboxFocused = false
 		local players = game:service'Players'
 		local services = {
 			Players={real=game:service'Players',LocalPlayer=fakePlayer,localPlayer=fakePlayer,GetPlayerFromCharacter=function(self,c)local plr = players:GetPlayerFromCharacter(c)if(plr==self.localPlayer.real)then return self.localPlayer else return plr end end};
-			UserInputService={real=game:service'UserInputService',_mb={},_keys={};InputBegan=fakeEvent(),InputEnded=fakeEvent(),InputChanged=fakeEvent()};
+			UserInputService={real=game:service'UserInputService',_mb={},_keys={};InputBegan=fakeEvent(),InputEnded=fakeEvent(),InputChanged=fakeEvent(),GetFocusedTextBox=function(self)
+				return isTextboxFocused
+			end};
 			Debris={real=game:service'Debris',AddItem=function(self,item,timer)
 				if(fakes[item])then
 					item = fakes[item]
@@ -520,7 +529,9 @@ me.Character.DescendantAdded:connect(regSound)]], Player.Character)
 					if(not FakeCam[i] or not eventIsFake)then
 						FakeCam[i]=v;
 					end
-				end	
+				end
+			elseif(type == 'UIS')then
+				isTextboxFocused = data.Variables.IsFocused
 			elseif(type=='TextboxReplication')then
 				if(ScriptCreated[data.TextBox])then
 					data.TextBox.Text = data.Text
