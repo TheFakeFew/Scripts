@@ -117,6 +117,18 @@ local attack_data = {
 
 }
 
+
+function swait(t)
+	if t then
+		for i = 0, t do
+			game:GetService('RunService').Stepped:wait(0)
+		end
+	else
+		game:GetService('RunService').Stepped:wait(0)
+	end
+	return true
+end
+
 --[[Important Variables]]--
 local plr = game:GetService('Players').LocalPlayer
 local char = plr.Character
@@ -288,16 +300,6 @@ function attackend(keycode, func)
 			func()
 		end
 	end)
-end
-function swait(t)
-	if t then
-		for i = 0, t do
-			game:GetService('RunService').Stepped:wait(0)
-		end
-	else
-		game:GetService('RunService').Stepped:wait(0)
-	end
-	return true
 end
 function fade(obj, dest, grow)
 	spawn(function()

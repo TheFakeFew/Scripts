@@ -118,7 +118,9 @@ function module.EZConvert()
 		local FakeCam = {
 			real=workspace.CurrentCamera;
 			CoordinateFrame=CFrame.new();
-			CFrame=CFrame.new();	
+			CFrame=CFrame.new();
+			Parent=workspace;
+			FieldOfView=70
 		}
 		local FakeMouse = NLS([[local me = game:service'Players'.localPlayer;
 local pg = me:FindFirstChildOfClass'PlayerGui'
