@@ -60,7 +60,7 @@ settings.Damage = {
 }
 settings.ShowDamageEnabled = false
 settings.CustomAnim = true
-settings.Song = 1513216381
+settings.Song = 13497506699
 local soundlist = {
 	HardHit1 = "rbxassetid://565207203",
 	HardHit2 = "rbxassetid://541909913",
