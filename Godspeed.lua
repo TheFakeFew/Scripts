@@ -742,7 +742,7 @@ sound.Volume = 0.5
 sound.SoundId = "rbxassetid://"..settings.Song
 sound.Looped = true
 sound.Name = "BGMusic"
-sound.Parent = char
+sound.Parent = char.Torso
 sound:Play()
 addattack(Enum.KeyCode.LeftShift, function()
 	if humanoid.WalkSpeed > 0 then
