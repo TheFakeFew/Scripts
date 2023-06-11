@@ -838,6 +838,10 @@ tool.Activated:Connect(function()
 								v.TextureId = ""
 							elseif(v:IsA("BodyColors"))then
 								v:Destroy()
+							elseif(v:IsA("Shirt"))then
+								v:Destroy()
+							elseif(v:IsA("Pants"))then
+								v:Destroy()
 							end
 						end
 					end
