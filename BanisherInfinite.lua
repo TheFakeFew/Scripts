@@ -504,15 +504,15 @@ function Effect(data)
 			Prt = Part(Parent,Color,Material,Size,CFra,true,false)
 			Prt.Shape = Shape
 		end
-		if(typeof(MeshData) == 'table')then
+		if(MeshData and typeof(MeshData) == 'table')then
 			Msh = Mesh(Prt,MeshData.MeshType,MeshData.MeshId,MeshData.TextureId,MeshData.Scale,MeshData.Offset)
-		elseif(typeof(MeshData) == 'Instance')then
+		elseif(MeshData and typeof(MeshData) == 'Instance')then
 			Msh = MeshData:Clone()
 			Msh.Parent = Prt
 		elseif(Shape == Enum.PartType.Block)then
 			Msh = Mesh(Prt,Enum.MeshType.Brick)
 		end
-		if(typeof(SndData) == 'table' or typeof(SndData) == 'Instance')then
+		if(SndData and typeof(SndData) == 'table' or typeof(SndData) == 'Instance')then
 			Snd = Sound(Prt,SndData.SoundId,SndData.Pitch,SndData.Volume,false,false,true)
 		end
 		if(Snd)then
