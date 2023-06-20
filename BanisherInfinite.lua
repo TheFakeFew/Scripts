@@ -497,7 +497,7 @@ function Effect(data)
 	local Settings = data.FXSettings or {}
 	local Snd,Prt,Msh;
 	local Shape = data.Shape or Enum.PartType.Block
-	coroutine.wrap(function()
+	task.spawn(function()
 		if(Manual and typeof(Manual) == 'Instance' and Manual:IsA'BasePart')then
 			Prt = Manual
 		else
@@ -580,7 +580,7 @@ function Effect(data)
 				Prt:destroy()
 			end
 		end
-	end)()
+	end)
 	return Prt,Msh,Snd
 end	
 
