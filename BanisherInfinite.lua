@@ -512,7 +512,7 @@ function Effect(data)
 		elseif(Shape == Enum.PartType.Block)then
 			Msh = Mesh(Prt,Enum.MeshType.Brick)
 		end
-		if(SndData and typeof(SndData) == 'table' or typeof(SndData) == 'Instance')then
+		if(SndData and (typeof(SndData) == 'table' or typeof(SndData) == 'Instance'))then
 			Snd = Sound(Prt,SndData.SoundId,SndData.Pitch,SndData.Volume,false,false,true)
 		end
 		if(Snd)then
