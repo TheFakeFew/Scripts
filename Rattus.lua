@@ -990,7 +990,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 				end
 			end
 
-			path = pfs:FindPathAsync(hroot.Position, enemytorso.Position * Vector3.new(1, 0, 1) + hroot.Position.Y)
+			local params = RaycastParams.new()
+			params.FilterType = Enum.RaycastFilterType.Blacklist
+			params.FilterDescendantsInstances = {enemyroot.Parent, zombie}
+			local ray = workspace:RayCast(enemyroot.Position, Vector3.new(0,-2000,0), params)
+			path = pfs:FindPathAsync(hroot.Position, ray and ray.Position or hroot.Position)
 			waypoint = path:GetWaypoints()
 			oldpoints = waypoint
 
@@ -1002,8 +1006,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 
 			if path and waypoint or checkw(waypoint) then
 				if checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Walk then
-					human:MoveTo( checkw(waypoint).Position )
+					human:MoveTo(checkw(waypoint).Position)
 					human.Jump = false
+				elseif checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Jump then
+					human:MoveTo(checkw(waypoint).Position)
+					human.Jump = true
 				end
 			else
 				for i = 3, #oldpoints do
