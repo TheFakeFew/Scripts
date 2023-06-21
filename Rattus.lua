@@ -690,9 +690,9 @@ function GetNearestPlayer(minimumDistance)
 	for i,v in next, game:GetService("Players"):GetPlayers() do
 		local Character = v.Character
 		if (Character) then
-			local humanoid = Character.Humanoid
+			local humanoid = Character:FindFirstChildOfClass("Humanoid")
 			local HRP = Character.HumanoidRootPart
-			if (humanoid.Health > 0) and HRP then
+			if humanoid and (humanoid.Health > 0) and HRP then
 				local mag = (hroot.Position - HRP.Position).Magnitude
 				if (mag <= closestMagnitude) then
 					closestPlayer = v
@@ -989,7 +989,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 					return t[ci]
 				end
 			end
-			
+
 			path = pfs:FindPathAsync(hroot.Position, enemyroot.Position)
 			waypoint = path:GetWaypoints()
 			oldpoints = waypoint
