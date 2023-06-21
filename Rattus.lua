@@ -921,7 +921,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 				local params = RaycastParams.new()
 				params.FilterType = Enum.RaycastFilterType.Blacklist
 				params.FilterDescendantsInstances = {enemytorso.Parent}
-				local rayc = workspace:Raycast(enemytorso.Position+(enemytorso.Parent:FindFirstChildOfClass("Humanoid").MoveDirection*4),Vector3.new(0,-100,0),params)
+				local rayc = workspace:Raycast(enemytorso.Position+(enemytorso.Parent:FindFirstChildOfClass("Humanoid").MoveDirection*4*(enemytorso.Parent:FindFirstChildOfClass("Humanoid").WalkSpeed/16)),Vector3.new(0,-20,0),params)
 				if rayc then
 					local cyl = Instance.new("Part",zombie)
 					cyl.Anchored = true
