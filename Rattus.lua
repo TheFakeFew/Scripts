@@ -704,7 +704,7 @@ function GetNearestPlayer(minimumDistance)
 	return closestPlayer
 end
 
-function GetTorso(part)
+function GetRoot(part)
 	local chars = workspace:GetChildren()
 	local torso = nil
 	local plr = GetNearestPlayer(SearchDistance)
@@ -910,18 +910,18 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		end)
 	end
 	
-	local enemytorso = GetTorso(hroot.Position)
+	local enemyroot = GetRoot(hroot.Position)
 	
-	if enemytorso ~= nil then
+	if enemyroot ~= nil then
 		isWandering = 1
-		if (hroot.Position - enemytorso.Position).Magnitude < 100 then
+		if (hroot.Position - enemyroot.Position).Magnitude < 100 then
 			spikeupd += 1
 			if spikeupd == 100 then
 				spikeupd = 0
 				local params = RaycastParams.new()
 				params.FilterType = Enum.RaycastFilterType.Blacklist
-				params.FilterDescendantsInstances = {enemytorso.Parent}
-				local rayc = workspace:Raycast(enemytorso.Position+(enemytorso.Parent:FindFirstChildOfClass("Humanoid").MoveDirection*14*(enemytorso.Parent:FindFirstChildOfClass("Humanoid").WalkSpeed/16)),Vector3.new(0,-200,0),params)
+				params.FilterDescendantsInstances = {enemyroot.Parent}
+				local rayc = workspace:Raycast(enemyroot.Position+(enemyroot.Parent:FindFirstChildOfClass("Humanoid").MoveDirection*14*(enemyroot.Parent:FindFirstChildOfClass("Humanoid").WalkSpeed/16)),Vector3.new(0,-200,0),params)
 				if rayc then
 					local cyl = Instance.new("Part",zombie)
 					cyl.Anchored = true
@@ -971,7 +971,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	end
 	
 	pcall(function()
-		if enemytorso ~= nil then
+		if enemyroot ~= nil then
 			isWandering = 1
 			local function checkw(t)
 				local ci = 3
@@ -990,7 +990,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 				end
 			end
 
-			path = pfs:FindPathAsync(hroot.Position, enemytorso.Position)
+			path = pfs:FindPathAsync(hroot.Position, enemyroot.Position)
 			waypoint = path:GetWaypoints()
 			oldpoints = waypoint
 
@@ -1010,7 +1010,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 					human:MoveTo(oldpoints[i].Position)
 				end
 			end
-		elseif enemytorso == nil and canWander then
+		elseif enemyroot == nil and canWander then
 			isWandering = 0
 			path = nil
 			waypoint = nil
