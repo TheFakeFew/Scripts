@@ -990,7 +990,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 				end
 			end
 
-			path = pfs:FindPathAsync(hroot.Position, enemyroot.Position)
+			path = pfs:FindPathAsync(hroot.Position, enemytorso.Position * Vector3.new(1, 0, 1) + hroot.Position.Y)
 			waypoint = path:GetWaypoints()
 			oldpoints = waypoint
 
