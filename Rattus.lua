@@ -347,7 +347,7 @@ local assets = loaded:Get("RattusAssets")
 local rat = assets.stuffs.Rat
 rat.Parent = nil
 
-CFuncs["EchoSound"].Create("rbxassetid://7616700381", workspace, 5, 1, 0, 10, 0.15, 0.5, 1)
+CFuncs["EchoSound"].Create("rbxassetid://7616700381", workspace, 2, 1, 0, 10, 0.15, 0.5, 1)
 bosschatfunc("im come you.", (math.random(1,2) == 1 and BrickColor.new("Really red") or BrickColor.new("Really black")).Color, 2)
 
 task.wait(8)
