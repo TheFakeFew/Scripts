@@ -970,7 +970,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		end
 	end
 	
-	pcall(function()
+	--pcall(function()
 		if enemyroot ~= nil then
 			isWandering = 1
 			local function checkw(t)
@@ -1019,7 +1019,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 			waypoint = nil
 			human.MoveToFinished:Wait()
 		end
-	end)
+	--end)
 end)
 ]=], rat)
 
