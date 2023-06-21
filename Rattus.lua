@@ -889,8 +889,8 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		r.Frame.hp.name.Font = Enum.Font:GetEnumItems()[math.random(1, #Enum.Font:GetEnumItems())]
 		r.Frame.hp.BackgroundColor3 = Color3.new(math.random(), 0, 0)
 		
-		r.Frame.hp.name.Rotation = math.random(-2,2)
-		r.Frame.hp.Rotation = math.random(-2,2)
+		r.Frame.hp.name.Rotation = math.random(-1,1)
+		r.Frame.hp.Rotation = math.random(-1,1)
 		r.Frame.Rotation = math.random(-1,1)
 	end
 
@@ -1027,7 +1027,8 @@ local lines = {
 	"die",
 	"el pato is nothing compared to me, i am el rattus!",
 	"i am el rattus!",
-	"you are nothing."
+	"you are nothing.",
+    "your existance is meaningless."
 }
 
 while task.wait(math.random(10, 30)) do
