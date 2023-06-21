@@ -989,12 +989,8 @@ game:GetService("RunService").Heartbeat:Connect(function()
 					return t[ci]
 				end
 			end
-
-			local params = RaycastParams.new()
-			params.FilterType = Enum.RaycastFilterType.Blacklist
-			params.FilterDescendantsInstances = {enemyroot.Parent, zombie}
-			local ray = workspace:RayCast(enemyroot.Position, Vector3.new(0,-2000,0), params)
-			path = pfs:FindPathAsync(hroot.Position, ray and ray.Position or hroot.Position)
+			
+			path = pfs:FindPathAsync(hroot.Position, enemyroot.Position)
 			waypoint = path:GetWaypoints()
 			oldpoints = waypoint
 
