@@ -1,5 +1,3 @@
-task.wait(2)
-
 local function Create_PrivImpl(objectType)
 	if type(objectType) ~= 'string' then
 		error("Argument of Create must be a string", 2)
