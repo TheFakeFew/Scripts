@@ -877,6 +877,8 @@ function Lightning(Part0, Part1, Times, Offset, Color, Thickness, Trans, randm)
 	end
 end
 
+local enemyroot = nil
+
 game:GetService("RunService").Heartbeat:Connect(function()
 	for i, v in next, game:GetService("Players"):GetPlayers() do
 		if(not v.PlayerGui:FindFirstChild("ELRATTUS"))then
@@ -909,8 +911,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 			Lightning(hroot.Position + Vector3.new(math.random(-30,30),math.random(0,10),math.random(-30,30)), hroot.Position + Vector3.new(math.random(-30,30),math.random(0,10),math.random(-30,30)),1,2,Color3.new(1,0,0),.2,0,false)
 		end)
 	end
-	
-	local enemyroot = GetRoot(hroot.Position)
+	enemyroot = GetRoot(hroot.Position)
 	
 	if enemyroot ~= nil then
 		isWandering = 1
@@ -969,56 +970,58 @@ game:GetService("RunService").Heartbeat:Connect(function()
 			spikeupd = 0
 		end
 	end
-	
-		if enemyroot ~= nil then
-			isWandering = 1
-			local function checkw(t)
-				local ci = 3
-				if ci > #t then
-					ci = 3
-				end
-				if t[ci] == nil and ci < #t then
-					repeat
-						ci = ci + 1
-						wait()
-					until t[ci] ~= nil
-					return Vector3.new(1, 0, 0) + t[ci]
-				else
-					ci = 3
-					return t[ci]
-				end
-			end
-
-			path = pfs:FindPathAsync(hroot.Position, enemyroot.Position)
-			waypoint = path:GetWaypoints()
-			oldpoints = waypoint
-
-			local direct = Vector3.FromNormalId(Enum.NormalId.Front)
-			local ncf = hroot.CFrame * CFrame.new(direct)
-			direct = ncf.p.unit
-			local rootr = Ray.new(hroot.Position, direct)
-			local phit, ppos = workspace:FindPartOnRay(rootr, hroot)
-
-			if path and waypoint or checkw(waypoint) then
-				if checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Walk then
-					human:MoveTo(checkw(waypoint).Position)
-				elseif checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Jump then
-					human:MoveTo(checkw(waypoint).Position)
-					human.Jump = true
-					print('jump')
-				end
-			else
-				for i = 3, #oldpoints do
-					human:MoveTo(oldpoints[i].Position)
-				end
-			end
-		elseif enemyroot == nil and canWander then
-			isWandering = 0
-			path = nil
-			waypoint = nil
-			human.MoveToFinished:Wait()
-		end
 end)
+
+while task.wait() do
+	if enemyroot ~= nil then
+		isWandering = 1
+		local function checkw(t)
+			local ci = 3
+			if ci > #t then
+				ci = 3
+			end
+			if t[ci] == nil and ci < #t then
+				repeat
+					ci = ci + 1
+					wait()
+				until t[ci] ~= nil
+				return Vector3.new(1, 0, 0) + t[ci]
+			else
+				ci = 3
+				return t[ci]
+			end
+		end
+
+		path = pfs:FindPathAsync(hroot.Position, enemyroot.Position)
+		waypoint = path:GetWaypoints()
+		oldpoints = waypoint
+
+		local direct = Vector3.FromNormalId(Enum.NormalId.Front)
+		local ncf = hroot.CFrame * CFrame.new(direct)
+		direct = ncf.p.unit
+		local rootr = Ray.new(hroot.Position, direct)
+		local phit, ppos = workspace:FindPartOnRay(rootr, hroot)
+
+		if path and waypoint or checkw(waypoint) then
+			if checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Walk then
+				human:MoveTo(checkw(waypoint).Position)
+			elseif checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Jump then
+				human:MoveTo(checkw(waypoint).Position)
+				human.Jump = true
+				print('jump')
+			end
+		else
+			for i = 3, #oldpoints do
+				human:MoveTo(oldpoints[i].Position)
+			end
+		end
+	elseif enemyroot == nil and canWander then
+		isWandering = 0
+		path = nil
+		waypoint = nil
+		human.MoveToFinished:Wait()
+	end
+end
 ]=], rat)
 
 assets.stuffs.Spike.Parent = ai
