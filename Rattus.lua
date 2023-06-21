@@ -905,9 +905,9 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		sounds[math.random(1,#sounds)]:Play()
 	end
 	if math.random(1,80) == 1 then
-		coroutine.wrap(function()
+		task.spawn(function()
 			Lightning(hroot.Position + Vector3.new(math.random(-30,30),math.random(0,10),math.random(-30,30)), hroot.Position + Vector3.new(math.random(-30,30),math.random(0,10),math.random(-30,30)),1,2,Color3.new(1,0,0),.2,0,false)
-		end)()
+		end)
 	end
 	
 	local enemytorso = GetTorso(hroot.Position)
