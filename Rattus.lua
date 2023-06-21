@@ -52,7 +52,7 @@ Create = setmetatable({}, {__call = function(tb, ...) return Create_PrivImpl(...
 CFuncs = {
 	["Sound"] = {
 		Create = function(id, par, vol, pit) 
-			coroutine.resume(coroutine.create(function()
+			task.spawn(function()
 				local S = Create("Sound"){
 					Volume = vol,
 					Name = "EffectSoundo",
@@ -60,15 +60,15 @@ CFuncs = {
 					SoundId = id,
 					Parent = par or workspace,
 				}
-				wait() 
+				task.wait() 
 				S:play() 
 				game:GetService("Debris"):AddItem(S, 10)
-			end))
+			end)
 		end;
 	};
 	["EchoSound"] = {
 		Create = function(id, par, vol, pit, timepos,delays,echodelay,fedb,dryl) 
-			coroutine.resume(coroutine.create(function()
+			task.spawn(function()
 				local Sas = Create("Sound"){
 					Volume = vol,
 					Name = "EffectSoundo",
@@ -84,10 +84,10 @@ CFuncs = {
 					DryLevel = dryl,
 					Parent = Sas,
 				}
-				wait() 
+				task.wait() 
 				Sas:play() 
 				game:GetService("Debris"):AddItem(Sas, delays)
-			end))
+			end)
 		end;
 	};
 }
@@ -158,7 +158,7 @@ function symbolizeBlink(guipar,size,img,color,bonussize,vol,pit,soundid,spar,rot
 	imgc.Image = "rbxassetid://" ..img
 	local rrot = math.random(1,2)
 	CFuncs["Sound"].Create("rbxassetid://" ..soundid, spar, vol,pit)
-	coroutine.resume(coroutine.create(function()
+	task.spawn(function()
 		for i = 0, 24*delay do
 			task.wait()
 			if rotationenabled == true then
@@ -172,7 +172,7 @@ function symbolizeBlink(guipar,size,img,color,bonussize,vol,pit,soundid,spar,rot
 			imgc.ImageTransparency = imgc.ImageTransparency + 0.04/delay
 		end
 		bgui:Destroy()
-	end))
+	end)
 end
 
 function CreateParta(parent,transparency,reflectance,material,brickcolor)
