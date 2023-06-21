@@ -921,7 +921,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 				local params = RaycastParams.new()
 				params.FilterType = Enum.RaycastFilterType.Blacklist
 				params.FilterDescendantsInstances = {enemytorso.Parent}
-				local rayc = workspace:Raycast(enemytorso.Position,Vector3.new(0,-20,0),params)
+				local rayc = workspace:Raycast(enemytorso.Position+(enemytorso.Parent:FindFirstChildOfClass("Humanoid").MoveDirection*4),Vector3.new(0,-100,0),params)
 				if rayc then
 					local cyl = Instance.new("Part",zombie)
 					cyl.Anchored = true
@@ -933,7 +933,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 					cyl.Material = Enum.Material.Neon
 					cyl.Color = Color3.new(1,0,0)
 					cyl.Transparency = 1
-					coroutine.wrap(function()
+					task.spawn(function()
 						local tw = game:GetService('TweenService'):Create(cyl,TweenInfo.new(.6),{
 							Transparency = 0
 						})
@@ -962,7 +962,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 						tw.Completed:Wait()
 						cyl:Destroy()
 						t:KillOperation()
-					end)()
+					end)
 				end
 			end
 		else
