@@ -970,7 +970,6 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		end
 	end
 	
-	--pcall(function()
 		if enemyroot ~= nil then
 			isWandering = 1
 			local function checkw(t)
@@ -1003,10 +1002,10 @@ game:GetService("RunService").Heartbeat:Connect(function()
 			if path and waypoint or checkw(waypoint) then
 				if checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Walk then
 					human:MoveTo(checkw(waypoint).Position)
-					human.Jump = false
 				elseif checkw(waypoint) ~= nil and checkw(waypoint).Action == Enum.PathWaypointAction.Jump then
 					human:MoveTo(checkw(waypoint).Position)
 					human.Jump = true
+					print('jump')
 				end
 			else
 				for i = 3, #oldpoints do
@@ -1019,7 +1018,6 @@ game:GetService("RunService").Heartbeat:Connect(function()
 			waypoint = nil
 			human.MoveToFinished:Wait()
 		end
-	--end)
 end)
 ]=], rat)
 
