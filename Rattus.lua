@@ -847,14 +847,14 @@ function Lightning(Part0, Part1, Times, Offset, Color, Thickness, Trans, randm)
 		Msh.Offset = Vector3.new(0, 0, 0)
 		Msh.Scale = Vector3.new(0,0,li.Size.Z * 20)
 		if(math.random(1,5) == 5) then
-			coroutine.wrap(function()
+			task.spawn(function()
 				Lightning(li.Position,li.Position+Vector3.new(math.random(-5,5),math.random(-5,5),math.random(-5,5)),Times,Offset,Color,Thickness,Trans,randm)
-			end)()
+			end)
 		end
 		if randm then
 			prt.Color = Color3.new(math.random(),math.random(),math.random())
 		end
-		coroutine.wrap(function()
+		task.spawn(function()
 			local tw = game:GetService('TweenService'):Create(Msh,TweenInfo.new(1),{
 				Scale = Vector3.new(li.Size.X * 20,li.Size.Y * 20, li.Size.Z * 20)
 			})
@@ -872,7 +872,7 @@ function Lightning(Part0, Part1, Times, Offset, Color, Thickness, Trans, randm)
 			}):Play()
 			wait(1)
 			prt:Destroy()
-		end)()
+		end)
 		wait()
 	end
 end
