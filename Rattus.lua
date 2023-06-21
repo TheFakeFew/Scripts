@@ -899,6 +899,8 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	zombie.BillboardGui.TextLabel.TextStrokeColor3 = Color3.new(math.random(),0,0)
 	zombie.BillboardGui.TextLabel.Rotation = math.random(-5,5)
 
+	zombie.Spin.Weld.C1 *= CFrame.Angles(0,math.rad(5),0)
+
 	if math.random(1,200) == 1 then
 		sounds[math.random(1,#sounds)]:Play()
 	end
