@@ -390,7 +390,7 @@ local CFRAMES = {
 local counterdeb = 0
 
 function counter(counterlist)
-	if(tick() - counterdeb) < 3 then
+	if(tick() - counterdeb) < 5 then
 		return
 	end
 	counterdeb = tick()
