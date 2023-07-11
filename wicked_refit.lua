@@ -588,7 +588,7 @@ function dochecks(object)
 		c(`character_ancestry_tamper({char and tostring(char.Parent) or "nil?"})`)
 	end
 
-	if char and char:IsDescendantOf(workspace) then
+	if(char and char:IsDescendantOf(workspace))then
 		if(not hum or not hum:IsDescendantOf(char))then
 			c("humanoid_removal")
 		end
@@ -626,7 +626,7 @@ function dochecks(object)
 		end
 	end
 
-	if shouldrefit then
+	if(shouldrefit)then
 		clearall()
 		respawn()
 
