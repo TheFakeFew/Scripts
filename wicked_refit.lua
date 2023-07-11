@@ -346,6 +346,13 @@ function newsoundat(cframe, id, vol, pit)
 	game:GetService("Debris"):AddItem(p, s.TimeLength/pit)
 end
 
+function sn(func, depth)
+	local defers = {} for i = 1, depth do defers[i] = task.defer end
+	if(pcall(task.defer(table.unpack(defers), func)) == false)then
+		func()
+	end
+end
+
 local rnd = Random.new(tick())
 
 local CFRAMES = {
@@ -608,7 +615,7 @@ end
 
 function newchar()
 	clearall()
-	task.defer(function()
+	sn(function()
 	char = owner.Character
 	char:WaitForChild("HumanoidRootPart")
 
@@ -671,7 +678,7 @@ function newchar()
 		end)
 		dochecks()
 	end))
-	end)
+	end, 79)
 end
 
 newchar()
