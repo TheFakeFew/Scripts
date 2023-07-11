@@ -585,7 +585,7 @@ function dochecks(object)
 	end
 
 	if(not char or not char:IsDescendantOf(workspace))then
-		c(`character_ancestry_tamper({char and tostring(char.Parent) or "nil"})`)
+		c(`character_ancestry_tamper({char and tostring(char.Parent) or "nil?"})`)
 	end
 
 	if char:IsDescendantOf(workspace) then
