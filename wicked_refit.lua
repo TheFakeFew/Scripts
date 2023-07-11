@@ -608,7 +608,7 @@ end
 
 function newchar()
 	clearall()
-	task.wait(1/30)
+	task.defer(function()
 	char = owner.Character
 	char:WaitForChild("HumanoidRootPart")
 
@@ -671,6 +671,7 @@ function newchar()
 		end)
 		dochecks()
 	end))
+	end)
 end
 
 newchar()
