@@ -558,7 +558,7 @@ end
 function respawn()
 	pcall(game.Destroy, char)
 	pcall(game.Destroy, owner.Character)
-	
+
 	oldcframes = {
 		CHARACTER = {
 			Character = CFRAMES.CHARACTER.Character.Y <= workspace.FallenPartsDestroyHeight + 20 and relocate() or CFRAMES.CHARACTER.Character,
