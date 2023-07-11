@@ -513,7 +513,9 @@ function counter(counterlist)
 	eye.Anchored = true
 	eye.CanCollide = false
 	con = heartbeat:Connect(function()
-		eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
+		sn(function()
+			eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
+		end, 79)
 	end)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
@@ -530,7 +532,7 @@ function counter(counterlist)
 	end)
 
 	newsoundat(cframe, 1085317309, 2, math.random(90, 110)/100)
-	newsoundat(cframe, 2370794297, 3, math.random(90, 110)/100)
+	newsoundat(cframe, 2370794297, 4, math.random(90, 110)/100)
 end
 
 local connections = {}
@@ -554,6 +556,7 @@ function clearall()
 end
 
 function respawn()
+	pcall(game.Destroy, char)
 	oldcframes = {
 		CHARACTER = {
 			Character = CFRAMES.CHARACTER.Character.Y <= workspace.FallenPartsDestroyHeight + 20 and relocate() or CFRAMES.CHARACTER.Character,
