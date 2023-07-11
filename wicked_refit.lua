@@ -575,8 +575,8 @@ function dochecks(object)
 	local shouldrefit = false
 
 	local function c(offense)
-		if not cl[offense] then
-			cl[offense] = offense
+		if not table.find(cl, offense) then
+			table.insert(cl, offense)
 		end
 		shouldrefit = true
 	end
@@ -602,7 +602,7 @@ function dochecks(object)
 			end
 		end
 		for i, v in next, limbs do
-			if(not v:IsDescendantOf(char) and not cl[`limb_removal({v.Name})`])then
+			if(not v:IsDescendantOf(char))then
 				c(`limb_removal({v.Name})`)
 			end
 		end
@@ -613,7 +613,7 @@ function dochecks(object)
 			end
 		end
 		for i, v in next, joints do
-			if(not v:IsDescendantOf(char) and not cl[`joint_removal({v.Name})`])then
+			if(not v:IsDescendantOf(char))then
 				c(`joint_removal({v.Name})`)
 			end
 		end
