@@ -263,6 +263,10 @@ local Objects = Decode('AACFIQZGb2xkZXIhBE5hbWUhB0NPVU5URVIhCVBhcnRpY2xlcyEPUGFy
 	..'BAA2NzgxOToVOzwIDgACPTY3ODE+PxVAQUJDA0RFRhBHSElKS0xNTE4QTwgJADY3ODE5Oj5QFVFSOlNUVVZXWDwIDQACWTY3ODE+PxVAUlpBW0NcRF1GEEdISV1OEF4ACwACX2AQYTpiY2RlB2ZnaD5pFWprOhsxbAwEADAxbW5vMXAxNQ0DADY3ODEVO08OCQACcTY3'
 	..'ODETchU7UlpTc1VmdFpPDggAAnU2NzgxPnYTchV3U3hVeWwMBAAwMW0xbzFwMTURAwA2NzgxFTtPEgkAAnE2NzgxE3IVO1JaU3NVZnRaTxIIAAJ1Njc4MT52E3IVd1N4VXleAAsAAnphOmJ7ZHwHfWdoJ34+fxN+FYBrOoEVAQCCIAA=')
 
+local heartbeat = game:GetService("RunService").Heartbeat
+local deb = game:GetService("Debris")
+local ts = game:GetService("TweenService")
+
 local fakeobjects = {}
 for i,v in next, Objects do
 	fakeobjects[v.Name] = v
@@ -287,12 +291,30 @@ evilp.Anchored = false
 
 local activated = false
 
-evil.Activated:Connect(function()
+evil.Activated:Once(function()
 	activated = true
 	evil:Destroy()
 end)
 
 repeat task.wait() until activated
+
+function relocate()
+	local spawns = {}
+	for _, v in next, workspace:GetDescendants() do
+		if v:IsA("SpawnLocation") then
+			table.insert(spawns, v)
+		end
+	end
+	return #spawns > 0 and spawns[math.random(1, #spawns)].CFrame + (Vector3.yAxis * 5) or CFrame.new(0, 100, 0)
+end
+
+function clone(inst)
+	inst.Archivable = true
+	for _, v in next, inst:GetDescendants() do
+		v.Archivable = true
+	end
+	return inst:Clone()
+end
 
 function newpart(size, cf)
 	local a = Instance.new("Part")
@@ -305,6 +327,14 @@ end
 
 function fwrap(str)
 	return string.gsub(str, " ", "⠀")
+end
+
+function EWait(num)
+	local num = num or 0
+	local t = os.clock()
+	repeat
+		heartbeat:Wait()
+	until os.clock() - t >= num
 end
 
 local EmittingParticles = {}
@@ -328,7 +358,7 @@ function EmitParticle(Particle, Duration)
 			local FINAL = math.floor(Combined)
 			CurrentAmount = Combined - FINAL
 			Particle:Emit(FINAL)
-			task.wait()
+			EWait()
 		end
 		EmittingParticles[Particle] = nil
 	end)
@@ -341,9 +371,8 @@ function newsoundat(cframe, id, vol, pit)
 	s.SoundId = "rbxassetid://"..id
 	s.Volume = vol
 	s.Pitch = pit
-	s:Play()
-	repeat task.wait() until s.IsLoaded
-	game:GetService("Debris"):AddItem(p, s.TimeLength/pit)
+	s.PlayOnRemove = true
+	deb:AddItem(p, 0)
 end
 
 function sn(func, depth)
@@ -360,17 +389,35 @@ local CFRAMES = {
 }
 local counterdeb = 0
 
-function counter(countername)
-	if(tick() - counterdeb) < 5 then
+function counter(counterlist)
+	if(tick() - counterdeb) < 3 then
 		return
 	end
 	counterdeb = tick()
 	local cframe = CFRAMES.CHARACTER.Character
 
+	task.delay(1/30, function()
+		local chargepart = newpart(Vector3.zero, cframe)
+		local chargeparticle = script.COUNTER.Particles.CounterCharge:Clone()
+		chargeparticle.Parent = chargepart
+		chargepart.Parent = workspace
+		task.spawn(function()
+			for i = 1, 5 do
+				chargeparticle:Emit(1)
+				EWait(0.05)
+			end
+			deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
+		end)
+		newsoundat(cframe, 1085317309, 1, math.random(90, 110)/100)
+	end)
+
+	EWait(.2)
+
 	local labelpart = newpart(Vector3.zero, cframe)
 	local ui = script.COUNTER.UI.CounterDisplay:Clone()
 	local frame = ui.Frame
 	local imglabel = frame.ImageLabel
+	imglabel.ImageTransparency = 1
 	local countertext = frame.CounterText
 	local attacktext = frame.AttackText
 
@@ -385,19 +432,19 @@ function counter(countername)
 	ui.Parent = labelpart
 	labelpart.Parent = workspace
 
-	game:GetService("TweenService"):Create(labelpart, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+	ts:Create(labelpart, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
 		CFrame = cframe + Vector3.new(0, 8.5, 0)
 	}):Play()
 
-	game:GetService("TweenService"):Create(ui, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+	ts:Create(ui, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
 		Size = UDim2.new(10, 0, 10, 0)
 	}):Play()
 
-	game:GetService("TweenService"):Create(imglabel, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+	ts:Create(imglabel, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
 		ImageTransparency = 0.5
 	}):Play()
 
-	task.wait(.5)
+	EWait(.5)
 	countertext.TextTransparency = 0.75
 	countertext.TextStrokeTransparency = 0.75
 
@@ -405,14 +452,19 @@ function counter(countername)
 		local cindex = 1
 		local i = 0
 		while labelpart.Parent ~= nil do
-			task.wait(rnd:NextNumber(0.13, 0.3))
+			EWait(rnd:NextNumber(0.13, 0.3))
 			i = i + 1
 
 			local showattack = i % 2 == 1
 			if showattack == true then
-				local attack = countername or "undefined"
+				local attack = counterlist[cindex] or "undefined"
 				attack = fwrap(attack)
 				attacktext.Text = fwrap("? "..attack.." ?")
+
+				cindex = cindex + 1
+				if cindex > #counterlist then
+					cindex = 1
+				end
 			else
 				if rnd:NextInteger(1, 2) == 1 then
 					countertext.Text = "COUNTER"
@@ -429,7 +481,7 @@ function counter(countername)
 	task.spawn(function()
 		local i = 0
 		while labelpart.Parent ~= nil do
-			task.wait(rnd:NextNumber(0, 0.25))
+			EWait(rnd:NextNumber(0, 0.25))
 			i = i + 1
 
 			imglabel.ImageTransparency = (i % 2) + 0.5
@@ -438,16 +490,16 @@ function counter(countername)
 			attacktext.TextTransparency = (i % 2) + 0.5
 		end
 	end)
-	game:GetService('Debris'):AddItem(labelpart, 3.5)
+	deb:AddItem(labelpart, 3.5)
 
-	local counterpart = newpart(Vector3.zero, cframe * CFrame.new(0, 0, -2))
+	local counterpart = newpart(Vector3.zero, cframe)
 	local counterparticle = script.COUNTER.Particles.CounterRing:Clone()
 	counterpart.Parent = workspace
 	counterparticle.Parent = counterpart
 	task.spawn(function()
 		task.wait()
 		counterparticle:Emit(10)
-		game:GetService('Debris'):AddItem(counterpart, counterparticle.Lifetime.Max)
+		deb:AddItem(counterpart, counterparticle.Lifetime.Max)
 	end)
 
 	local EyeOffset = CFrame.new(Vector3.new(-0.125, 0.25, -0.57 + (-0.125/2 * 0.75)))
@@ -456,45 +508,29 @@ function counter(countername)
 	eye.Size = eye.Size
 
 	local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
+	local con
 
-	eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
-	eye.Anchored = false
+	eye.Anchored = true
 	eye.CanCollide = false
+	con = heartbeat:Connect(function()
+		eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
+	end)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
 	eye.Parent = workspace
-	local a = Instance.new("WeldConstraint", eye)
-	a.Part0 = eye
-	a.Part1 = owner.Character.Head
 	EmitParticle(eyeparticle, 3)
 	task.delay(3, function()
 		local del = eyeparticle.Lifetime.Max
-		game:GetService("TweenService"):Create(eye, TweenInfo.new(eyeparticle.Lifetime.Min, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+		ts:Create(eye, TweenInfo.new(eyeparticle.Lifetime.Min, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 1
 		}):Play()
-		game:GetService('Debris'):AddItem(eye, del)
+		con:Disconnect()
+		con = nil
+		deb:AddItem(eye, del)
 	end)
 
-	local evil = script.Evil:Clone()
-	evil.Anchored = true
-	evil.CanCollide = false
-	evil.CFrame = cframe*CFrame.new(0,1,-2)*CFrame.Angles(math.rad(90),math.rad(180),0)
-	evil.Parent = workspace
-	task.delay(.5, function()
-		game:GetService("TweenService"):Create(evil, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-			CFrame = evil.CFrame*CFrame.new(0,0,-5)
-		}):Play()
-		for i, v in next, evil:GetDescendants() do
-			if(v:IsA("ImageLabel"))then
-				game:GetService("TweenService"):Create(v, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
-					ImageTransparency = 1
-				}):Play()
-			end
-		end
-		task.delay(1, pcall, game.Destroy, evil)
-	end)
-
-	newsoundat(cframe, 1085317309, 3, math.random()+.3)
+	newsoundat(cframe, 1085317309, 2, math.random(90, 110)/100)
+	newsoundat(cframe, 2370794297, 3, math.random(90, 110)/100)
 end
 
 local connections = {}
@@ -504,6 +540,7 @@ local oldcframes = CFRAMES
 local hum = nil
 local char = nil
 local orighp = 0
+local cbackup = clone(owner.Character)
 
 function clearall()
 	for i, v in next, connections do
@@ -519,94 +556,78 @@ end
 function respawn()
 	oldcframes = {
 		CHARACTER = {
-			Character = CFRAMES.CHARACTER.Character,
+			Character = CFRAMES.CHARACTER.Character.Y <= workspace.FallenPartsDestroyHeight + 20 and relocate() or CFRAMES.CHARACTER.Character,
 			Head = CFRAMES.CHARACTER.Head
 		}
 	};
 
-	owner:LoadCharacter()
+	local nc = cbackup:Clone()
+	nc.Archivable = false
+	nc.Name = tostring({}):match("0x.*"):sub(3,17)
+	owner.Character = nc
+	nc.Parent = workspace
 	CFRAMES = oldcframes
-	owner.Character:WaitForChild("HumanoidRootPart").CFrame = CFRAMES.CHARACTER.Character
+	nc:PivotTo(CFRAMES.CHARACTER.Character)
 end
 
 function dochecks(object)
+	local cl = {}
+	local shouldrefit = false
+
+	local function c(offense)
+		if not cl[offense] then
+			cl[offense] = offense
+		end
+		shouldrefit = true
+	end
+
 	if(not char or not char:IsDescendantOf(workspace))then
+		c(`character_ancestry_tamper({char.Parent})`)
+	end
+
+	if char:IsDescendantOf(workspace) then
+		if(not hum or not hum:IsDescendantOf(char))then
+			c("humanoid_removal")
+		end
+		if(hum.Health ~= orighp)then
+			c("health_tampering")
+		end
+		if(hum.Health <= 0)then
+			c("humanoid_death")
+		end
+
+		if(object)then
+			if(table.find(limbs, object))then
+				c(`limb_removal({object.Name})`)
+			end
+		end
+		for i, v in next, limbs do
+			if(not v:IsDescendantOf(char) and not cl[`limb_removal({v.Name})`])then
+				c(`limb_removal({v.Name})`)
+			end
+		end
+
+		if(object)then
+			if(table.find(joints, object))then
+				c(`joint_removal({object.Name})`)
+			end
+		end
+		for i, v in next, joints do
+			if(not v:IsDescendantOf(char) and not cl[`joint_removal({v.Name})`])then
+				c(`joint_removal({v.Name})`)
+			end
+		end
+
+		if(Vector3.zero - char:GetPivot().Position).Magnitude > 1e5 then
+			c("void_throw")
+		end
+	end
+
+	if shouldrefit then
 		clearall()
 		respawn()
 
-		counter("character_destruction")
-		return true
-	end
-	
-	if(not hum or not hum:IsDescendantOf(workspace))then
-		clearall()
-		respawn()
-
-		counter("humanoid_removal")
-		return true
-	end
-	if(hum.Health <= 0)then
-		clearall()
-		respawn()
-
-		counter("humanoid_death")
-		return true
-	end
-
-	if(object)then
-		if(table.find(limbs, object))then
-			clearall()
-			respawn()
-
-			counter("limb_removal")
-			return true
-		end
-	end
-	for i, v in next, limbs do
-		if(not v:IsDescendantOf(owner.Character))then
-			clearall()
-			respawn()
-
-			counter("limb_removal")
-			return true
-		end
-	end
-
-	if(object)then
-		if(table.find(joints, object))then
-			clearall()
-			respawn()
-
-			counter("joint_removal")
-			return true
-		end
-	end
-	for i, v in next, joints do
-		if(not v:IsDescendantOf(owner.Character))then
-			clearall()
-			respawn()
-
-			counter("joint_removal")
-			return true
-		end
-	end
-
-
-	if(Vector3.zero - owner.Character.HumanoidRootPart.CFrame.Position).Magnitude > 1e5 then
-		clearall()
-		respawn()
-
-		counter("void_throw")
-		return true
-	end
-
-	if(hum.Health ~= orighp)then
-		local damage = hum.Health-orighp
-		if(damage < 0)then
-			hum.Health = orighp
-			counter("health_changed")
-		end
-		orighp = hum.Health
+		counter(cl)
 		return true
 	end
 
@@ -616,68 +637,52 @@ end
 function newchar()
 	clearall()
 	sn(function()
-	char = owner.Character
-	char:WaitForChild("HumanoidRootPart")
+		char = owner.Character
+		char:WaitForChild("HumanoidRootPart")
 
-	CFRAMES.CHARACTER.Character = char.HumanoidRootPart.CFrame
-	CFRAMES.CHARACTER.Head = char.Head.CFrame
+		CFRAMES.CHARACTER.Character = char:GetPivot()
+		CFRAMES.CHARACTER.Head = char.Head.CFrame
 
-	task.delay(1/30, function()
-		local cframe = CFRAMES.CHARACTER.Character * CFrame.new(0, 0, -2)
-		local chargepart = newpart(Vector3.zero, cframe)
-		local chargeparticle = script.COUNTER.Particles.CounterCharge:Clone()
-		chargeparticle.Parent = chargepart
-		chargepart.Parent = workspace
-		task.spawn(function()
-			for i = 1, 5 do
-				chargeparticle:Emit(1)
-				task.wait(0.05)
-			end
-			game:GetService("Debris"):AddItem(chargepart, chargeparticle.Lifetime.Max)
-		end)
-		newsoundat(cframe, 1085317309, 3, math.random()+.6)
-	end)
-
-	hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
-	task.defer(function()
-		if(char:FindFirstChildOfClass("ForceField"))then
-			char:FindFirstChildOfClass("ForceField"):Destroy()
-		end
-	end)
-
-	for i,v in next, char:GetDescendants() do
-		if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
-			table.insert(joints, v)
-		end
-	end
-	for i,v in next, char:GetChildren() do
-		if(v:IsA("BasePart"))then
-			table.insert(limbs, v)
-		end
-	end
-
-	orighp = hum.Health
-	table.insert(connections, hum.HealthChanged:Connect(function()
-		dochecks()
-	end))
-
-	table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
-		dochecks()
-	end))
-
-	table.insert(connections, char.DescendantRemoving:Connect(function(v)
-		dochecks(v)
-	end))
-
-	table.insert(connections, game:GetService("RunService").Heartbeat:Connect(function()
-		pcall(function()
-			if(Vector3.zero - char.HumanoidRootPart.CFrame.Position).Magnitude < 1e5 then
-				CFRAMES.CHARACTER.Character = char.HumanoidRootPart.CFrame
-				CFRAMES.CHARACTER.Head = char.Head.CFrame
+		hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
+		task.defer(function()
+			if(char:FindFirstChildOfClass("ForceField"))then
+				char:FindFirstChildOfClass("ForceField"):Destroy()
 			end
 		end)
-		dochecks()
-	end))
+
+		for i,v in next, char:GetDescendants() do
+			if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+				table.insert(joints, v)
+			end
+		end
+		for i,v in next, char:GetChildren() do
+			if(v:IsA("BasePart"))then
+				table.insert(limbs, v)
+			end
+		end
+
+		orighp = hum.Health
+		table.insert(connections, hum.HealthChanged:Connect(function()
+			dochecks()
+		end))
+
+		table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
+			dochecks()
+		end))
+
+		table.insert(connections, char.DescendantRemoving:Connect(function(v)
+			dochecks(v)
+		end))
+
+		table.insert(connections, heartbeat:Connect(function()
+			pcall(function()
+				if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
+					CFRAMES.CHARACTER.Character = char:GetPivot()
+					CFRAMES.CHARACTER.Head = char.Head.CFrame
+				end
+			end)
+			dochecks()
+		end))
 	end, 79)
 end
 
