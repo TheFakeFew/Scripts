@@ -329,13 +329,7 @@ function fwrap(str)
 	return string.gsub(str, " ", "⠀")
 end
 
-function EWait(num)
-	local num = num or 0
-	local t = os.clock()
-	repeat
-		heartbeat:Wait()
-	until os.clock() - t >= num
-end
+local EWait = task.wait
 
 local EmittingParticles = {}
 function EmitParticle(Particle, Duration)
