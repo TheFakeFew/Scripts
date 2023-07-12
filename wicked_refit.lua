@@ -819,7 +819,7 @@ function dochecks(object)
 		if(not hum or not hum:IsDescendantOf(char))then
 			c("humanoid_removal")
 		end
-		if(hum.Health ~= orighp)then
+		if(hum.Health < orighp)then
 			c("health_tampering")
 		end
 		if(hum.Health <= 0)then
