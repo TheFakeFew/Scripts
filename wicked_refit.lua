@@ -506,9 +506,6 @@ function counter(counterlist)
 
 	eye.Anchored = false
 	eye.CanCollide = false
-	con = heartbeat:Connect(function()
-		eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
-	end)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
 	eye.Parent = char
@@ -521,7 +518,6 @@ function counter(counterlist)
 		ts:Create(eye, TweenInfo.new(eyeparticle.Lifetime.Min, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
 			Transparency = 1
 		}):Play()
-		con:Disconnect()
 		con = nil
 		deb:AddItem(eye, del)
 	end)
