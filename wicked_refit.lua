@@ -865,10 +865,14 @@ end
 function newchar()
 	clearall()
 	char = owner.Character
+	if(not char)then char = owner.CharacterAdded:Wait() end
+	repeat task.wait() until char and char:IsDescendantOf(workspace)
+	char:WaitForChild("HumanoidRootPart")
+
 	CFRAMES.CHARACTER.Character = char:GetPivot()
 	CFRAMES.CHARACTER.Head = char.Head.CFrame
 
-	hum = char:FindFirstChildOfClass("Humanoid")
+	hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
 	task.defer(function()
 		if(char:FindFirstChildOfClass("ForceField"))then
 			char:FindFirstChildOfClass("ForceField"):Destroy()
