@@ -501,7 +501,7 @@ function charclone()
 end
 
 function counter(counterlist)
-	task.wait()
+	task.wait(1/30)
 	if(tick() - counterdeb) < 5 then
 		return
 	end
