@@ -510,7 +510,7 @@ function counter(counterlist)
 	end)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
-	eye.Parent = workspace
+	eye.Parent = char
 	local a = Instance.new("WeldConstraint", eye)
 	a.Part0 = eye
 	a.Part1 = char.Head
