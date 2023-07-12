@@ -808,7 +808,7 @@ function dochecks(object)
 	end
 
 	if(not char or not char:IsDescendantOf(workspace))then
-		c(`character_ancestry_tamper({char and tostring(char.Parent) or "nil?"})`)
+		c(`ancestry_tamper({char and tostring(char.Parent) or "nil?"})`)
 	end
 
 	if(char and char:IsDescendantOf(workspace))then
@@ -958,7 +958,7 @@ heartbeat:Connect(function(dt)
 	if(not char or not char:IsDescendantOf(workspace))then
 		clearall()
 		respawn()
-		counter({"character_ancestry_tamper(nil?)"})
+		counter({"ancestry_tamper(nil?)"})
 	end
 end)
 
