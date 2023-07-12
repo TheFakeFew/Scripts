@@ -837,7 +837,7 @@ function dochecks(object)
 				physicstamper = true
 			end
 		end
-		if(numofdescc ~= numofdesc)then
+		if(numofdescc > numofdesc)then
 			c("intrusion")
 		end
 		if(physicstamper)then
