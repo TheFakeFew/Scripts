@@ -298,6 +298,11 @@ end)
 
 repeat task.wait() until activated
 
+local rnd = Random.new(tick())
+local CFRAMES = {
+	CHARACTER = {}
+}
+local counterdeb = 0
 local connections = {}
 local joints = {}
 local limbs = {}
@@ -377,13 +382,6 @@ function newsoundat(cframe, id, vol, pit)
 	s.PlayOnRemove = true
 	deb:AddItem(p, 0)
 end
-
-local rnd = Random.new(tick())
-
-local CFRAMES = {
-	CHARACTER = {}
-}
-local counterdeb = 0
 
 function counter(counterlist)
 	if(tick() - counterdeb) < 5 then
