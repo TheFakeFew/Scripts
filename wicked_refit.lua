@@ -822,7 +822,7 @@ function dochecks(object)
 		local numofdescc = 0
 		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or (v.Name == "Eye" and v:IsA("BasePart")) or v:FindFirstAncestor("Eye") or (v.Name == "Broom" and v:IsA("BasePart")) or v:FindFirstAncestor("Broom"))then
+			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
 				continue
 			end
 			numofdescc = numofdescc + 1
