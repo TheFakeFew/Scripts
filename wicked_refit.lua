@@ -503,7 +503,7 @@ function counter(counterlist)
 	local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
 	local con
 
-	eye.Anchored = true
+	eye.Anchored = false
 	eye.CanCollide = false
 	con = heartbeat:Connect(function()
 		eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
@@ -511,6 +511,9 @@ function counter(counterlist)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
 	eye.Parent = workspace
+	local a = Instance.new("WeldConstraint", eye)
+	a.Part0 = eye
+	a.Part1 = char.Head
 	EmitParticle(eyeparticle, 3)
 	task.delay(3, function()
 		local del = eyeparticle.Lifetime.Max
