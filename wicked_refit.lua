@@ -484,7 +484,7 @@ function charclone()
 				if(not vv:IsA("DataModelMesh") and not vv:IsA("BasePart"))then
 					pcall(game.Destroy, vv)
 				elseif(vv:IsA("DataModelMesh"))then
-					v.TextureID = ""
+					vv.TextureId = ""
 				end
 			end
 			a.Material = Enum.Material.Neon
