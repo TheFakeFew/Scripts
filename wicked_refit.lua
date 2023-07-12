@@ -666,7 +666,6 @@ function counter(counterlist)
 		local cindex = 1
 		local i = 0
 		while labelpart.Parent ~= nil do
-			EWait(rnd:NextNumber(0.13, 0.3))
 			i = i + 1
 
 			local showattack = i % 2 == 1
@@ -689,6 +688,7 @@ function counter(counterlist)
 
 			countertext.Visible = not showattack
 			attacktext.Visible = showattack
+			EWait(rnd:NextNumber(0.25, 0.4))
 		end
 	end)
 
