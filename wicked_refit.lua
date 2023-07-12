@@ -484,7 +484,7 @@ function charclone()
 				if(not vv:IsA("DataModelMesh") and not vv:IsA("BasePart"))then
 					pcall(game.Destroy, vv)
 				elseif(vv:IsA("DataModelMesh"))then
-					v.TextureId = ""
+					v.TextureID = ""
 				end
 			end
 			a.Material = Enum.Material.Neon
@@ -763,7 +763,6 @@ function clearall()
 end
 
 function remakechar()
-	print("char remake")
 	local nc = cbackup:Clone()
 	pcall(function()
 		nc.Archivable = false
@@ -827,7 +826,7 @@ function dochecks(object)
 		local numofdescc = 0
 		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
+			if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
 				continue
 			end
 			numofdescc = numofdescc + 1
@@ -836,7 +835,6 @@ function dochecks(object)
 			end
 		end
 		if(numofdescc > numofdesc)then
-			print(object)
 			c("intrusion")
 		end
 		if(physicstamper)then
@@ -901,7 +899,7 @@ function newchar()
 		end
 	end)
 	for i, v in next, char:GetDescendants() do
-		if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
+		if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
 			continue
 		end
 		numofdesc = numofdesc + 1
