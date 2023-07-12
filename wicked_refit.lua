@@ -298,6 +298,15 @@ end)
 
 repeat task.wait() until activated
 
+local connections = {}
+local joints = {}
+local limbs = {}
+local oldcframes = CFRAMES
+local hum = nil
+local char = nil
+local orighp = 0
+local cbackup = clone(owner.Character)
+
 function relocate()
 	local spawns = {}
 	for _, v in next, workspace:GetDescendants() do
@@ -522,15 +531,6 @@ function counter(counterlist)
 	newsoundat(cframe, 1085317309, 2, math.random(90, 110)/100)
 	newsoundat(cframe, 2370794297, 4, math.random(90, 110)/100)
 end
-
-local connections = {}
-local joints = {}
-local limbs = {}
-local oldcframes = CFRAMES
-local hum = nil
-local char = nil
-local orighp = 0
-local cbackup = clone(owner.Character)
 
 function clearall()
 	for i, v in next, connections do
