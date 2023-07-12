@@ -556,6 +556,7 @@ function counter(counterlist)
 
 	task.spawn(pcall, function()
 		if(hum.RigType == Enum.HumanoidRigType.R6)then
+			NLS([[for i, v in next, owner.Character:FindFirstChildOfClass("Humanoid").Animator:GetPlayingAnimationTracks() do v:Stop() end]], owner.PlayerGui)
 			stopAnims()
 			hum.WalkSpeed = 0
 			local broom = script.Broom:Clone()
