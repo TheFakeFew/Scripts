@@ -730,7 +730,6 @@ function counter(counterlist)
 		local eye = script.Eye:Clone()
 		eye.Color = Color3.new(1, 1, 1)
 		eye.Size = eye.Size
-		eye.Name = "Wicked_Eye"
 
 		local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
 		eye.Anchored = false
@@ -832,7 +831,7 @@ function dochecks(object)
 		local numofdescc = 0
 		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")) or v.Parent.Name == "Wicked_Eye" or (v.Name == "Broom" and v:IsA("BasePart")) or v.Parent.Name == "Broom")then
+			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or (v.Name == "Eye" and v:IsA("BasePart")) or v:FindFirstAncestor("Eye") or (v.Name == "Broom" and v:IsA("BasePart")) or v.Parent.Name == "Broom")then
 				continue
 			end
 			numofdescc = numofdescc + 1
