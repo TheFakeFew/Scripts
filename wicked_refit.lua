@@ -298,6 +298,14 @@ end)
 
 repeat task.wait() until activated
 
+function clone(inst)
+	inst.Archivable = true
+	for _, v in next, inst:GetDescendants() do
+		v.Archivable = true
+	end
+	return inst:Clone()
+end
+
 local rnd = Random.new(tick())
 local CFRAMES = {
 	CHARACTER = {}
@@ -320,14 +328,6 @@ function relocate()
 		end
 	end
 	return #spawns > 0 and spawns[math.random(1, #spawns)].CFrame + (Vector3.yAxis * 5) or CFrame.new(0, 100, 0)
-end
-
-function clone(inst)
-	inst.Archivable = true
-	for _, v in next, inst:GetDescendants() do
-		v.Archivable = true
-	end
-	return inst:Clone()
 end
 
 function newpart(size, cf)
