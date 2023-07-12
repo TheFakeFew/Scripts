@@ -880,7 +880,9 @@ function newchar()
 	char = owner.Character
 	numofdesc = 0
 	if(not char)then char = owner.CharacterAdded:Wait() end
-	repeat task.wait() until char and char:IsDescendantOf(workspace)
+	if(not char or not char:IsDescendantOf(workspace))then
+		repeat task.wait() until char and char:IsDescendantOf(workspace)
+	end
 	char:WaitForChild("HumanoidRootPart")
 
 	CFRAMES.CHARACTER.Character = char:GetPivot()
