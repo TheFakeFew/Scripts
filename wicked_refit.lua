@@ -506,11 +506,11 @@ function counter(counterlist)
 	eye.CanCollide = false
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
-	eye.Parent = char
+	eye.Parent = workspace
 	eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
 	local a = Instance.new("WeldConstraint", eye)
 	a.Part0 = eye
-	a.Part1 = char:FindFirstChildOfClass("Head")
+	a.Part1 = char and char:FindFirstChildOfClass("Head") or nil
 	EmitParticle(eyeparticle, 3)
 	task.delay(3, function()
 		local del = eyeparticle.Lifetime.Max
