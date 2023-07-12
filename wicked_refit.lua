@@ -513,15 +513,6 @@ function counter(counterlist)
 	local origc0s = {}
 
 	local function stopAnims()
-		task.spawn(function()
-			NLS([[
-	    		local chr = owner.Character
-	    		local hum = chr:FindFirstChildOfClass("Humanoid")
-	    		for i,v in next, hum.Animator:GetPlayingAnimationTracks() do
-	    			v:Stop()
-	    		end
-    		]], owner.PlayerGui)
-		end)
 		for i,v in next, anims do
 			pcall(function()
 				task.cancel(v)
@@ -831,7 +822,7 @@ function dochecks(object)
 		local numofdescc = 0
 		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or (v.Name == "Eye" and v:IsA("BasePart")) or v:FindFirstAncestor("Eye") or (v.Name == "Broom" and v:IsA("BasePart")) or v.Parent.Name == "Broom")then
+			if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or (v.Name == "Eye" and v:IsA("BasePart")) or v:FindFirstAncestor("Eye") or (v.Name == "Broom" and v:IsA("BasePart")) or v:FindFirstAncestor("Broom"))then
 				continue
 			end
 			numofdescc = numofdescc + 1
