@@ -483,6 +483,8 @@ function charclone()
 			for i, vv in next, a:GetDescendants() do
 				if(not vv:IsA("DataModelMesh") and not vv:IsA("BasePart"))then
 					pcall(game.Destroy, vv)
+				elseif(vv:IsA("DataModelMesh"))then
+					v.TextureId = ""
 				end
 			end
 			a.Material = Enum.Material.Neon
@@ -562,7 +564,6 @@ function counter(counterlist)
 			NLS([[for i, v in next, owner.Character:FindFirstChildOfClass("Humanoid").Animator:GetPlayingAnimationTracks() do v:Stop() end]], owner.PlayerGui)
 			stopAnims()
 			hum.WalkSpeed = 0
-			task.wait(.1)
 			local broom = script.Broom:Clone()
 			broom.Parent = char
 			broom.Motor6D.Part0 = char["Left Arm"]
@@ -762,6 +763,7 @@ function clearall()
 end
 
 function remakechar()
+	print("char remake")
 	local nc = cbackup:Clone()
 	pcall(function()
 		nc.Archivable = false
