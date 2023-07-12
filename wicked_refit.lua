@@ -268,7 +268,7 @@ local Objects = Decode('AACXIQZGb2xkZXIhBE5hbWUhB0NPVU5URVIhCVBhcnRpY2xlcyEPUGFy
 	..'ZGUKBzdmEGdoPmkVams6bAwEAG1ub3BxcnMSdAwBAHV2XgALAAJ4eRBgOmF6Y3sHfGdoPn0Vfms6GzF/DwQAMDGAgYIxgzE1EAMANjc4MRU7TxEJAAKENjc4MROFFTtSWlOGVXyHWk8RCAACiDY3ODE+iROFFYpTi1WMfw8EADAxgDGCMYMxNRQDADY3ODEVO08VCQAC'
 	..'hDY3ODEThRU7UlpThlV8h1pPFQgAAog2NzgxPokThRWKU4tVjF4ACwACjWA6YY5jjweQZ2gnkT6SE5EVk2s6bBgBAHMgAQ53DA==')
 
-local heartbeat = game:GetService("RunService").Heartbeat
+local heartbeat = game:GetService("RunService").PostSimulation
 local deb = game:GetService("Debris")
 local ts = game:GetService("TweenService")
 
@@ -569,7 +569,7 @@ function counter(counterlist)
 			local broom = script.Broom:Clone()
 			broom.Parent = char
 			broom.Motor6D.Part0 = char["Left Arm"]
-			
+
 			local bv = Instance.new("BodyVelocity", char.HumanoidRootPart)
 			bv.Velocity = -char.HumanoidRootPart.CFrame.LookVector*7
 			bv.MaxForce = Vector3.new(99e9, 99e9, 99e9)
@@ -891,7 +891,7 @@ function newchar()
 	end
 	char:WaitForChild("HumanoidRootPart")
 
-	CFRAMES.CHARACTER.Character = char:GetPivot()
+	CFRAMES.CHARACTER.Character = char.HumanoidRootPart.CFrame
 	CFRAMES.CHARACTER.Head = char.Head.CFrame
 
 	hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
@@ -942,8 +942,13 @@ function newchar()
 	table.insert(connections, heartbeat:Connect(function()
 		pcall(function()
 			if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
-				CFRAMES.CHARACTER.Character = char:GetPivot()
-				CFRAMES.CHARACTER.Head = char.Head.CFrame
+				local param = RaycastParams.new()
+				param.FilterDescendantsInstances = {char}
+				local ray = workspace:Raycast(char.HumanoidRootPart.Position, Vector3.new(0,-4,0), param)
+				if(ray)then
+					CFRAMES.CHARACTER.Character = char.HumanoidRootPart.CFrame
+					CFRAMES.CHARACTER.Head = char.Head.CFrame
+				end
 			end
 		end)
 		dochecks()
