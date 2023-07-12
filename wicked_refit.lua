@@ -501,7 +501,7 @@ function charclone()
 end
 
 function counter(counterlist)
-	task.wait(1)
+	task.wait()
 	if(tick() - counterdeb) < 5 then
 		return
 	end
@@ -898,7 +898,7 @@ function newchar()
 		end
 	end)
 	for i, v in next, char:GetDescendants() do
-		if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance"))then
+		if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
 			continue
 		end
 		numofdesc = numofdesc + 1
