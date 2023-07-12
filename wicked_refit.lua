@@ -563,6 +563,8 @@ function respawn()
 	owner.Character = nc
 	char = nc
 	nc.Parent = workspace
+	owner.Character = nc
+	char = nc
 	CFRAMES = oldcframes
 	nc:PivotTo(CFRAMES.CHARACTER.Character)
 end
