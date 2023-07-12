@@ -557,12 +557,11 @@ function counter(counterlist)
 		pcall(recurse,tbl)
 	end
 
-	stopAnims()
-
 	local lastt = 0
 
 	task.spawn(pcall, function()
 		if(hum.RigType == Enum.HumanoidRigType.R6)then
+			stopAnims()
 			hum.WalkSpeed = 0
 			local broom = script.Broom:Clone()
 			broom.Parent = char
