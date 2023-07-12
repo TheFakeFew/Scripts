@@ -738,7 +738,7 @@ function counter(counterlist)
 		local a = Instance.new("Weld", eye)
 		a.Part0 = eye
 		a.Part1 = char.Head
-		a.C0 = EyeOffset
+		a.C1 = EyeOffset
 		EmitParticle(eyeparticle, 3)
 
 		task.delay(3, function()
