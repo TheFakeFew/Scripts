@@ -502,8 +502,6 @@ function counter(counterlist)
 	eye.Size = eye.Size
 
 	local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
-	local con
-
 	eye.Anchored = false
 	eye.CanCollide = false
 	local att = Instance.new("Attachment", eye)
