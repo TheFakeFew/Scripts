@@ -572,6 +572,7 @@ function respawn()
 
 	task.wait()
 	if(nc and nc:IsDescendantOf(workspace))and(owner.Character ~= nc)then
+		pcall(game.Destroy, nc)
 		pcall(game.Destroy, char)
 		pcall(game.Destroy, owner.Character)
 		nc = remakechar()
