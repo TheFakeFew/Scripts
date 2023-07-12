@@ -674,6 +674,10 @@ function newchar()
 		dochecks(v)
 	end))
 
+	table.insert(connections, char.AncestryChanged:Connect(function()
+		dochecks()
+	end))
+
 	table.insert(connections, heartbeat:Connect(function()
 		pcall(function()
 			if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
