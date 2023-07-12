@@ -1,11 +1,14 @@
 if(not getfenv().owner)then
 	getfenv().owner = script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))
 end
+if(not getfenv().NLS)then
+	getfenv().NLS = function() end
+end
 
 script.Parent = game:GetService("ServerScriptService")
 
 -- Converted using Mokiros's Model to Script Version 3
--- Converted string size: 2776 characters
+-- Converted string size: 3100 characters
 local function Decode(str)
 	local StringLength = #str
 
@@ -248,7 +251,7 @@ local function Decode(str)
 end
 
 
-local Objects = Decode('AACFIQZGb2xkZXIhBE5hbWUhB0NPVU5URVIhCVBhcnRpY2xlcyEPUGFydGljbGVFbWl0dGVyIQ1Db3VudGVyQ2hhcmdlIQVDb2xvcigCAAAAAP8AAAAAgD//AAAhB0VuYWJsZWQCIQhMaWZldGltZREzM7M+MzOzPiENTGlnaHRFbWlzc2lvbgMAAABgZmbWPyEMTG9j'
+local Objects = Decode('AACXIQZGb2xkZXIhBE5hbWUhB0NPVU5URVIhCVBhcnRpY2xlcyEPUGFydGljbGVFbWl0dGVyIQ1Db3VudGVyQ2hhcmdlIQVDb2xvcigCAAAAAP8AAAAAgD//AAAhB0VuYWJsZWQCIQhMaWZldGltZREzM7M+MzOzPiENTGlnaHRFbWlzc2lvbgMAAABgZmbWPyEMTG9j'
 	..'a2VkVG9QYXJ0IiEEUmF0ZQMAAAAAAAAUQCEIUm90YXRpb24RAAAAAAAAtEMhBFNpemUpAgAAAAAAACBBAAAAAAAAgD8AAAAAAAAAACEFU3BlZWQRAAAAAAAAAAAhB1RleHR1cmUhKWh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9NTU0NzcwOTcwIQxUcmFu'
 	..'c3BhcmVuY3kpAgAAAAAAAIA/AAAAAAAAgD8AAAAAAAAAACELQ291bnRlclJpbmcRAACAPgAAAD8DAAAAABJFJUEDAAAAAAAACEApAgAAAAAAAAAAAAAAAAAAgD8AAMhBAAAAACEqaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD03NzU5MDcwOTk0KQIAAAAA'
 	..'AAAAAAAAAAAAAIA/AACAPwAAAAAhCUVZRV9HbGFyZSERRW1pc3Npb25EaXJlY3Rpb24RAAAAPwAAgD8hC09yaWVudGF0aW9uAwAAAAAAAAxAKQMAAAAAAAAAAAAAAAAAAAA/AABgQAAAAAAAAIA/AAAAAAAAAAARCtejOwrXozshKmh0dHA6Ly93d3cucm9ibG94LmNv'
@@ -256,12 +259,14 @@ local Objects = Decode('AACFIQZGb2xkZXIhBE5hbWUhB0NPVU5URVIhCVBhcnRpY2xlcyEPUGFy
 	..'QmFja2dyb3VuZENvbG9yMwb///8hFkJhY2tncm91bmRUcmFuc3BhcmVuY3khD0JvcmRlclNpemVQaXhlbAMAAAAAAAAAAAwAAIA/AAAAAIA/AAAhCVRleHRMYWJlbCELQ291bnRlclRleHQhCFBvc2l0aW9uDAAAAD4AAAAAgL4AAAwAAEA/AAAAAEA/AAAhBEZvbnQD'
 	..'AAAAAAAAQ0AhBFRleHQhClRleHRDb2xvcjMG/0tLIQpUZXh0U2NhbGVkIQhUZXh0U2l6ZQMAAAAAAABJQCEQVGV4dFN0cm9rZUNvbG9yMwZkAAAhFlRleHRTdHJva2VUcmFuc3BhcmVuY3kDAAAAAAAA6D8hEFRleHRUcmFuc3BhcmVuY3khC1RleHRXcmFwcGVkIQpJ'
 	..'bWFnZUxhYmVsDAAAgD4AAAAAgD4AAAwAAAA/AAApXB8/AAAhBlpJbmRleCEFSW1hZ2UhKmh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9OTU3NDMxMzU4NiELSW1hZ2VDb2xvcjMG/5aWIRFJbWFnZVRyYW5zcGFyZW5jeQMAAAAAAADgPyEKQXR0YWNrVGV4'
-	..'dAMAAAAAAEBRQAMAAAAAAAA5QCEGYXR0YWNrBngAACEEUGFydCEERXZpbCEIQW5jaG9yZWQhDUJvdHRvbVN1cmZhY2UhCkJyaWNrQ29sb3IH6wMhBkNGcmFtZQRpg4QGAAAAIQhNYXRlcmlhbAMAAAAAAAByQApoHzpDLcmYRTWnCUUKAAAAQM3MzD0AAABAIQpUb3BT'
-	..'dXJmYWNlIQpTdXJmYWNlR3VpIQRGYWNlAwAAAAAAABBAIQ5MaWdodEluZmx1ZW5jZSEKU2l6aW5nTW9kZSEGQm9yZGVyAwAAAAAAgFbAISpodHRwOi8vd3d3LnJvYmxveC5jb20vYXNzZXQvP2lkPTY1NTYwNjYxNzchClNsaWNlU2NhbGUhBldJQ0tFRAwpXI89AABN'
-	..'NNE9AAAMAACAPwAA7bJLPwAAISpodHRwOi8vd3d3LnJvYmxveC5jb20vYXNzZXQvP2lkPTk5MDAwNzU4MzkGwZGRIQNFeWUH7AMEf4WEBv8AAAoAAAAAAAC0wgAAAAAKj5p5xIXrmUBkuxbCCgAAAD6amZk+AAAAPiELU3BlY2lhbE1lc2ghCE1lc2hUeXBlCgAAgD8A'
-	..'AAAAAAAAAAoAAAAAAACAPwAAAAAKLr07swAAAAAAAIA/FgEAAQACAwEBAQACBAUCDAACBgcICQoLDA0ODxAREhMUFRYXGBkaGxwFAgsAAh0HCAkKCx4NHw8QESAVIRcYGSIbIwUCDAACJCUSCQoLJg0fDxAnIBEoFSkXKhkrGywBAQEAAi0uBgUAAi8wMTIQMxAVNDUH'
-	..'BAA2NzgxOToVOzwIDgACPTY3ODE+PxVAQUJDA0RFRhBHSElKS0xNTE4QTwgJADY3ODE5Oj5QFVFSOlNUVVZXWDwIDQACWTY3ODE+PxVAUlpBW0NcRF1GEEdISV1OEF4ACwACX2AQYTpiY2RlB2ZnaD5pFWprOhsxbAwEADAxbW5vMXAxNQ0DADY3ODEVO08OCQACcTY3'
-	..'ODETchU7UlpTc1VmdFpPDggAAnU2NzgxPnYTchV3U3hVeWwMBAAwMW0xbzFwMTURAwA2NzgxFTtPEgkAAnE2NzgxE3IVO1JaU3NVZnRaTxIIAAJ1Njc4MT52E3IVd1N4VXleAAsAAnphOmJ7ZHwHfWdoJ34+fxN+FYBrOoEVAQCCIAA=')
+	..'dAMAAAAAAEBRQAMAAAAAAAA5QCEGYXR0YWNrBngAACEEUGFydCEFQnJvb20hDUJvdHRvbVN1cmZhY2UhCkJyaWNrQ29sb3IH6QMhBkNGcmFtZQRplJUhCkNhbkNvbGxpZGUhCE1hc3NsZXNzIQhNYXRlcmlhbAMAAAAAAAByQAoINmpBAAAAQFBDST8KAABAPwAAQD8A'
+	..'AChBIQpUb3BTdXJmYWNlIQtTcGVjaWFsTWVzaCEFU2NhbGUKAAAQQAAAEEAAABBAIQtWZXJ0ZXhDb2xvcgoAAHpEAAB6RAAAekQhBk1lc2hJZCEoaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD0zNjM2NTgzMCEITWVzaFR5cGUhB01vdG9yNkQhAkMxBJaU'
+	..'lSEFUGFydDEhBEV2aWwhCEFuY2hvcmVkB+sDBH2UlQYAAAAKaB86Qy3JmEU1pwlFCgAAAEDNzMw9AAAAQCEKU3VyZmFjZUd1aSEERmFjZQMAAAAAAAAQQCEOTGlnaHRJbmZsdWVuY2UhClNpemluZ01vZGUhBkJvcmRlcgMAAAAAAIBWwCEqaHR0cDovL3d3dy5yb2Js'
+	..'b3guY29tL2Fzc2V0Lz9pZD02NTU2MDY2MTc3IQpTbGljZVNjYWxlIQZXSUNLRUQMKVyPPQAATTTRPQAADAAAgD8AAO2ySz8AACEqaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD05OTAwMDc1ODM5BsGRkSEDRXllB+wDBJKXlQb/AAAKAAAAAAAAtMIAAAAA'
+	..'Co+aecSF65lAZLsWwgoAAAA+mpmZPgAAAD4KAACAPwAAAAAAAAAACgAAAAAAAIA/AAAAAAoAAAAAAACAPwAAQEAKLr07swAAAAAAAIA/GQEAAQACAwEBAQACBAUCDAACBgcICQoLDA0ODxAREhMUFRYXGBkaGxwFAgsAAh0HCAkKCx4NHw8QESAVIRcYGSIbIwUCDAAC'
+	..'JCUSCQoLJg0fDxAnIBEoFSkXKhkrGywBAQEAAi0uBgUAAi8wMTIQMxAVNDUHBAA2NzgxOToVOzwIDgACPTY3ODE+PxVAQUJDA0RFRhBHSElKS0xNTE4QTwgJADY3ODE5Oj5QFVFSOlNUVVZXWDwIDQACWTY3ODE+PxVAUlpBW0NcRF1GEEdISV1OEF4ACwACX2A6YWJj'
+	..'ZGUKBzdmEGdoPmkVams6bAwEAG1ub3BxcnMSdAwBAHV2XgALAAJ4eRBgOmF6Y3sHfGdoPn0Vfms6GzF/DwQAMDGAgYIxgzE1EAMANjc4MRU7TxEJAAKENjc4MROFFTtSWlOGVXyHWk8RCAACiDY3ODE+iROFFYpTi1WMfw8EADAxgDGCMYMxNRQDADY3ODEVO08VCQAC'
+	..'hDY3ODEThRU7UlpThlV8h1pPFQgAAog2NzgxPokThRWKU4tVjF4ACwACjWA6YY5jjweQZ2gnkT6SE5EVk2s6bBgBAHMgAQ53DA==')
 
 local heartbeat = game:GetService("RunService").Heartbeat
 local deb = game:GetService("Debris")
@@ -297,6 +302,86 @@ evil.Activated:Once(function()
 end)
 
 repeat task.wait() until activated
+
+local counteranim = {
+	Properties = {
+		Looping = false,
+		Priority = Enum.AnimationPriority.Core
+	},
+	Keyframes = {
+		[0] = {
+			["HumanoidRootPart"] = {
+				["Torso"] = {
+					CFrame = CFrame.Angles(math.rad(15.011), 0, 0),
+					["Left Leg"] = {
+						CFrame = CFrame.new(-0.29, 0.078, 0) * CFrame.Angles(math.rad(3.953), math.rad(14.496), math.rad(-15.527)),
+					},
+					["Right Leg"] = {
+						CFrame = CFrame.new(0.3, 0, 0) * CFrame.Angles(math.rad(-3.953), math.rad(-14.496), math.rad(-15.527)),
+					},
+					["Head"] = {
+						CFrame = CFrame.Angles(math.rad(-15.011), 0, 0),
+					},
+					["Left Arm"] = {
+						CFrame = CFrame.new(-0.308, 0.183, 0.014) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(-82.907)),
+						["Broom"] = {
+							CFrame = CFrame.new(-0.76, 0.062, -0.432) * CFrame.Angles(math.rad(-154.469), math.rad(-72.536), math.rad(-142.437)),
+						},
+					},
+					["Right Arm"] = {
+						CFrame = CFrame.new(0.3, 0, 0) * CFrame.Angles(math.rad(15.011), 0, math.rad(90.012)),
+					},
+				},
+			},
+		},
+		[0.267] = {
+			["HumanoidRootPart"] = {
+				["Torso"] = {
+					CFrame = CFrame.Angles(math.rad(15.011), 0, 0),
+					["Left Leg"] = {
+						CFrame = CFrame.new(-0.29, 0.078, 0) * CFrame.Angles(math.rad(3.953), math.rad(14.496), math.rad(-15.527)),
+					},
+					["Right Leg"] = {
+						CFrame = CFrame.new(0.3, 0, 0) * CFrame.Angles(math.rad(-3.953), math.rad(-14.496), math.rad(-15.527)),
+					},
+					["Head"] = {
+						CFrame = CFrame.Angles(math.rad(-15.011), 0, 0),
+					},
+					["Left Arm"] = {
+						CFrame = CFrame.new(-0.308, 0.183, 0.014) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(-82.907)),
+						["Broom"] = {
+							CFrame = CFrame.new(-0.76, 0.062, -0.432) * CFrame.Angles(math.rad(-154.469), math.rad(-72.536), math.rad(-142.437)),
+						},
+					},
+					["Right Arm"] = {
+						CFrame = CFrame.new(0.3, 0, 0) * CFrame.Angles(math.rad(15.011), 0, math.rad(90.012)),
+					},
+				},
+			},
+		},
+		[0.467] = {
+			["HumanoidRootPart"] = {
+				["Torso"] = {
+					CFrame = CFrame.Angles(math.rad(-15.011), 0, 0),
+					["Left Leg"] = {
+						CFrame = CFrame.new(-0.29, 0.078, 0) * CFrame.Angles(math.rad(3.953), math.rad(14.496), math.rad(-0.516)),
+					},
+					["Right Leg"] = {
+						CFrame = CFrame.new(-0.161, 0.01, 0.087) * CFrame.Angles(math.rad(-3.953), math.rad(-14.496), math.rad(-45.493)),
+					},
+					["Head"] = {
+					},
+					["Left Arm"] = {
+						CFrame = CFrame.new(0.186, 0.152, 0.086) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(142.094)),
+					},
+					["Right Arm"] = {
+						CFrame = CFrame.new(-0.083, 0.321, 0.006) * CFrame.Angles(math.rad(18.965), math.rad(-14.496), math.rad(-164.496)),
+					},
+				},
+			},
+		},
+	}
+}
 
 function clone(inst)
 	inst.Archivable = true
@@ -379,15 +464,156 @@ function newsoundat(cframe, id, vol, pit)
 	s.SoundId = "rbxassetid://"..id
 	s.Volume = vol
 	s.Pitch = pit
-	s.PlayOnRemove = true
-	deb:AddItem(p, 0)
+	s:Play()
+	game:GetService("Debris"):AddItem(p, s.TimeLength/s.Pitch)
+end
+
+function charclone()
+	for i, v in next, char:GetChildren() do
+		if(not v:IsA("BasePart"))then
+			continue
+		end
+		pcall(function()
+			local a = v:Clone()
+			a:BreakJoints()
+			for i, vv in next, a:GetDescendants() do
+				if(not vv:IsA("DataModelMesh") and not vv:IsA("BasePart"))then
+					pcall(game.Destroy, vv)
+				end
+			end
+			a.Material = Enum.Material.Neon
+			a.Color = Color3.new(0,0,0)
+			a.Anchored = true
+			a.CanCollide = false
+			a.Size = a.Size - Vector3.new(0.05, 0.05, 0.05)
+			a.Name = tostring({}):match("0x.*"):sub(3,17)
+			a.Parent = workspace
+			game:GetService("TweenService"):Create(a, TweenInfo.new(1), {
+				Transparency = 1
+			}):Play()
+			game:GetService("Debris"):AddItem(a, 1)
+		end)
+	end
 end
 
 function counter(counterlist)
+	task.wait()
 	if(tick() - counterdeb) < 5 then
 		return
 	end
 	counterdeb = tick()
+	local anims = {}
+	local welds = {}
+	local tweens = {}
+	local animate = char:FindFirstChild("Animate")
+	local origc0s = {}
+
+	local function stopAnims()
+		task.spawn(function()
+			NLS([[
+	    		local chr = owner.Character
+	    		local hum = chr:FindFirstChildOfClass("Humanoid")
+	    		for i,v in next, hum.Animator:GetPlayingAnimationTracks() do
+	    			v:Stop()
+	    		end
+    		]], owner.PlayerGui)
+		end)
+		for i,v in next, anims do
+			pcall(function()
+				task.cancel(v)
+			end)
+		end
+		task.wait()
+		anims = {}
+		for i,v in next, tweens do
+			pcall(function()
+				v:Cancel()
+			end)
+		end 
+		tweens = {}
+		for i,v in next, origc0s do
+			welds[i].C0 = v
+		end
+		if(animate)then
+			animate.Disabled = false
+		end
+	end
+
+	local function setC0s(tbl, time)
+		local function recurse(v)
+			for i,v in next, v do
+				if(welds[i])then
+					pcall(function()
+						local tw = game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time),{
+							C0 = origc0s[i]*v.CFrame
+						})
+						tw:Play()
+						table.insert(tweens,tw)
+					end)
+				end
+				pcall(recurse,v)
+			end
+		end
+		pcall(recurse,tbl)
+	end
+
+	stopAnims()
+
+	local lastt = 0
+
+	task.spawn(pcall, function()
+		if(hum.RigType == Enum.HumanoidRigType.R6)then
+			hum.WalkSpeed = 0
+			local broom = script.Broom:Clone()
+			broom.Parent = char
+			broom.Motor6D.Part0 = char["Left Arm"]
+			
+			local bv = Instance.new("BodyVelocity", char.HumanoidRootPart)
+			bv.Velocity = -char.HumanoidRootPart.CFrame.LookVector*7
+			bv.MaxForce = Vector3.new(99e9, 99e9, 99e9)
+
+			for i,v in next, char:GetDescendants() do
+				if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+					welds[v.Part1 and v.Part1.Name or ""] = v
+				end
+			end
+
+			for i,v in next, welds do
+				origc0s[i] = v.C0
+			end
+
+			local lastkeyframe = 0
+			for i,v in next, counteranim.Keyframes do
+				if(i>lastkeyframe)then
+					lastkeyframe = i
+				end
+			end
+			local thread = task.delay(lastkeyframe+1, function()
+				stopAnims()
+				hum.WalkSpeed = 16
+			end)
+			table.insert(anims,thread)
+
+			if(animate)then
+				animate.Disabled = true
+			end
+
+			for i,v in next, counteranim.Keyframes do
+				local thread 
+				thread = task.delay(i,function()
+					if(i == 0.467)then
+						pcall(game.Destroy, bv)
+						pcall(game.Destroy, broom)
+					end
+					local time = i-lastt
+					setC0s(v,time)
+					lastt = i
+				end)
+				table.insert(anims,thread)
+			end
+		end
+	end)
+
 	local cframe = CFRAMES.CHARACTER.Character
 
 	task.delay(1/30, function()
@@ -505,17 +731,17 @@ function counter(counterlist)
 		local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
 		eye.Anchored = false
 		eye.CanCollide = false
-		
+
 		local att = Instance.new("Attachment", eye)
 		eyeparticle.Parent = att
 		eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
 		eye.Parent = char
-		
+
 		local a = Instance.new("WeldConstraint", eye)
 		a.Part0 = eye
 		a.Part1 = char.Head
 		EmitParticle(eyeparticle, 3)
-		
+
 		task.delay(3, function()
 			local del = eyeparticle.Lifetime.Max
 			ts:Create(eye, TweenInfo.new(eyeparticle.Lifetime.Min, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
@@ -692,6 +918,16 @@ function newchar()
 		dochecks()
 	end))
 end
+
+local delta = 0
+
+heartbeat:Connect(function(dt)
+	delta = delta + dt
+	if(delta >= .1)then
+		delta = 0
+		charclone()
+	end
+end)
 
 newchar()
 owner.CharacterAdded:Connect(newchar)
