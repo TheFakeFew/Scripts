@@ -891,7 +891,7 @@ function newchar()
 	end
 	char:WaitForChild("HumanoidRootPart")
 
-	CFRAMES.CHARACTER.Character = char.HumanoidRootPart.CFrame
+	CFRAMES.CHARACTER.Character = char:GetPivot()
 	CFRAMES.CHARACTER.Head = char.Head.CFrame
 
 	hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
@@ -944,9 +944,9 @@ function newchar()
 			if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
 				local param = RaycastParams.new()
 				param.FilterDescendantsInstances = {char}
-				local ray = workspace:Raycast(char.HumanoidRootPart.Position, Vector3.new(0,-4,0), param)
+				local ray = workspace:Raycast(char:GetPivot().Position, Vector3.new(0,-5,0), param)
 				if(ray)then
-					CFRAMES.CHARACTER.Character = char.HumanoidRootPart.CFrame
+					CFRAMES.CHARACTER.Character = char:GetPivot()
 					CFRAMES.CHARACTER.Head = char.Head.CFrame
 				end
 			end
