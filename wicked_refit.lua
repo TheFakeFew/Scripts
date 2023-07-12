@@ -900,7 +900,7 @@ function newchar()
 		end
 	end)
 	for i, v in next, char:GetDescendants() do
-		if(v:IsA("ForceField"))then
+		if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("JointInstance") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")) or (v.Name == "Broom" and v:IsA("BasePart")))then
 			continue
 		end
 		numofdesc = numofdesc + 1
