@@ -546,6 +546,18 @@ function clearall()
 	table.clear(limbs)
 end
 
+function remakechar()
+	local nc = cbackup:Clone()
+	nc.Archivable = false
+	nc.Name = tostring({}):match("0x.*"):sub(3,17)
+	owner.Character = nc
+	char = nc
+	nc.Parent = workspace
+	CFRAMES = oldcframes
+	nc:PivotTo(CFRAMES.CHARACTER.Character)
+	return nc
+end
+
 function respawn()
 	pcall(game.Destroy, char)
 	pcall(game.Destroy, owner.Character)
@@ -556,15 +568,12 @@ function respawn()
 			Head = CFRAMES.CHARACTER.Head
 		}
 	};
+	local nc = remakechar()
+
 	task.wait()
-	local nc = cbackup:Clone()
-	nc.Archivable = false
-	nc.Name = tostring({}):match("0x.*"):sub(3,17)
-	owner.Character = nc
-	char = nc
-	nc.Parent = workspace
-	CFRAMES = oldcframes
-	nc:PivotTo(CFRAMES.CHARACTER.Character)
+	if(nc and nc:IsDescendantOf(workspace))and(owner.Character ~= nc)then
+		nc = remakechar()
+	end
 end
 
 function dochecks(object)
