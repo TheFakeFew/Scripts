@@ -602,7 +602,7 @@ function counter(counterlist)
 				local thread 
 				thread = task.delay(i,function()
 					if(i == 0.467)then
-						task.delay(.2, pcall, game.Destroy, bv)
+						pcall(game.Destroy, bv)
 						pcall(game.Destroy, broom)
 					end
 					local time = i-lastt
