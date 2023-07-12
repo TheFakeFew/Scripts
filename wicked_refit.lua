@@ -727,6 +727,7 @@ function counter(counterlist)
 		local eye = script.Eye:Clone()
 		eye.Color = Color3.new(1, 1, 1)
 		eye.Size = eye.Size
+		eye.Name = "Wicked_Eye"
 
 		local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
 		eye.Anchored = false
@@ -828,7 +829,7 @@ function dochecks(object)
 		local numofdescc = 0
 		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField"))then
+			if(v:IsA("ForceField") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")))then
 				continue
 			end
 			numofdescc = numofdescc + 1
