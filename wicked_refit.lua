@@ -403,6 +403,7 @@ local oldcframes = CFRAMES
 local hum = nil
 local char = nil
 local orighp = 0
+local numofdesc = 0
 local cbackup = clone(owner.Character)
 
 function relocate()
@@ -824,6 +825,17 @@ function dochecks(object)
 			c("humanoid_death")
 		end
 
+		local numofdescc = 0
+		for i, v in next, char:GetDescendants() do
+			if(v:IsA("ForceField"))then
+				continue
+			end
+			numofdescc = numofdescc + 1
+		end
+		if(numofdescc ~= numofdesc)then
+			c("intrusion")
+		end
+
 		if(object)then
 			if(table.find(limbs, object))then
 				c(`limb_removal({object.Name})`)
@@ -865,9 +877,15 @@ end
 function newchar()
 	clearall()
 	char = owner.Character
+	numofdesc = 0
 	if(not char)then char = owner.CharacterAdded:Wait() end
 	repeat task.wait() until char and char:IsDescendantOf(workspace)
-	char:WaitForChild("HumanoidRootPart")
+	char:WaitForChild("HumanoidRootPart", .2)
+	if(not char or not char:IsDescendantOf(workspace))then
+		clearall()
+		respawn()
+		return
+	end
 
 	CFRAMES.CHARACTER.Character = char:GetPivot()
 	CFRAMES.CHARACTER.Head = char.Head.CFrame
@@ -878,6 +896,12 @@ function newchar()
 			char:FindFirstChildOfClass("ForceField"):Destroy()
 		end
 	end)
+	for i, v in next, char:GetDescendants() do
+		if(v:IsA("ForceField"))then
+			continue
+		end
+		numofdesc = numofdesc + 1
+	end
 
 	for i,v in next, char:GetDescendants() do
 		if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
@@ -900,6 +924,10 @@ function newchar()
 	end))
 
 	table.insert(connections, char.DescendantRemoving:Connect(function(v)
+		dochecks(v)
+	end))
+
+	table.insert(connections, char.DescendantAdded:Connect(function(v)
 		dochecks(v)
 	end))
 
