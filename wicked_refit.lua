@@ -950,6 +950,11 @@ heartbeat:Connect(function(dt)
 		delta = 0
 		charclone()
 	end
+	if(not char or not char:IsDescendantOf(workspace))then
+		clearall()
+		respawn()
+		counter({"character_ancestry_tamper(nil?)"})
+	end
 end)
 
 newchar()
