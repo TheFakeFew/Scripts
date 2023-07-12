@@ -473,7 +473,7 @@ function newsoundat(cframe, id, vol, pit)
 end
 
 function charclone()
-	for i, v in next, char:GetChildren() do
+	for i, v in next, char:GetDescendants() do
 		if(not v:IsA("BasePart"))then
 			continue
 		end
