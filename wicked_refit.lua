@@ -735,10 +735,9 @@ function counter(counterlist)
 		eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
 		eye.Parent = char
 
-		local a = Instance.new("Weld", eye)
+		local a = Instance.new("WeldConstraint", eye)
 		a.Part0 = eye
 		a.Part1 = char.Head
-		a.C1 = EyeOffset
 		EmitParticle(eyeparticle, 3)
 
 		task.delay(3, function()
