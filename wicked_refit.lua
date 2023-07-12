@@ -559,6 +559,7 @@ function counter(counterlist)
 			NLS([[for i, v in next, owner.Character:FindFirstChildOfClass("Humanoid").Animator:GetPlayingAnimationTracks() do v:Stop() end]], owner.PlayerGui)
 			stopAnims()
 			hum.WalkSpeed = 0
+			task.wait(.1)
 			local broom = script.Broom:Clone()
 			broom.Parent = char
 			broom.Motor6D.Part0 = char["Left Arm"]
