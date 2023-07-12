@@ -826,14 +826,21 @@ function dochecks(object)
 		end
 
 		local numofdescc = 0
+		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
 			if(v:IsA("ForceField"))then
 				continue
 			end
 			numofdescc = numofdescc + 1
+			if(v:IsA("BasePart") and v.Anchored)then
+				physicstamper = true
+			end
 		end
 		if(numofdescc ~= numofdesc)then
 			c("intrusion")
+		end
+		if(physicstamper)then
+			c("physics_tampering")
 		end
 
 		if(object)then
