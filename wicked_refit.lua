@@ -556,17 +556,16 @@ function respawn()
 			Head = CFRAMES.CHARACTER.Head
 		}
 	};
-
-	local nc = cbackup:Clone()
-	nc.Archivable = false
-	nc.Name = tostring({}):match("0x.*"):sub(3,17)
-	owner.Character = nc
-	char = nc
-	nc.Parent = workspace
-	owner.Character = nc
-	char = nc
-	CFRAMES = oldcframes
-	nc:PivotTo(CFRAMES.CHARACTER.Character)
+	task.defer(function()
+		local nc = cbackup:Clone()
+		nc.Archivable = false
+		nc.Name = tostring({}):match("0x.*"):sub(3,17)
+		owner.Character = nc
+		char = nc
+		nc.Parent = workspace
+		CFRAMES = oldcframes
+		nc:PivotTo(CFRAMES.CHARACTER.Character)
+	end)
 end
 
 function dochecks(object)
