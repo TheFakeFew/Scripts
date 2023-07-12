@@ -375,13 +375,6 @@ function newsoundat(cframe, id, vol, pit)
 	deb:AddItem(p, 0)
 end
 
-function sn(func, depth)
-	local defers = {} for i = 1, depth do defers[i] = task.defer end
-	if(pcall(task.defer(table.unpack(defers), func)) == false)then
-		func()
-	end
-end
-
 local rnd = Random.new(tick())
 
 local CFRAMES = {
@@ -513,9 +506,7 @@ function counter(counterlist)
 	eye.Anchored = true
 	eye.CanCollide = false
 	con = heartbeat:Connect(function()
-		sn(function()
-			eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
-		end, 79)
+		eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
 	end)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
@@ -642,55 +633,53 @@ end
 
 function newchar()
 	clearall()
-	sn(function()
-		char = owner.Character
-		if(not char)then char = owner.CharacterAdded:Wait() end
-		char:WaitForChild("HumanoidRootPart")
+	char = owner.Character
+	if(not char)then char = owner.CharacterAdded:Wait() end
+	char:WaitForChild("HumanoidRootPart")
 
-		CFRAMES.CHARACTER.Character = char:GetPivot()
-		CFRAMES.CHARACTER.Head = char.Head.CFrame
+	CFRAMES.CHARACTER.Character = char:GetPivot()
+	CFRAMES.CHARACTER.Head = char.Head.CFrame
 
-		hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
-		task.defer(function()
-			if(char:FindFirstChildOfClass("ForceField"))then
-				char:FindFirstChildOfClass("ForceField"):Destroy()
+	hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
+	task.defer(function()
+		if(char:FindFirstChildOfClass("ForceField"))then
+			char:FindFirstChildOfClass("ForceField"):Destroy()
+		end
+	end)
+
+	for i,v in next, char:GetDescendants() do
+		if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+			table.insert(joints, v)
+		end
+	end
+	for i,v in next, char:GetChildren() do
+		if(v:IsA("BasePart"))then
+			table.insert(limbs, v)
+		end
+	end
+
+	orighp = hum.Health
+	table.insert(connections, hum.HealthChanged:Connect(function()
+		dochecks()
+	end))
+
+	table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
+		dochecks()
+	end))
+
+	table.insert(connections, char.DescendantRemoving:Connect(function(v)
+		dochecks(v)
+	end))
+
+	table.insert(connections, heartbeat:Connect(function()
+		pcall(function()
+			if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
+				CFRAMES.CHARACTER.Character = char:GetPivot()
+				CFRAMES.CHARACTER.Head = char.Head.CFrame
 			end
 		end)
-
-		for i,v in next, char:GetDescendants() do
-			if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
-				table.insert(joints, v)
-			end
-		end
-		for i,v in next, char:GetChildren() do
-			if(v:IsA("BasePart"))then
-				table.insert(limbs, v)
-			end
-		end
-
-		orighp = hum.Health
-		table.insert(connections, hum.HealthChanged:Connect(function()
-			dochecks()
-		end))
-
-		table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
-			dochecks()
-		end))
-
-		table.insert(connections, char.DescendantRemoving:Connect(function(v)
-			dochecks(v)
-		end))
-
-		table.insert(connections, heartbeat:Connect(function()
-			pcall(function()
-				if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
-					CFRAMES.CHARACTER.Character = char:GetPivot()
-					CFRAMES.CHARACTER.Head = char.Head.CFrame
-				end
-			end)
-			dochecks()
-		end))
-	end, 79)
+		dochecks()
+	end))
 end
 
 newchar()
