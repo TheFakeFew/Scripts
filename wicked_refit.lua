@@ -466,10 +466,12 @@ function newsoundat(cframe, id, vol, pit)
 	s.Volume = vol
 	s.Pitch = pit
 	s:Play()
-	if(not s.IsLoaded)then
-		repeat task.wait() until s.IsLoaded
-	end
-	game:GetService("Debris"):AddItem(p, s.TimeLength/s.Pitch)
+	task.spawn(function()
+		if(not s.IsLoaded)then
+			repeat task.wait() until s.IsLoaded
+		end
+		game:GetService("Debris"):AddItem(p, s.TimeLength/s.Pitch)
+	end)
 end
 
 function charclone()
