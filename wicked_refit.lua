@@ -466,6 +466,9 @@ function newsoundat(cframe, id, vol, pit)
 	s.Volume = vol
 	s.Pitch = pit
 	s:Play()
+	if(not s.IsLoaded)then
+		repeat task.wait() until s.IsLoaded
+	end
 	game:GetService("Debris"):AddItem(p, s.TimeLength/s.Pitch)
 end
 
@@ -829,7 +832,7 @@ function dochecks(object)
 		local numofdescc = 0
 		local physicstamper = false
 		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField") or v:IsA("Attachment") or v:IsA("ParticleEmitter") or v:IsA("WeldConstraint") or v:IsA("BodyVelocity") or v:IsA("JointInstance") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")) or (v.Name == "Broom" and v:IsA("BasePart")))then
+			if(v:IsA("ForceField") or v:IsA("Attachment") or v:IsA("LuaSourceContainer") or v:IsA("ParticleEmitter") or v:IsA("WeldConstraint") or v:IsA("BodyVelocity") or v:IsA("JointInstance") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")) or (v.Name == "Broom" and v:IsA("BasePart")))then
 				continue
 			end
 			numofdescc = numofdescc + 1
@@ -900,7 +903,7 @@ function newchar()
 		end
 	end)
 	for i, v in next, char:GetDescendants() do
-		if(v:IsA("ForceField") or v:IsA("Attachment") or v:IsA("ParticleEmitter") or v:IsA("WeldConstraint") or v:IsA("BodyVelocity") or v:IsA("JointInstance") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")) or (v.Name == "Broom" and v:IsA("BasePart")))then
+		if(v:IsA("ForceField") or v:IsA("LuaSourceContainer") or v:IsA("Attachment") or v:IsA("ParticleEmitter") or v:IsA("WeldConstraint") or v:IsA("BodyVelocity") or v:IsA("JointInstance") or (v.Name == "Wicked_Eye" and v:IsA("BasePart")) or (v.Name == "Broom" and v:IsA("BasePart")))then
 			continue
 		end
 		numofdesc = numofdesc + 1
