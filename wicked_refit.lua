@@ -507,6 +507,7 @@ function counter(counterlist)
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
 	eye.Parent = char
+	eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
 	local a = Instance.new("WeldConstraint", eye)
 	a.Part0 = eye
 	a.Part1 = char.Head
