@@ -959,6 +959,11 @@ heartbeat:Connect(function(dt)
 		if(not char or not char:IsDescendantOf(workspace))then
 			clearall()
 			respawn()
+			task.spawn(function()
+				task.wait(1/30)
+				clearall()
+				respawn()
+			end)
 			counter({"ancestry_tamper(nil?)"})
 		end
 		charclone()
