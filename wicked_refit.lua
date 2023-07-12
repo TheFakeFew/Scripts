@@ -569,8 +569,7 @@ function respawn()
 		}
 	};
 	local nc = remakechar()
-	task.spawn(function()
-		task.wait()
+	task.defer(function()
 		if(nc and nc:IsDescendantOf(workspace))and(owner.Character ~= nc)then
 			pcall(game.Destroy, nc)
 			pcall(game.Destroy, char)
