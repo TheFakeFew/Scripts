@@ -953,12 +953,12 @@ heartbeat:Connect(function(dt)
 	delta = delta + dt
 	if(delta >= .1)then
 		delta = 0
+		if(not char or not char:IsDescendantOf(workspace))then
+			clearall()
+			respawn()
+			counter({"ancestry_tamper(nil?)"})
+		end
 		charclone()
-	end
-	if(not char or not char:IsDescendantOf(workspace))then
-		clearall()
-		respawn()
-		counter({"ancestry_tamper(nil?)"})
 	end
 end)
 
