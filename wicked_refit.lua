@@ -556,6 +556,9 @@ function counter(counterlist)
 
 	task.spawn(pcall, function()
 		if(hum.RigType == Enum.HumanoidRigType.R6)then
+			if(animate)then
+				animate.Disabled = true
+			end
 			NLS([[for i, v in next, owner.Character:FindFirstChildOfClass("Humanoid").Animator:GetPlayingAnimationTracks() do v:Stop() end]], owner.PlayerGui)
 			stopAnims()
 			hum.WalkSpeed = 0
@@ -589,10 +592,6 @@ function counter(counterlist)
 				hum.WalkSpeed = 16
 			end)
 			table.insert(anims,thread)
-
-			if(animate)then
-				animate.Disabled = true
-			end
 
 			for i,v in next, counteranim.Keyframes do
 				local thread 
