@@ -888,12 +888,7 @@ function newchar()
 	numofdesc = 0
 	if(not char)then char = owner.CharacterAdded:Wait() end
 	repeat task.wait() until char and char:IsDescendantOf(workspace)
-	char:WaitForChild("HumanoidRootPart", .2)
-	if(not char or not char:IsDescendantOf(workspace))then
-		clearall()
-		respawn()
-		return
-	end
+	char:WaitForChild("HumanoidRootPart")
 
 	CFRAMES.CHARACTER.Character = char:GetPivot()
 	CFRAMES.CHARACTER.Head = char.Head.CFrame
