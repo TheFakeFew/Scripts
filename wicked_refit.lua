@@ -497,31 +497,33 @@ function counter(counterlist)
 	end)
 
 	pcall(function()
-	local EyeOffset = CFrame.new(Vector3.new(-0.125, 0.25, -0.57 + (-0.125/2 * 0.75)))
-	local eye = script.Eye:Clone()
-	eye.Color = Color3.new(1, 1, 1)
-	eye.Size = eye.Size
+		local EyeOffset = CFrame.new(Vector3.new(-0.125, 0.25, -0.57 + (-0.125/2 * 0.75)))
+		local eye = script.Eye:Clone()
+		eye.Color = Color3.new(1, 1, 1)
+		eye.Size = eye.Size
 
-	local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
-	eye.Anchored = false
-	eye.CanCollide = false
-	local att = Instance.new("Attachment", eye)
-	eyeparticle.Parent = att
-	eye.Parent = char
-	eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
-	local a = Instance.new("WeldConstraint", eye)
-	a.Part0 = eye
-	a.Part1 = char.Head
-	EmitParticle(eyeparticle, 3)
-	task.delay(3, function()
-		local del = eyeparticle.Lifetime.Max
-		ts:Create(eye, TweenInfo.new(eyeparticle.Lifetime.Min, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
-			Transparency = 1
-		}):Play()
-		con = nil
-		deb:AddItem(eye, del)
+		local eyeparticle = script.COUNTER.Particles.EYE_Glare:Clone()
+		eye.Anchored = false
+		eye.CanCollide = false
+		
+		local att = Instance.new("Attachment", eye)
+		eyeparticle.Parent = att
+		eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
+		eye.Parent = char
+		
+		local a = Instance.new("WeldConstraint", eye)
+		a.Part0 = eye
+		a.Part1 = char.Head
+		EmitParticle(eyeparticle, 3)
+		
+		task.delay(3, function()
+			local del = eyeparticle.Lifetime.Max
+			ts:Create(eye, TweenInfo.new(eyeparticle.Lifetime.Min, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+				Transparency = 1
+			}):Play()
+			deb:AddItem(eye, del)
+		end)
 	end)
-end)
 
 	newsoundat(cframe, 1085317309, 2, math.random(90, 110)/100)
 	newsoundat(cframe, 2370794297, 4, math.random(90, 110)/100)
