@@ -496,6 +496,7 @@ function counter(counterlist)
 		deb:AddItem(counterpart, counterparticle.Lifetime.Max)
 	end)
 
+	pcall(function()
 	local EyeOffset = CFrame.new(Vector3.new(-0.125, 0.25, -0.57 + (-0.125/2 * 0.75)))
 	local eye = script.Eye:Clone()
 	eye.Color = Color3.new(1, 1, 1)
@@ -506,11 +507,11 @@ function counter(counterlist)
 	eye.CanCollide = false
 	local att = Instance.new("Attachment", eye)
 	eyeparticle.Parent = att
-	eye.Parent = workspace
+	eye.Parent = char
 	eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
 	local a = Instance.new("WeldConstraint", eye)
 	a.Part0 = eye
-	a.Part1 = char and char:FindFirstChildOfClass("Head") or nil
+	a.Part1 = char.Head
 	EmitParticle(eyeparticle, 3)
 	task.delay(3, function()
 		local del = eyeparticle.Lifetime.Max
@@ -520,6 +521,7 @@ function counter(counterlist)
 		con = nil
 		deb:AddItem(eye, del)
 	end)
+end)
 
 	newsoundat(cframe, 1085317309, 2, math.random(90, 110)/100)
 	newsoundat(cframe, 2370794297, 4, math.random(90, 110)/100)
