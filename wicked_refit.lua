@@ -635,6 +635,7 @@ function newchar()
 	clearall()
 	char = owner.Character
 	if(not char)then char = owner.CharacterAdded:Wait() end
+	repeat task.wait() until char and char:IsDescendantOf(workspace)
 	char:WaitForChild("HumanoidRootPart")
 
 	CFRAMES.CHARACTER.Character = char:GetPivot()
