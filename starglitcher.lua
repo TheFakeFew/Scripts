@@ -234,7 +234,6 @@ local chaosmode = false
 kan = Instance.new("Sound", Torso)
 kan.Volume = 1.98
 kan.TimePosition = 0
-kan.PlaybackSpeed = 1
 kan.Pitch = 1
 kan.SoundId = "rbxassetid://415898123"
 kan.Name = "wrecked"
