@@ -1253,7 +1253,7 @@ text.TextStrokeColor3 = Color3.new(1, 0, 0)
 text.TextColor3 = Color3.new(0, 0, 0)
 text.Text = "Sweet Dreams"
 local highlight = Instance.new("Highlight", Character)
-highlight.DepthMode = "Occlude"
+highlight.DepthMode = "Occluded"
 highlight.FillTransparency = 1
 highlight.Adornee = Character
 function RecolorTextAndRename(name, col1, col2)
