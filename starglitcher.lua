@@ -4451,7 +4451,7 @@ idleanim = 0.4
 RecolorTextAndRename("Sweet Dreams", Color3.new(0, 0, 0), Color3.new(1, 0, 0))
 while true do
 	if rainbowmode == true then
-		RecolorTextAndRename("StarLight", Color3.new(r / 255, g / 255, b / 255), Color3.new(r / 500, g / 500, b / 500))
+		RecolorTextAndRename("StarLight", Color3.new(r / 500, g / 500, b / 500), Color3.new(r / 255, g / 255, b / 255))
 		MAINRUINCOLOR = BrickColor.new("White")
 		for i, v in pairs(m:GetChildren()) do
 			if v:IsA("Part") then
