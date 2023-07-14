@@ -4448,7 +4448,7 @@ Humanoid.Health = math.huge
 Instance.new("ForceField", char).Visible = false
 Humanoid.Animator.Parent = nil
 idleanim = 0.4
-RecolorTextAndRename("Singularity", Color3.new(0, 0, 0), Color3.new(1, 0, 0))
+RecolorTextAndRename("Sweet Dreams", Color3.new(0, 0, 0), Color3.new(1, 0, 0))
 while true do
 	if rainbowmode == true then
 		RecolorTextAndRename("StarLight", Color3.new(r / 255, g / 255, b / 255), Color3.new(r / 500, g / 500, b / 500))
