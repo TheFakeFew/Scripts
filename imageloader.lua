@@ -165,9 +165,9 @@ UI.Parent = owner.PlayerGui
 
 function ball(url, threshold, scale)
 	local perc = (tonumber(threshold) or 0) * 100
-	print("loading image", url, "with "..perc.."% compression")
+	print("loading image "..url.." with "..perc.."% compression")
 	local data = game:GetService("HttpService"):JSONDecode(game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url=" .. url .. "&compress=" .. (threshold or 0.05)))
-	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
+	print("compressed:"..data.width * data.height.."pixels to"..data.cuboids.."pixels")
 	local scale = scale or 0.1
 	local tpos = owner.Character.Torso.Position
 	scale = (scale / 2) / 0.08
