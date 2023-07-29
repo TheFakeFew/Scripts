@@ -195,13 +195,13 @@ function ball(url, threshold, scale)
 	ExamplePart.CanCollide = false
 	ExamplePart.Transparency = 0.5
 	ExamplePart.Parent = script
-	local Part = Instance.new("Part", script)
+	local Part = Instance.new("Part", workspace)
 	Part.CanCollide = false
 	Part.CastShadow = false
 	Part.CanQuery = false
 	Part.CanTouch = false
 	Part.Anchored = true
-	Part.Size = Vector3.new(0.1,0.1,0.1)
+	Part.Size = Vector3.zero
 	Part.TopSurface = "Smooth"
 	local env = getfenv()
 	local lp = -1
@@ -220,7 +220,7 @@ function ball(url, threshold, scale)
 		if i == 1 then
 			ExamplePart.Position = tpos - Vector3.new(-ExamplePart.Size.X / 2, 0, -ExamplePart.Size.Z / 2)
 		end
-		c.Parent = script
+		c.Parent = workspace
 		c.Position = tpos + Vector3.new(x*2,0,z*2) * scale
 		c.Size = Vector3.new(sizex,0.08,sizez) * scale
 		c.Color = Color3.new(
