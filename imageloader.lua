@@ -246,7 +246,6 @@ remote.OnServerEvent:Connect(function(player,tbl)
 	ball(tbl.url, tbl.thresh, tbl.scale or 0.05)
 end)
 local ls = NLS([[
-	print(script.Parent)
 	local UI = script.Parent:WaitForChild("ImageGenUniverseInterface")
 	local urltb = UI.Frame.Url
 	urltb.PlaceholderText = "Url"
