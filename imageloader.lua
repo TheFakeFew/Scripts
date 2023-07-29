@@ -178,6 +178,7 @@ function ball(url, threshold, scale)
 	local TextLabel = Instance.new("TextBox", SurfaceGui)
 	SurfaceGui.Adornee = ExamplePart
 	SurfaceGui.Face = "Top"
+
 	TextLabel.Size = UDim2.new(0.5, 0, 0.75, 0)
 	TextLabel.AnchorPoint = Vector2.new(0.5, 0.5)
 	TextLabel.Position = UDim2.new(0.5,0,0.5,0)
@@ -205,10 +206,9 @@ function ball(url, threshold, scale)
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
-		local x = (v["startX"] + v["endX"])/50
-		local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
-		local z = (v["startZ"] + v["endZ"])/50
-		local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
+
+		local x = (v["startX"] + v["endX"])/50 local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
+		local z = (v["startZ"] + v["endZ"])/50 local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
 		
 		local c = Instance.new("Part")
 		c.CanCollide = false
@@ -227,6 +227,8 @@ function ball(url, threshold, scale)
 		)
 		c.Parent = workspace
 	end
+
+	table.clear(data)
 	ExamplePart:Destroy()
 end
 
