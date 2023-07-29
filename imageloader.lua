@@ -188,16 +188,17 @@ function ball(url, threshold, scale)
 	TextLabel.Rotation = 90
 	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	TextLabel.TextScaled = true
+
 	ExamplePart.Anchored = true
 	ExamplePart.Size = Vector3.new(data.width * scale, scale + 0.05, data.height * scale) * 0.08
-	ExamplePart.Color = Color3.fromHex("000000")
+	ExamplePart.Color = Color3.new()
 	ExamplePart.Position = tpos + Vector3.new(
 		(data.width / 2) * scale, 0, (data.height / 2) * scale
 	) * scale
 	ExamplePart.CanCollide = false
 	ExamplePart.Transparency = 0.5
-	ExamplePart.Parent = workspace
 	ExamplePart.Position = tpos - Vector3.new(-ExamplePart.Size.X / 2, 0, -ExamplePart.Size.Z / 2)
+	ExamplePart.Parent = workspace
 
 	for i,v in next, data.data do
 		if i % 35 == 0 then
