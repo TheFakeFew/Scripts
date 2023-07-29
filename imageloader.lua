@@ -166,13 +166,13 @@ UI.Parent = owner.PlayerGui
 function ball(url, threshold, scale)
 	print(tonumber(threshold) or 0)
 	print("loading image", url)
-	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url=" .. url .. "&compress=" .. (threshold or 0.05))
-	local data = game:GetService("HttpService"):JSONDecode(json)
+	local data = game:GetService("HttpService"):JSONDecode(game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url=" .. url .. "&compress=" .. (threshold or 0.05)))
 	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
 	local scale = scale or 0.1
 	local tpos = owner.Character.Torso.Position
 	scale = (scale / 2) / 0.08
 	local cuboids = data
+
 	local ExamplePart = Instance.new("Part")
 	local SurfaceGui = Instance.new("SurfaceGui", ExamplePart)
 	local TextLabel = Instance.new("TextBox", SurfaceGui)
@@ -196,7 +196,8 @@ function ball(url, threshold, scale)
 	) * scale
 	ExamplePart.CanCollide = false
 	ExamplePart.Transparency = 0.5
-	ExamplePart.Parent = script
+	ExamplePart.Parent = workspace
+
 	local Part = Instance.new("Part", workspace)
 	Part.CanCollide = false
 	Part.CastShadow = false
