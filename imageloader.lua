@@ -201,7 +201,7 @@ function ball(url, threshold, scale)
 	ExamplePart.Parent = workspace
 
 	for i,v in next, data.data do
-		if i % 35 == 0 then
+		if i % 45 == 0 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
