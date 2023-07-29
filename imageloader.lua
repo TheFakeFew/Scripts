@@ -195,13 +195,12 @@ function ball(url, threshold, scale)
 	ExamplePart.CanCollide = false
 	ExamplePart.Transparency = 0.5
 	ExamplePart.Parent = script
-	local Part = Instance.new("SpawnLocation", script)
+	local Part = Instance.new("Part", script)
 	Part.CanCollide = false
 	Part.CastShadow = false
 	Part.CanQuery = false
 	Part.CanTouch = false
 	Part.Anchored = true
-	Part.Enabled = false
 	Part.Size = Vector3.new(0.1,0.1,0.1)
 	Part.TopSurface = "Smooth"
 	local env = getfenv()
