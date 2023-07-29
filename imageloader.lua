@@ -197,39 +197,34 @@ function ball(url, threshold, scale)
 	ExamplePart.CanCollide = false
 	ExamplePart.Transparency = 0.5
 	ExamplePart.Parent = workspace
+	ExamplePart.Position = tpos - Vector3.new(-ExamplePart.Size.X / 2, 0, -ExamplePart.Size.Z / 2)
 
-	local Part = Instance.new("Part", workspace)
-	Part.CanCollide = false
-	Part.CastShadow = false
-	Part.CanQuery = false
-	Part.CanTouch = false
-	Part.Anchored = true
-	Part.Size = Vector3.zero
-	Part.TopSurface = "Smooth"
-	local env = getfenv()
-	local lp = -1
-	local cuboids = data.data
 	for i,v in next, data.data do
 		if i % 35 == 0 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
-		local x = (cuboids[i]["startX"] + cuboids[i]["endX"])/50 --((cuboids[i]["startX"]*2) + (cuboids[i]["endX"]*2)) / 2
-		local sizex = ((cuboids[i]["endX"]-cuboids[i]["startX"])*0.08)+0.08
-		local z = (cuboids[i]["startZ"] + cuboids[i]["endZ"])/50 --((cuboids[i]["startX"]*2) + (cuboids[i]["endX"]*2)) / 2
-		local sizez = ((cuboids[i]["endZ"]-cuboids[i]["startZ"])*0.08)+0.08
-		local c = Part:Clone()
-		if i == 1 then
-			ExamplePart.Position = tpos - Vector3.new(-ExamplePart.Size.X / 2, 0, -ExamplePart.Size.Z / 2)
-		end
-		c.Parent = workspace
+		local x = (v["startX"] + v["endX"])/50
+		local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
+		local z = (v["startZ"] + v["endZ"])/50
+		local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
+		
+		local c = Instance.new("Part")
+		c.CanCollide = false
+		c.CastShadow = false
+		c.CanQuery = false
+		c.CanTouch = false
+		c.Anchored = true
+		c.Size = Vector3.zero
+		c.TopSurface = "Smooth"
 		c.Position = tpos + Vector3.new(x*2,0,z*2) * scale
 		c.Size = Vector3.new(sizex,0.08,sizez) * scale
 		c.Color = Color3.new(
-			cuboids[i]["color"].R,
-			cuboids[i]["color"].G,
-			cuboids[i]["color"].B
+			v["color"].R,
+			v["color"].G,
+			v["color"].B
 		)
+		c.Parent = workspace
 	end
 	ExamplePart:Destroy()
 end
