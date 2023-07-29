@@ -208,7 +208,7 @@ function ball(url, threshold, scale)
 	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
 	local cuboids = data.data
 	for i,v in next, data.data do
-		if i % 15 == 0 then
+		if i % 25 == 0 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
