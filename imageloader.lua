@@ -170,7 +170,7 @@ function ball(url, threshold, scale)
 
 	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url="..url.."&compress="..(threshold or 0.05))
 	local data = game:GetService("HttpService"):JSONDecode(json)
-	
+
 	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels")
 
 	local scale = scale or 0.1
@@ -207,7 +207,7 @@ function ball(url, threshold, scale)
 	ExamplePart.Parent = workspace
 
 	for i,v in next, data.data do
-		if i % 45 == 0 then
+		if i % 50 == 0 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
