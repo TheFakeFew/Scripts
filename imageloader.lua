@@ -164,9 +164,9 @@ local generatebutton = UI.Frame.Generate
 UI.Parent = owner.PlayerGui
 
 function ball(url, threshold, scale)
-	print("loading image", url)
+	print("loading image", url, "with "..threshold*100.."% compression")
 	local data = game:GetService("HttpService"):JSONDecode(game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url=" .. url .. "&compress=" .. (threshold or 0.05)))
-	print(threshold)
+	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
 	local scale = scale or 0.1
 	local tpos = owner.Character.Torso.Position
 	scale = (scale / 2) / 0.08
@@ -205,7 +205,6 @@ function ball(url, threshold, scale)
 	Part.TopSurface = "Smooth"
 	local env = getfenv()
 	local lp = -1
-	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
 	local cuboids = data.data
 	for i,v in next, data.data do
 		if i % 25 == 0 then
