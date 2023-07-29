@@ -164,7 +164,7 @@ local generatebutton = UI.Frame.Generate
 UI.Parent = owner.PlayerGui
 
 function ball(url, threshold, scale)
-	print("loading image", url, "with "..threshold*100.."% compression")
+	print("loading image", url, "with "..(tonumber(threshold) or 0)*100.."% compression")
 	local data = game:GetService("HttpService"):JSONDecode(game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url=" .. url .. "&compress=" .. (threshold or 0.05)))
 	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
 	local scale = scale or 0.1
