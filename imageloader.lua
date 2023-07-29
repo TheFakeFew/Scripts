@@ -165,7 +165,7 @@ UI.Parent = owner.PlayerGui
 
 function ball(url, threshold, scale)
 	print(tonumber(threshold) or 0)
-	print("loading image", url, "with "..(tonumber(threshold) or 0.05)*100.."% compression")
+	print("loading image", url)
 	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url=" .. url .. "&compress=" .. (threshold or 0.05))
 	local data = game:GetService("HttpService"):JSONDecode(json)
 	print("compressed:", data.width * data.height, "pixels to", data.cuboids, "pixels")
