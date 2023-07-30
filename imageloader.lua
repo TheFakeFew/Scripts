@@ -168,7 +168,8 @@ function ball(url, threshold, scale)
 
 	print("loading image "..url.." with "..(threshold*100).."% compression")
 
-	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url="..url.."&compress="..(threshold or 0.05))
+	local encodedurl = game:GetService("HttpService"):UrlEncode(url);
+	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url="..encodedurl.."&compress="..(threshold or 0.05))
 	local data = game:GetService("HttpService"):JSONDecode(json)
 
 	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels")
