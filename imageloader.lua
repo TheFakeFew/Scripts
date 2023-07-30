@@ -164,6 +164,7 @@ local generatebutton = UI.Frame.Generate
 UI.Parent = owner.PlayerGui
 
 function ball(url, threshold, scale)
+	scale = 0.05 * scale
 	threshold = math.clamp(tonumber(threshold) or 0.05, 0.05, 1)
 
 	print("loading image "..url.." with "..(threshold*100).."% compression")
@@ -175,7 +176,7 @@ function ball(url, threshold, scale)
 	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels")
 
 	local scale = scale or 0.1
-	local tpos = owner.Character.Torso.Position
+	local tpos = owner.Character:FindFirstChild("HumanoidRootPart").Position
 	scale = (scale / 2) / 0.08
 	local cuboids = data
 
@@ -250,7 +251,7 @@ remote.OnServerEvent:Connect(function(player,tbl)
 	if(not tbl)then
 		return
 	end
-	ball(tbl.url, tbl.thresh, tbl.scale or 0.05)
+	ball(tbl.url, tbl.thresh, tbl.scale or 1)
 end)
 local ls = NLS([[
 	local UI = script.Parent:WaitForChild("ImageGenUniverseInterface")
