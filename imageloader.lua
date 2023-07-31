@@ -2,166 +2,256 @@ if(not owner)then
 	getfenv(1).owner = script.Parent:IsA("PlayerGui") and script.Parent.Parent or game:GetService('Players'):GetPlayerFromCharacter(script.Parent)
 end
 
-local genv={}
-Decode =  function(str,t,props,classes,values,ICList,Model,CurPar,LastIns,split,RemoveAndSplit,InstanceList)
-	local tonum,table_remove,inst,parnt,comma,table_foreach = tonumber,table.remove,Instance.new,"Parent",",",
-	function(t,f)
-		for a,b in pairs(t) do
-			f(a,b)
+local function Decode(str)
+	local StringLength = #str
+
+	-- Base64 decoding
+	do
+		local decoder = {}
+		for b64code, char in pairs(('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='):split('')) do
+			decoder[char:byte()] = b64code-1
 		end
+		local n = StringLength
+		local t,k = table.create(math.floor(n/4)+1),1
+		local padding = str:sub(-2) == '==' and 2 or str:sub(-1) == '=' and 1 or 0
+		for i = 1, padding > 0 and n-4 or n, 4 do
+			local a, b, c, d = str:byte(i,i+3)
+			local v = decoder[a]*0x40000 + decoder[b]*0x1000 + decoder[c]*0x40 + decoder[d]
+			t[k] = string.char(bit32.extract(v,16,8),bit32.extract(v,8,8),bit32.extract(v,0,8))
+			k = k + 1
+		end
+		if padding == 1 then
+			local a, b, c = str:byte(n-3,n-1)
+			local v = decoder[a]*0x40000 + decoder[b]*0x1000 + decoder[c]*0x40
+			t[k] = string.char(bit32.extract(v,16,8),bit32.extract(v,8,8))
+		elseif padding == 2 then
+			local a, b = str:byte(n-3,n-2)
+			local v = decoder[a]*0x40000 + decoder[b]*0x1000
+			t[k] = string.char(bit32.extract(v,16,8))
+		end
+		str = table.concat(t)
 	end
-	local Types = {
-		Color3 = Color3.new,
-		Vector3 = Vector3.new,
-		Vector2 = Vector2.new,
-		UDim = UDim.new,
-		UDim2 = UDim2.new,
-		CFrame = CFrame.new,
-		Rect = Rect.new,
-		NumberRange = NumberRange.new,
-		BrickColor = BrickColor.new,
-		PhysicalProperties = PhysicalProperties.new,
-		NumberSequence = function(...)
-			local a = {...}
-			local t = {}
-			repeat
-				t[#t+1] = NumberSequenceKeypoint.new(table_remove(a,1),table_remove(a,1),table_remove(a,1))
-			until #a==0
-			return NumberSequence.new(t)
-		end,
-		ColorSequence = function(...)
-			local a = {...}
-			local t = {}
-			repeat
-				t[#t+1] = ColorSequenceKeypoint.new(table_remove(a,1),Color3.new(table_remove(a,1),table_remove(a,1),table_remove(a,1)))
-			until #a==0
-			return ColorSequence.new(t)
-		end,
-		number = tonumber,
-		boolean = function(a)
-			return a=="1"
-		end
+
+	local Position = 1
+	local function Parse(fmt)
+		local Values = {string.unpack(fmt,str,Position)}
+		Position = table.remove(Values)
+		return table.unpack(Values)
+	end
+
+	local Settings = Parse('B')
+	local Flags = Parse('B')
+	Flags = {
+		--[[ValueIndexByteLength]] bit32.extract(Flags,6,2)+1,
+		--[[InstanceIndexByteLength]] bit32.extract(Flags,4,2)+1,
+		--[[ConnectionsIndexByteLength]] bit32.extract(Flags,2,2)+1,
+		--[[MaxPropertiesLengthByteLength]] bit32.extract(Flags,0,2)+1,
+		--[[Use Double instead of Float]] bit32.band(Settings,0b1) > 0
 	}
-	split = function(str,sep)
-		if not str then return end
-		local fields = {}
-		local ConcatNext = false
-		str:gsub(("([^%s]+)"):format(sep),function(c)
-			if ConcatNext == true then
-				fields[#fields] = fields[#fields]..sep..c
-				ConcatNext = false
-			else
-				fields[#fields+1] = c
-			end
-			if c:sub(#c)=="\\" then
-				c = fields[#fields]
-				fields[#fields] = c:sub(1,#c-1)
-				ConcatNext = true
-			end
-		end)
-		return fields
-	end
-	RemoveAndSplit = function(t)
-		return split(table_remove(t,1),comma)
-	end
-	t = split(str,";")
-	props = RemoveAndSplit(t)
-	classes = RemoveAndSplit(t)
-	values = split(table_remove(t,1),'|')
-	ICList = RemoveAndSplit(t)
-	InstanceList = {}
-	Model = inst"Model"
-	CurPar = Model
-	table_foreach(t,function(ct,c)
-		if c=="n" or c=="p" then
-			CurPar = c=="n" and LastIns or CurPar[parnt]
-		else
-			ct = split(c,"|")
-			local class = classes[tonum(table_remove(ct,1))]
-			if class=="UnionOperation" then
-				LastIns = {UsePartColor="1"}
-			else
-				LastIns = inst(class)
-				if LastIns:IsA"Script" then
-					s(LastIns)
-				elseif LastIns:IsA("ModuleScript") then
-					ms(LastIns)
-				end
-			end
 
-			local function SetProperty(LastIns,p,str,s)
-				s = Types[typeof(LastIns[p])]
-				if p=="CustomPhysicalProperties" then
-					s = PhysicalProperties.new
-				end
-				if s then
-					LastIns[p] = s(unpack(split(str,comma)))
-				else
-					LastIns[p] = str
+	local ValueFMT = ('I'..Flags[1])
+	local InstanceFMT = ('I'..Flags[2])
+	local ConnectionFMT = ('I'..Flags[3])
+	local PropertyLengthFMT = ('I'..Flags[4])
+
+	local ValuesLength = Parse(ValueFMT)
+	local Values = table.create(ValuesLength)
+	local CFrameIndexes = {}
+
+	local ValueDecoders = {
+		
+		[1] = function(Modifier)
+			return Parse('s'..Modifier)
+		end,
+		
+		[2] = function(Modifier)
+			return Modifier ~= 0
+		end,
+		
+		[3] = function()
+			return Parse('d')
+		end,
+		
+		[4] = function(_,Index)
+			table.insert(CFrameIndexes,{Index,Parse(('I'..Flags[1]):rep(3))})
+		end,
+		
+		[5] = {CFrame.new,Flags[5] and 'dddddddddddd' or 'ffffffffffff'},
+		
+		[6] = {Color3.fromRGB,'BBB'},
+		
+		[7] = {BrickColor.new,'I2'},
+		
+		[8] = function(Modifier)
+			local len = Parse('I'..Modifier)
+			local kpts = table.create(len)
+			for i = 1,len do
+				kpts[i] = ColorSequenceKeypoint.new(Parse('f'),Color3.fromRGB(Parse('BBB')))
+			end
+			return ColorSequence.new(kpts)
+		end,
+		
+		[9] = function(Modifier)
+			local len = Parse('I'..Modifier)
+			local kpts = table.create(len)
+			for i = 1,len do
+				kpts[i] = NumberSequenceKeypoint.new(Parse(Flags[5] and 'ddd' or 'fff'))
+			end
+			return NumberSequence.new(kpts)
+		end,
+		
+		[10] = {Vector3.new,Flags[5] and 'ddd' or 'fff'},
+		
+		[11] = {Vector2.new,Flags[5] and 'dd' or 'ff'},
+		
+		[12] = {UDim2.new,Flags[5] and 'di2di2' or 'fi2fi2'},
+		
+		[13] = {Rect.new,Flags[5] and 'dddd' or 'ffff'},
+		
+		[14] = function()
+			local flags = Parse('B')
+			local ids = {"Top","Bottom","Left","Right","Front","Back"}
+			local t = {}
+			for i = 0,5 do
+				if bit32.extract(flags,i,1)==1 then
+					table.insert(t,Enum.NormalId[ids[i+1]])
 				end
 			end
-
-			local UnionData
-			table_foreach(ct,function(s,p,a,str)
-				a = p:find":"
-				p,str = props[tonum(p:sub(1,a-1))],values[tonum(p:sub(a+1))]
-				if p=="UnionData" then
-					UnionData = split(str," ")
-					return
+			return Axes.new(unpack(t))
+		end,
+		
+		[15] = function()
+			local flags = Parse('B')
+			local ids = {"Top","Bottom","Left","Right","Front","Back"}
+			local t = {}
+			for i = 0,5 do
+				if bit32.extract(flags,i,1)==1 then
+					table.insert(t,Enum.NormalId[ids[i+1]])
 				end
-				if class=="UnionOperation" then
-					LastIns[p] = str
-					return
-				end
-				SetProperty(LastIns,p,str)
-			end)
-
-			if UnionData then
-				local LI_Data = LastIns
-				LastIns = DecodeUnion(UnionData)
-				table_foreach(LI_Data,function(p,str)
-					SetProperty(LastIns,p,str)
-				end)
 			end
-			table.insert(InstanceList,LastIns)
-			LastIns[parnt] = CurPar
+			return Faces.new(unpack(t))
+		end,
+		
+		[16] = {PhysicalProperties.new,Flags[5] and 'ddddd' or 'fffff'},
+		
+		[17] = {NumberRange.new,Flags[5] and 'dd' or 'ff'},
+		
+		[18] = {UDim.new,Flags[5] and 'di2' or 'fi2'},
+		
+		[19] = function()
+			return Ray.new(Vector3.new(Parse(Flags[5] and 'ddd' or 'fff')),Vector3.new(Parse(Flags[5] and 'ddd' or 'fff')))
 		end
-	end)
-	table_remove(ICList,1)
-	table_foreach(ICList,function(a,b)
-		b = split(b,">")
-		InstanceList[tonum(b[1])][props[tonum(b[2])]] = InstanceList[tonum(b[3])]
-	end)
+		
+	}
 
-	return Model:GetChildren()
+	for i = 1,ValuesLength do
+		local TypeAndModifier = Parse('B')
+		local Type = bit32.band(TypeAndModifier,0b11111)
+		local Modifier = (TypeAndModifier - Type) / 0b100000
+		local Decoder = ValueDecoders[Type]
+		if type(Decoder)=='function' then
+			Values[i] = Decoder(Modifier,i)
+		else
+			Values[i] = Decoder[1](Parse(Decoder[2]))
+		end
+	end
+
+	for i,t in pairs(CFrameIndexes) do
+		Values[t[1]] = CFrame.fromMatrix(Values[t[2]],Values[t[3]],Values[t[4]])
+	end
+
+	local InstancesLength = Parse(InstanceFMT)
+	local Instances = {}
+	local NoParent = {}
+
+	for i = 1,InstancesLength do
+		local ClassName = Values[Parse(ValueFMT)]
+		local obj
+		local MeshPartMesh,MeshPartScale
+		if ClassName == "UnionOperation" then
+			obj = DecodeUnion(Values,Flags,Parse)
+			obj.UsePartColor = true
+		elseif ClassName:find("Script") then
+			obj = Instance.new("Folder")
+			Script(obj,ClassName=='ModuleScript')
+		elseif ClassName == "MeshPart" then
+			obj = Instance.new("Part")
+			MeshPartMesh = Instance.new("SpecialMesh")
+			MeshPartMesh.MeshType = Enum.MeshType.FileMesh
+			MeshPartMesh.Parent = obj
+		else
+			obj = Instance.new(ClassName)
+		end
+		local Parent = Instances[Parse(InstanceFMT)]
+		local PropertiesLength = Parse(PropertyLengthFMT)
+		local AttributesLength = Parse(PropertyLengthFMT)
+		Instances[i] = obj
+		for i = 1,PropertiesLength do
+			local Prop,Value = Values[Parse(ValueFMT)],Values[Parse(ValueFMT)]
+
+			-- ok this looks awful
+			if MeshPartMesh then
+				if Prop == "MeshId" then
+					MeshPartMesh.MeshId = Value
+					continue
+				elseif Prop == "TextureID" then
+					MeshPartMesh.TextureId = Value
+					continue
+				elseif Prop == "Size" then
+					if not MeshPartScale then
+						MeshPartScale = Value
+					else
+						MeshPartMesh.Scale = Value / MeshPartScale
+					end
+				elseif Prop == "MeshSize" then
+					if not MeshPartScale then
+						MeshPartScale = Value
+						MeshPartMesh.Scale = obj.Size / Value
+					else
+						MeshPartMesh.Scale = MeshPartScale / Value
+					end
+					continue
+				end
+			end
+
+			obj[Prop] = Value
+		end
+		if MeshPartMesh then
+			if MeshPartMesh.MeshId=='' then
+				if MeshPartMesh.TextureId=='' then
+					MeshPartMesh.TextureId = 'rbxasset://textures/meshPartFallback.png'
+				end
+				MeshPartMesh.Scale = obj.Size
+			end
+		end
+		for i = 1,AttributesLength do
+			obj:SetAttribute(Values[Parse(ValueFMT)],Values[Parse(ValueFMT)])
+		end
+		if not Parent then
+			table.insert(NoParent,obj)
+		else
+			obj.Parent = Parent
+		end
+	end
+
+	local ConnectionsLength = Parse(ConnectionFMT)
+	for i = 1,ConnectionsLength do
+		local a,b,c = Parse(InstanceFMT),Parse(ValueFMT),Parse(InstanceFMT)
+		Instances[a][Values[b]] = Instances[c]
+	end
+
+	return NoParent
 end
 
-local Objects = Decode('Name,ZIndexBehavior,ResetOnSpawn,Position,Size,AnchorPoint,BackgroundColor3,BorderColor3,Font,Text,TextColor3,TextScaled,TextSize,TextWrapped;Part,ScreenGui,Frame,TextBox,TextButton;Part|UI|1|0|0.9319'
-	..',0,0.8817,0|0.1029,0,0.2075,0|0.5,0.5|0.2078,0.2078,0.2078|Url|0.4936,0,0.1491,0|0.7782,0,0.1723,0|1,1,1|3| |0,0,0|1|14|Threshold|0.4936,0,0.3771,0|Generate|0.4971,0,0.8653,0|0.6148,0,0.1854,0|Scale|0'
-	..'.4936,0,0.6015,0;0;2|1:2|2:3|3:4;n;3|4:5|5:6|6:7|7:8;n;4|1:9|4:10|5:11|6:7|7:8|8:12|9:13|10:14|11:15|12:16|13:17|14:16;4|1:18|4:19|5:11|6:7|7:8|8:12|9:13|10:14|11:15|12:16|13:17|14:16;5|1:20|4:21|5:22'
-	..'|6:7|7:8|8:12|9:13|10:20|11:12|12:16|13:17|14:16;4|1:23|4:24|5:11|6:7|7:8|8:12|9:13|10:14|11:15|12:16|13:17|14:16;p;p;')
-local UI = Objects[1]
-if(owner.PlayerGui:FindFirstChild("ImageGenUniverseInterface"))then
-	owner.PlayerGui:FindFirstChild("ImageGenUniverseInterface"):Destroy()
-end
-UI.Name = "ImageGenUniverseInterface"
-local urltb = UI.Frame.Url
-urltb.PlaceholderText = "Url"
-urltb.PlaceholderColor3 = Color3.new(1,1,1)
-urltb.TextColor3 = Color3.new(1,1,1)
-urltb.Text = "Url"
-local threshtb = UI.Frame.Threshold
-threshtb.PlaceholderText = "Threshold"
-threshtb.PlaceholderColor3 = Color3.new(1,1,1)
-threshtb.TextColor3 = Color3.new(1,1,1)
-threshtb.Text = "Threshold"
-local scaletb = UI.Frame.Scale
-scaletb.PlaceholderText = "Scale"
-scaletb.PlaceholderColor3 = Color3.new(1,1,1)
-scaletb.TextColor3 = Color3.new(1,1,1)
-scaletb.Text = "Scale"
-local generatebutton = UI.Frame.Generate
-UI.Parent = owner.PlayerGui
+
+local Objects = Decode('AAAxIQlTY3JlZW5HdWkhBE5hbWUhAnVpIQxSZXNldE9uU3Bhd24CIQ5aSW5kZXhCZWhhdmlvcgMAAAAAAADwPyEFRnJhbWUhEEJhY2tncm91bmRDb2xvcjMGLCwsIQxCb3JkZXJDb2xvcjMG////IQhQb3NpdGlvbgyMLFU/AADUmTs/AAAhBFNpemUMAAAAAL0AAAAA'
+	..'ANMAIQdUZXh0Qm94IQN1cmwMZC6ZPQAA0yYxPQAADAAAAACfAAAAAAApACEOQ3Vyc29yUG9zaXRpb24DAAAAAAAA8L8hBEZvbnQDAAAAAAAACEAhEVBsYWNlaG9sZGVyQ29sb3IzIQ9QbGFjZWhvbGRlclRleHQhA1VSTCEEVGV4dCEAIQpUZXh0Q29sb3IzIQhUZXh0'
+	..'U2l6ZQMAAAAAAAAzQCELVGV4dFdyYXBwZWQiIQRjb21wDGQumT0AAPjUjz4AACELQ29tcHJlc3Npb24hBXNjYWxlDGQumT0AALw3BD8AACEFU2NhbGUhClRleHRCdXR0b24hA2dlbgxkLpk9AAC3v0c/AAAMAAAAAEMAAAAAACIAIQhHZW5lcmF0ZSEDY2xyDOnsBD8A'
+	..'ALe/Rz8AAAwAAAAASwAAAAAAIgAhBUNsZWFyBwEAAwACAwQFBgcIAQQACQoLDA0ODxARAg0AAhIJCgsMDRMPFBUWFxgZDBobHB0eDB8gISIRAg0AAiMJCgsMDSQPFBUWFxgZDBolHB0eDB8gISIRAg0AAiYJCgsMDScPFBUWFxgZDBooHB0eDB8gISIpAgoAAioJCgsM'
+	..'DSsPLBcYHC0eDB8gISIpAgoAAi4JCgsMDS8PMBcYHDEeDB8gISIA')
+
+local ui = Objects[1]
+ui.Parent = owner.PlayerGui
 
 function ball(url, threshold, scale)
 	scale = 0.05 * scale
@@ -200,23 +290,21 @@ function ball(url, threshold, scale)
 	ExamplePart.Anchored = true
 	ExamplePart.Size = Vector3.new(data.width * scale, scale + 0.05, data.height * scale) * 0.08
 	ExamplePart.Color = Color3.new()
-	ExamplePart.Position = tpos + Vector3.new(
-		(data.width / 2) * scale, 0, (data.height / 2) * scale
-	) * scale
+	ExamplePart.Position = tpos + Vector3.new((data.width / 2) * scale, 0, (data.height / 2) * scale) * scale
 	ExamplePart.CanCollide = false
 	ExamplePart.Transparency = 0.5
 	ExamplePart.Position = tpos - Vector3.new(-ExamplePart.Size.X / 2, 0, -ExamplePart.Size.Z / 2)
 	ExamplePart.Parent = workspace
 
 	for i,v in next, data.data do
-		if i % 50 == 0 then
+		if i % 75 == 0 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
 
 		local x = (v["startX"] + v["endX"])/50 local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
 		local z = (v["startZ"] + v["endZ"])/50 local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
-		
+
 		local c = Instance.new("Part")
 		c.CanCollide = false
 		c.CastShadow = false
@@ -227,52 +315,52 @@ function ball(url, threshold, scale)
 		c.TopSurface = "Smooth"
 		c.Position = tpos + Vector3.new(x*2,0,z*2) * scale
 		c.Size = Vector3.new(sizex,0.08,sizez) * scale
-		c.Color = Color3.new(
-			v["color"].R,
-			v["color"].G,
-			v["color"].B
-		)
-		c.Parent = workspace
+		c.Color = Color3.new(v["color"].R, v["color"].G, v["color"].B)
+		c.Parent = script
 	end
 
 	table.clear(data)
-	ExamplePart:Destroy()
+	pcall(game.Destroy, ExamplePart)
 end
 
-if(game:GetService('ReplicatedStorage'):FindFirstChild("imagegen"..owner.Name))then
-	game:GetService('ReplicatedStorage'):FindFirstChild("imagegen"..owner.Name):Destroy()
+function clearparts()
+	for i, v in next, script:GetChildren() do
+		if i % 200 == 0 then
+			task.wait()
+		end
+		pcall(game.Destroy, v)
+	end
 end
-local remote = Instance.new("RemoteEvent",game:GetService("ReplicatedStorage"))
-remote.Name = "imagegen"..owner.Name
-remote.OnServerEvent:Connect(function(player,tbl)
+
+local handler = NLS([=[
+local rem = script:WaitForChild("RemoteEvent")
+local f = script.Parent.Frame
+local urlt = f.url
+local compt = f.comp
+local scalet = f.scale
+local gen = f.gen
+local clear = f.clr
+
+gen.MouseButton1Click:Connect(function()
+	rem:FireServer("gen", {urlt.Text, compt.Text, tonumber(scalet.Text)})
+end)
+
+clear.MouseButton1Click:Connect(function()
+	rem:FireServer("clr", true)
+end)
+]=], ui)
+
+local remote = Instance.new("RemoteEvent", handler)
+remote.OnServerEvent:Connect(function(player,type,tbl)
 	if(player ~= owner)then
 		return
 	end
 	if(not tbl)then
 		return
 	end
-	ball(tbl.url, tbl.thresh, tbl.scale or 1)
+	if(type == "gen")then
+		ball(tbl[1], tbl[2], tbl[3] or 1)
+	elseif(type == "clr")then
+		clearparts()
+	end
 end)
-local ls = NLS([[
-	local UI = script.Parent:WaitForChild("ImageGenUniverseInterface")
-	local urltb = UI.Frame.Url
-	urltb.PlaceholderText = "Url"
-	urltb.PlaceholderColor3 = Color3.new(1,1,1)
-	urltb.TextColor3 = Color3.new(1,1,1)
-	urltb.Text = "Url"
-	local threshtb = UI.Frame.Threshold
-	threshtb.PlaceholderText = "Threshold"
-	threshtb.PlaceholderColor3 = Color3.new(1,1,1)
-	threshtb.TextColor3 = Color3.new(1,1,1)
-	threshtb.Text = "Threshold"
-	local scaletb = UI.Frame.Scale
-	scaletb.PlaceholderText = "Scale"
-	scaletb.PlaceholderColor3 = Color3.new(1,1,1)
-	scaletb.TextColor3 = Color3.new(1,1,1)
-	scaletb.Text = "Scale"
-	local generatebutton = UI.Frame.Generate
-	local rem = game:GetService("ReplicatedStorage"):FindFirstChild("imagegen"..owner.Name)
-	generatebutton.MouseButton1Click:Connect(function()
-		rem:FireServer({url = urltb.Text, thresh = threshtb.Text, scale = tonumber(scaletb.Text)})
-	end)
-]],owner.PlayerGui)
