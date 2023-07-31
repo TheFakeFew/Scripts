@@ -308,7 +308,7 @@ function ball(url, threshold, scale)
 	TextLabel.Rotation = 90
 	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	TextLabel.TextScaled = true
-	TextLabel.Text = "[0 of "..data.cuboids.." pixels]"
+	TextLabel.Text = "[0/"..data.cuboids.." pixels]"
 
 	ExamplePart.Anchored = true
 	ExamplePart.Size = Vector3.new(data.width * scale, scale + 0.05, data.height * scale) * 0.08
@@ -324,7 +324,7 @@ function ball(url, threshold, scale)
 	for i = 1, #dt do
 		if i % 150 == 0 or i == 1 then
 			task.wait()
-			TextLabel.Text = "["..i.." of "..data.cuboids.." pixels]"
+			TextLabel.Text = "["..i.."/"..data.cuboids.." pixels]"
 		end
 		local v = dt[i]
 
@@ -355,7 +355,7 @@ function clearparts()
 	local start = tick()
 	local parts = script:GetChildren()
 	for i = 1, #parts do
-		if i % 350 == 0 or i == 1 then
+		if i % 450 == 0 or i == 1 then
 			task.wait()
 		end
 		pcall(game.Destroy, parts[i])
