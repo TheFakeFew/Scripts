@@ -316,11 +316,14 @@ function ball(url, threshold, scale)
 	ExamplePart.Position = tpos - Vector3.new(-ExamplePart.Size.X / 2, 0, -ExamplePart.Size.Z / 2)
 	ExamplePart.Parent = workspace
 
-	for i,v in next, data.data do
+	local dt = data.data
+
+	for i = 1, #dt do
 		if i % 80 == 0 or i == 1 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
+		local v = dt[i]
 
 		local x = (v["startX"] + v["endX"])/50 local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
 		local z = (v["startZ"] + v["endZ"])/50 local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
@@ -346,13 +349,14 @@ end
 
 function clearparts()
 	local start = tick()
-	for i, v in next, script:GetChildren() do
+	local parts = script:GetChildren()
+	for i = 1, #parts do
 		if i % 350 == 0 or i == 1 then
 			task.wait()
 		end
-		pcall(game.Destroy, v)
+		pcall(game.Destroy, parts[i])
 	end
-	print("successfully slowcleared. took "..round(tick() - start, 2).." seconds")
+	print("successfully slowcleared "..(#parts).." parts. took "..round(tick() - start, 2).." seconds")
 end
 
 local handler = NLS([=[
