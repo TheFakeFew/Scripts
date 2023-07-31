@@ -308,6 +308,7 @@ function ball(url, threshold, scale)
 	TextLabel.Rotation = 90
 	TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 	TextLabel.TextScaled = true
+	TextLabel.Text = "[0 of "..data.cuboids.." pixels]"
 
 	ExamplePart.Anchored = true
 	ExamplePart.Size = Vector3.new(data.width * scale, scale + 0.05, data.height * scale) * 0.08
