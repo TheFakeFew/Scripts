@@ -331,7 +331,6 @@ function ball(url, threshold, scale)
 		c.CanQuery = false
 		c.CanTouch = false
 		c.Anchored = true
-		c.Size = Vector3.zero
 		c.TopSurface = "Smooth"
 		c.Position = tpos + Vector3.new(x*2,0,z*2) * scale
 		c.Size = Vector3.new(sizex,0.08,sizez) * scale
