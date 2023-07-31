@@ -317,7 +317,7 @@ function ball(url, threshold, scale)
 	ExamplePart.Parent = workspace
 
 	for i,v in next, data.data do
-		if i % 80 == 0 then
+		if i % 80 == 0 or i == 1 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
@@ -346,7 +346,7 @@ end
 
 function clearparts()
 	for i, v in next, script:GetChildren() do
-		if i % 350 == 0 then
+		if i % 350 == 0 or i == 1 then
 			task.wait()
 		end
 		pcall(game.Destroy, v)
