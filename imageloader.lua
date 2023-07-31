@@ -291,7 +291,7 @@ function ball(url, threshold, scale)
 	local scale = scale or 0.1
 	local tpos = owner.Character:FindFirstChild("HumanoidRootPart").Position
 	scale = (scale / 2) / 0.08
-	
+
 	local ExamplePart = Instance.new("Part")
 	local SurfaceGui = Instance.new("SurfaceGui", ExamplePart)
 	local TextLabel = Instance.new("TextBox", SurfaceGui)
@@ -360,6 +360,7 @@ function clearparts()
 		pcall(game.Destroy, parts[i])
 	end
 	print("successfully slowcleared "..(#parts).." parts. took "..round(tick() - start, 2).." seconds")
+	table.clear(parts)
 end
 
 local handler = NLS([=[
