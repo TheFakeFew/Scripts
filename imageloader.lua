@@ -280,8 +280,8 @@ function ball(url, threshold, scale)
 		return error(data)
 	end
 
-	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels")
-	print("loading image "..url.." with "..(threshold*100).."% compression took "..round(tick() - start, 2).." seconds")
+	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels took "..round(tick() - start, 2).." seconds")
+	print("loading image "..url.." with "..(threshold*100).."% compression")
 
 	start = tick()
 
