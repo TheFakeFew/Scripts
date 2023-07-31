@@ -345,12 +345,14 @@ function ball(url, threshold, scale)
 end
 
 function clearparts()
+	local start = tick()
 	for i, v in next, script:GetChildren() do
 		if i % 350 == 0 or i == 1 then
 			task.wait()
 		end
 		pcall(game.Destroy, v)
 	end
+	print("successfully slowcleared. took "..round(tick() - start, 2).." seconds")
 end
 
 local handler = NLS([=[
