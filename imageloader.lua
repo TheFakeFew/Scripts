@@ -323,7 +323,7 @@ function ball(url, threshold, scale)
 	for i = 1, #dt do
 		if i % 150 == 0 or i == 1 then
 			task.wait()
-			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
+			TextLabel.Text = "["..i.." of "..data.cuboids.." pixels]"
 		end
 		local v = dt[i]
 
