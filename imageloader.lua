@@ -253,11 +253,17 @@ local Objects = Decode('AAAxIQlTY3JlZW5HdWkhBE5hbWUhAnVpIQxSZXNldE9uU3Bhd24CIQ5a
 local ui = Objects[1]
 ui.Parent = owner.PlayerGui
 
+function round(num, numDecimalPlaces)
+	return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
+end
+
 function ball(url, threshold, scale)
+	local start = tick()
+
 	scale = 0.05 * scale
 	threshold = math.clamp(tonumber(threshold) or 0.05, 0.05, 1)
 
-	print("loading image "..url.." with "..(threshold*100).."% compression")
+	print("sending request to api")
 
 	local encodedurl = game:GetService("HttpService"):UrlEncode(url);
 	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url="..encodedurl.."&compress="..(threshold or 0.05))
@@ -265,7 +271,9 @@ function ball(url, threshold, scale)
 	if(not json or not tostring(json) or tostring(json):lower():find("error"))then
 		return error(tostring(json))
 	end
-	
+
+	print("decoding json")
+
 	local data = game:GetService("HttpService"):JSONDecode(json)
 	
 	if(not data or typeof(data) ~= "table")then
@@ -273,6 +281,9 @@ function ball(url, threshold, scale)
 	end
 
 	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels")
+	print("loading image "..url.." with "..(threshold*100).."% compression took "..round(tick() - start, 2).." seconds")
+
+	start = tick()
 
 	local scale = scale or 0.1
 	local tpos = owner.Character:FindFirstChild("HumanoidRootPart").Position
@@ -330,6 +341,8 @@ function ball(url, threshold, scale)
 
 	table.clear(data)
 	pcall(game.Destroy, ExamplePart)
+
+	print("image loaded. took "..round(tick() - start, 2).." seconds")
 end
 
 function clearparts()
