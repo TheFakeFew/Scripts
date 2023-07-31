@@ -319,7 +319,7 @@ function ball(url, threshold, scale)
 	local dt = data.data
 
 	for i = 1, #dt do
-		if i % 80 == 0 or i == 1 then
+		if i % 100 == 0 or i == 1 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
