@@ -291,8 +291,7 @@ function ball(url, threshold, scale)
 	local scale = scale or 0.1
 	local tpos = owner.Character:FindFirstChild("HumanoidRootPart").Position
 	scale = (scale / 2) / 0.08
-	local cuboids = data
-
+	
 	local ExamplePart = Instance.new("Part")
 	local SurfaceGui = Instance.new("SurfaceGui", ExamplePart)
 	local TextLabel = Instance.new("TextBox", SurfaceGui)
