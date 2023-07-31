@@ -341,6 +341,7 @@ function ball(url, threshold, scale)
 		c.Parent = script
 	end
 
+	dt = nil
 	table.clear(data)
 	pcall(game.Destroy, ExamplePart)
 
