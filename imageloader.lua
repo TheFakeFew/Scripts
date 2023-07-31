@@ -262,6 +262,10 @@ function ball(url, threshold, scale)
 	local encodedurl = game:GetService("HttpService"):UrlEncode(url);
 	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url="..encodedurl.."&compress="..(threshold or 0.05))
 	local data = game:GetService("HttpService"):JSONDecode(json)
+	
+	if(not data or typeof(data) ~= "table")then
+		return error(data)
+	end
 
 	print("compressed "..data.width*data.height.." pixels to "..data.cuboids.." pixels")
 
@@ -297,7 +301,7 @@ function ball(url, threshold, scale)
 	ExamplePart.Parent = workspace
 
 	for i,v in next, data.data do
-		if i % 75 == 0 then
+		if i % 80 == 0 then
 			task.wait()
 			TextLabel.Text = tostring(math.floor((i / data.cuboids) * 100)) .. "% completed"
 		end
@@ -325,7 +329,7 @@ end
 
 function clearparts()
 	for i, v in next, script:GetChildren() do
-		if i % 200 == 0 then
+		if i % 350 == 0 then
 			task.wait()
 		end
 		pcall(game.Destroy, v)
