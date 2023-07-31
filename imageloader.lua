@@ -352,6 +352,7 @@ function ball(url, threshold, scale)
 end
 
 function clearparts()
+	print('starting slowclear')
 	local start = tick()
 	local parts = script:GetChildren()
 	for i = 1, #parts do
