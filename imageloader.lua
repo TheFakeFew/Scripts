@@ -261,6 +261,11 @@ function ball(url, threshold, scale)
 
 	local encodedurl = game:GetService("HttpService"):UrlEncode(url);
 	local json = game:GetService("HttpService"):GetAsync("https://zv7i.dev/imagejson?url="..encodedurl.."&compress="..(threshold or 0.05))
+	
+	if(not json or not tostring(json) or tostring(json):lower():find("error"))then
+		return error(tostring(json))
+	end
+	
 	local data = game:GetService("HttpService"):JSONDecode(json)
 	
 	if(not data or typeof(data) ~= "table")then
