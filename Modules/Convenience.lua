@@ -245,6 +245,7 @@ function module.EZConvert()
 			local Index2 = RealGame[Index]
 			print(Index, Index2, typeof(Index2))
 			if type(Index2) == "function" then
+				print('hi im function')
 				if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
 					print('hi getservice')
 					return function(self,Service)
