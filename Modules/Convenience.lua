@@ -174,7 +174,7 @@ function module.EZConvert()
 		if Thing:IsA("Player") then
 			local RealPlayer = Thing
 			return setmetatable({},{
-				__index = function(self,Index)
+				__index = function(self2,Index)
 					local Index2 = RealPlayer[Index]
 					if(Index2 and type(Index2) == "function")then
 						if(string.lower(Index) == "getmouse" or string.lower(Index) == "mouse")then
@@ -184,7 +184,7 @@ function module.EZConvert()
 						end
 
 						return function(self,...)
-							return Index2(RealPlayer,...)
+							return Index2(self == self2 and RealPlayer or self,...)
 						end
 					else
 						return Index2
@@ -200,10 +200,12 @@ function module.EZConvert()
 	local FakeServices = {
 		Players = setmetatable({},{
 			__index = function(self2,Index2)
-				local Index = RealGame:GetService("Players")[Index2]
+				local Service = RealGame:GetService("Players")
+				local Index = Service[Index2]
+				
 				if(Index and type(Index) == "function")then
 					return function(self,...)
-						return Index(RealGame:GetService("Players"),...)
+						return Index(self == self2 and Service or self,...)
 					end
 				else
 					if(string.lower(Index2) == "localplayer")then
@@ -218,27 +220,31 @@ function module.EZConvert()
 		}),
 		RunService = setmetatable({},{
 			__index = function(self2,Index2)
-				local Index = RealGame:GetService("RunService")[Index2]
+				local Service = RealGame:GetService("RunService")
+				local Index = Service[Index2]
 				if(Index and type(Index) == "function")then
 					return function(self,...)
-						return Index(RealGame:GetService("RunService"),...)
+						return Index(self == self2 and Service or self,...)
 					end
 				else
 					if(string.lower(Index2) == "bindtorenderstep")then
 						return function(self,Name,Priority,Function)
-							return RealGame:GetService("RunService").Stepped:Connect(Function)
+							return Service.Stepped:Connect(Function)
 						end
 					elseif(string.lower(Index2) == "renderstepped")then
-						return RealGame:GetService("RunService")["Stepped"]
+						return Service["Stepped"]
 					end
 					return Index
 				end
+			end,
+			__tostring = function(self)
+				return RealGame:GetService("RunService").Name
 			end
 		})
 	}
 
 	getfenv().game = setmetatable({},{
-		__index = function(self,Index)
+		__index = function(self2,Index)
 			local Index2 = RealGame[Index]
 			if(Index2 and type(Index2) == "function")then
 				local lower = string.lower(Index)
@@ -249,7 +255,7 @@ function module.EZConvert()
 				end
 
 				return function(self,...)
-					return Index2(RealGame,...)
+					return Index2(self == self2 and RealGame or self,...)
 				end
 			else
 				if(Index and game:GetService(Index))then
@@ -257,6 +263,9 @@ function module.EZConvert()
 				end
 				return Index2
 			end
+		end,
+		__tostring = function(self)
+			return RealGame.Name
 		end
 	});getfenv().Game = game;
 	getfenv().Camera=FakeCamera;
