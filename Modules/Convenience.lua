@@ -171,21 +171,21 @@ function module.EZConvert()
 	local RealGame = game;
 
 	local function Sandbox(Thing)
-		print(Thing)
+		print(Thing,"sandbox")
 		if Thing:IsA("Player") then
 			local RealPlayer = Thing
 			return setmetatable({},{
 				__index = function(self,Index)
 					local Index2 = RealPlayer[Index]
-					print(Index,Index2)
+					print(Index,Index2,"sandbox")
 					if type(Index2) == "function" then
 						if string.lower(Index) == "getmouse" or string.lower(Index) == "mouse" then
-							return function (self)
+							return function(self)
 								return InternalData["Mouse"]
 							end
 						end
 
-						return function (self,...)
+						return function(self,...)
 							return Index2(RealPlayer,...)
 						end
 					else
@@ -203,15 +203,15 @@ function module.EZConvert()
 		Players = setmetatable({},{
 			__index = function(self2,Index2)
 				local Index = RealGame:GetService("Players")[Index2]
-				print(Index2, Index)
-				print(type(Index))
+				print(Index2, Index, "players")
+				print(type(Index), "players")
 				if type(Index) == "function" then
 					return function(self,...)
 						return Index(RealGame:GetService("Players"),...)
 					end
 				else
 					if string.lower(Index2) == "localplayer" then
-						print("sandboxing")
+						print("sandboxing", "players")
 						return Sandbox(owner)
 					end
 					return Index
@@ -245,14 +245,14 @@ function module.EZConvert()
 	getfenv().game = setmetatable({},{
 		__index = function(self,Index)
 			local Index2 = RealGame[Index]
-			print(Index, Index2, type(Index2))
+			print(Index, Index2, type(Index2), "game")
 			if type(Index2) == "function" then
-				print("is function")
+				print("is function", "game")
 				local lower = string.lower(Index)
 				if lower == "getservice" or lower == "service" or lower == "findservice" then
-					print("hi getservice")
+					print("hi getservice", "game")
 					return function(self,Service)
-						print(Service)
+						print(Service, "services")
 						return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 					end
 				end
