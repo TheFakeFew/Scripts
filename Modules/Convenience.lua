@@ -89,8 +89,9 @@ function module.EZConvert()
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
 	getfenv().spawn = task.spawn
-	if game:GetService("RunService"):IsClient() then error("Please run as a server script. Use h/ instead of hl/.") end
-	print("Starting FE Convert")
+	
+	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
+	print("starting converter")
 	InternalData = {}
 	FakeSignal = fsig()
 	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity,CoordinateFrame=CFrame.identity}
@@ -98,14 +99,24 @@ function module.EZConvert()
 		local Event = Instance.new("RemoteEvent")
 		Event.Name = "UserInput"
 
-		local TBFocus = false
+		local TBFocus = nil
 		
-		local Mouse = {Target=nil,Hit=CFrame.index,KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()}
-		local UserInputService = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),GetFocusedTextBox=function() return TBFocus end}
+		local Mouse = {
+			Target=nil,Hit=CFrame.index,
+			KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),
+			Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()
+		}
+		local UserInputService = {
+			InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),
+			GetFocusedTextBox=function()return TBFocus end
+		}
 		
-		local ContextActionService = {Actions={},BindAction = function(self,actionName,Func,touch,...)
-			self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
-		end};ContextActionService.UnBindAction = ContextActionService.BindAction
+		local ContextActionService = {
+			Actions={},
+			BindAction = function(self,actionName,Func,touch,...)
+				self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
+			end
+		};ContextActionService.UnBindAction = ContextActionService.BindAction
 		
 		Event.OnServerEvent:Connect(function(FiredBy,Input)
 			if FiredBy.Name ~= owner.Name then end
@@ -249,7 +260,7 @@ function module.EZConvert()
 	
 	task.wait(.5)
 
-	print("Complete! Running...")
+	print("finished")
 end
 
 module.BezierCurve = {
