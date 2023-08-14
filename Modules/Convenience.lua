@@ -93,6 +93,7 @@ function module.EZConvert()
 	print("Starting FE Convert")
 	InternalData = {}
 	FakeSignal = fsig()
+	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity}
 	do
 		local Event = Instance.new("RemoteEvent")
 		Event.Name = "UserInput"
@@ -112,6 +113,7 @@ function module.EZConvert()
 				Mouse.Target = Input.Target
 				Mouse.Hit = Input.Hit
 				TBFocus = Input.TextBox
+				FakeCamera.CFrame = Input.CameraCF
 			else
 				local Begin = Input.UserInputState == Enum.UserInputState.Begin
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -142,11 +144,11 @@ function module.EZConvert()
 			end
 			UserInputService.InputBegan:Connect(Input)
 			UserInputService.InputEnded:Connect(Input)
-			local Hit,Target,FT
+			local Hit,Target,FT,FCF
 			while wait(1/30) do
-				if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() then
-					Hit,Target = Mouse.Hit,Mouse.Target
-					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"] = UserInputService:GetFocusedTextBox()})
+				if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() or workspace.CurrentCamera.CFrame ~= FCF then
+					Hit,Target,FT,FCF = Mouse.Hit,Mouse.Target,UserInputService:GetFocusedTextBox(),workspace.CurrentCamera.CFrame
+					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
 				end
 			end
 		]],owner.Character)
@@ -247,7 +249,7 @@ function module.EZConvert()
 				return nil
 			end
 		end
-	});getfenv().Game = game;getfenv().Camera={};
+	});getfenv().Game = game;getfenv().Camera=FakeCamera;
 	
 	print("Complete! Running...")
 end
