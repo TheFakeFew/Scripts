@@ -171,6 +171,7 @@ function module.EZConvert()
 	local RealGame = game;
 
 	local function Sandbox(Thing)
+		print(Thing)
 		if Thing:IsA("Player") then
 			local RealPlayer = Thing
 			return setmetatable({},{
@@ -210,6 +211,7 @@ function module.EZConvert()
 					end
 				else
 					if string.lower(Index2) == "localplayer" then
+						print("sandboxing")
 						return Sandbox(owner)
 					end
 					return Index
@@ -231,8 +233,7 @@ function module.EZConvert()
 						return function(self,Name,Priority,Function)
 							return RealGame:GetService("RunService").Stepped:Connect(Function)
 						end
-					end
-					if string.lower(Index2) == "renderstepped" then
+					elseif(string.lower(Index2) == "renderstepped")then
 						return RealGame:GetService("RunService")["Stepped"]
 					end
 					return Index
@@ -244,9 +245,14 @@ function module.EZConvert()
 	getfenv().game = setmetatable({},{
 		__index = function(self,Index)
 			local Index2 = RealGame[Index]
+			print(Index, Index2, type(Index2))
 			if type(Index2) == "function" then
-				if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
+				print("is function")
+				local lower = string.lower(Index)
+				if lower == "getservice" or lower == "service" or lower == "findservice" then
+					print("hi getservice")
 					return function(self,Service)
+						print(Service)
 						return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 					end
 				end
