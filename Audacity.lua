@@ -54,7 +54,7 @@ LeftHip = Torso["Left Hip"]
 local TIME = 0
 local sick = Instance.new("Sound",Torso)
 local MODE = "Ban"
-local Song = 1054813241
+local Song = 13713216762
 
 IT = Instance.new
 CF = CFrame.new
@@ -2045,7 +2045,7 @@ function Switch()
               Weapon.Parent = Character
 		end
 		MODE = "Ban"
-                Song = 1054813241
+                Song = 13713216762
 	end
 	ATTACK = false
 	Rooted = false
@@ -2127,7 +2127,7 @@ function Switch2()
                Big.Parent = nil
               Knife.Parent = nil
              Weapon.Parent = Character
-              Song = 1054813241
+              Song = 13713216762
 		end
 		MODE = "Ban"
 	end
