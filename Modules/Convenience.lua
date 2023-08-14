@@ -146,7 +146,7 @@ function module.EZConvert()
 					end
 				end
 				
-				MouseDowns[Enum.KeyCode[Input.KeyCode.Name]] = Begin
+				KeyDowns[Enum.KeyCode[Input.KeyCode.Name]] = Begin
 				Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
 				UserInputService[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
 			end
