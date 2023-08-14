@@ -86,8 +86,8 @@ function module.fsig()
 end
 
 function module.EZConvert()
-	if not getfenv().owner or not getfenv().NLS then error("this is made to be ran in a sandbox") end
-	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
+	if(not getfenv().owner or not getfenv().NLS)then error("this is made to be ran in a sandbox") end
+	if(game:GetService("RunService"):IsClient())then error("why are you running this on client") end
 
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
@@ -121,7 +121,7 @@ function module.EZConvert()
 		};ContextActionService.UnBindAction = ContextActionService.BindAction
 
 		Event.OnServerEvent:Connect(function(FiredBy,Input)
-			if FiredBy.Name ~= owner.Name then return end
+			if(FiredBy.Name ~= owner.Name)then return end
 			if Input.MouseEvent then
 				Mouse.Target = Input.Target
 				Mouse.Hit = Input.Hit
@@ -130,12 +130,12 @@ function module.EZConvert()
 				FakeCamera.CoordinateFrame = Input.CameraCF
 			else
 				local Begin = Input.UserInputState == Enum.UserInputState.Begin
-				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+				if(Input.UserInputType == Enum.UserInputType.MouseButton1)then
 					return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
 				end
 				for _,Action in pairs(ContextActionService.Actions) do
 					for _,Key in pairs(Action.Keys) do
-						if Key==Input.KeyCode then
+						if(Key==Input.KeyCode)then
 							Action.Function(Action.Name,Input.UserInputState,Input)
 						end
 					end
@@ -171,15 +171,13 @@ function module.EZConvert()
 	local RealGame = game;
 
 	local function Sandbox(Thing)
-		print(Thing,"sandbox")
 		if Thing:IsA("Player") then
 			local RealPlayer = Thing
 			return setmetatable({},{
 				__index = function(self,Index)
 					local Index2 = RealPlayer[Index]
-					print(Index,Index2,"sandbox")
-					if type(Index2) == "function" then
-						if string.lower(Index) == "getmouse" or string.lower(Index) == "mouse" then
+					if(Index2 and type(Index2) == "function")then
+						if(string.lower(Index) == "getmouse" or string.lower(Index) == "mouse")then
 							return function(self)
 								return InternalData["Mouse"]
 							end
@@ -203,15 +201,12 @@ function module.EZConvert()
 		Players = setmetatable({},{
 			__index = function(self2,Index2)
 				local Index = RealGame:GetService("Players")[Index2]
-				print(Index2, Index, "players")
-				print(type(Index), "players")
-				if type(Index) == "function" then
+				if(Index and type(Index) == "function")then
 					return function(self,...)
 						return Index(RealGame:GetService("Players"),...)
 					end
 				else
-					if string.lower(Index2) == "localplayer" then
-						print("sandboxing", "players")
+					if(string.lower(Index2) == "localplayer")then
 						return Sandbox(owner)
 					end
 					return Index
@@ -224,12 +219,12 @@ function module.EZConvert()
 		RunService = setmetatable({},{
 			__index = function(self2,Index2)
 				local Index = RealGame:GetService("RunService")[Index2]
-				if type(Index) == "function" then
+				if(Index and type(Index) == "function")then
 					return function(self,...)
 						return Index(RealGame:GetService("RunService"),...)
 					end
 				else
-					if string.lower(Index2) == "bindtorenderstep" then
+					if(string.lower(Index2) == "bindtorenderstep")then
 						return function(self,Name,Priority,Function)
 							return RealGame:GetService("RunService").Stepped:Connect(Function)
 						end
@@ -245,14 +240,10 @@ function module.EZConvert()
 	getfenv().game = setmetatable({},{
 		__index = function(self,Index)
 			local Index2 = RealGame[Index]
-			print(Index, Index2, type(Index2), "game")
-			if type(Index2) == "function" then
-				print("is function", "game")
+			if(Index2 and type(Index2) == "function")then
 				local lower = string.lower(Index)
-				if lower == "getservice" or lower == "service" or lower == "findservice" then
-					print("hi getservice", "game")
+				if(lower == "getservice" or lower == "service" or lower == "findservice")then
 					return function(self,Service)
-						print(Service, "services")
 						return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 					end
 				end
@@ -261,7 +252,7 @@ function module.EZConvert()
 					return Index2(RealGame,...)
 				end
 			else
-				if game:GetService(Index) then
+				if(Index and game:GetService(Index))then
 					return game:GetService(Index)
 				end
 				return Index2
