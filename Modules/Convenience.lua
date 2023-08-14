@@ -90,7 +90,7 @@ function module.EZConvert()
 	getfenv().delay = task.delay
 	getfenv().spawn = task.spawn
 	if game:GetService("RunService"):IsClient() then error("Please run as a server script. Use h/ instead of hl/.") end
-	print("FE Compatibility: by WaverlyCole & Mokiros")
+	print("Starting FE Convert")
 	InternalData = {}
 	FakeSignal = fsig()
 	do
@@ -159,21 +159,18 @@ function module.EZConvert()
 					local RealPlayer = Thing
 					return setmetatable({},{
 						__index = function (self,Index)
-							local Type = type(RealPlayer[Index])
-							if Type == "function" then
-								if Index:lower() == "getmouse" or Index:lower() == "mouse" then
+							if type(RealPlayer[Index]) == "function" then
+								if string.lower(Index) == "getmouse" or string.lower(Index) == "mouse" then
 									return function (self)
 										return InternalData["Mouse"]
 									end
 								end
+
 								return function (self,...)
 									return RealPlayer[Index](RealPlayer,...)
 								end
 							else
-								if Index == "PlrObj" then
-									return RealPlayer
-								end
-								return RealPlayer[Index]
+								return Index == "PlrObj" and RealPlayer or RealPlayer[Index]
 							end
 						end;
 						__tostring = function(self)
@@ -183,9 +180,8 @@ function module.EZConvert()
 				end
 			end
 			if RealGame[Index] then
-				local Type = type(RealGame[Index])
-				if Type == "function" then
-					if Index:lower() == "getservice" or Index:lower() == "service" then
+				if type(RealGame[Index]) == "function" then
+					if string.lower(Index) == "getservice" or string.lower(Index) == "service" then
 						return function (self,Service)
 							if Service:lower() == "players" then
 								return setmetatable({},{
