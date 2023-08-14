@@ -281,6 +281,10 @@ function module.EZConvert()
 		getfenv().LoadAssets = require
 	end
 
+	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
+		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
+	end
+
 	task.wait(.5)
 
 	print("finished")
