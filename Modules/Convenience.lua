@@ -223,15 +223,17 @@ function module.EZConvert()
 				local Service = RealGame:GetService("RunService")
 				local Index = Service[Index2]
 				if(Index and type(Index) == "function")then
-					return function(self,...)
-						return Index(self == self2 and Service or self,...)
-					end
-				else
 					if(string.lower(Index2) == "bindtorenderstep")then
 						return function(self,Name,Priority,Function)
 							return Service.Stepped:Connect(Function)
 						end
-					elseif(string.lower(Index2) == "renderstepped")then
+					end
+					
+					return function(self,...)
+						return Index(self == self2 and Service or self,...)
+					end
+				else
+					if(string.lower(Index2) == "renderstepped")then
 						return Service["Stepped"]
 					end
 					return Index
