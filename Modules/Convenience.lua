@@ -189,10 +189,8 @@ function module.EZConvert()
 		
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or object[index]
-			print(index, custommethods[index], fetched, type(fetched))
 			if(fetched and type(fetched) == "function")then
 				if(custommethods[index])then
-					print("custom method")
 					return custommethods[index]
 				end
 				
@@ -210,6 +208,10 @@ function module.EZConvert()
 		
 		meta.__newindex = function(self, index, value)
 			unwrap(self)[index] = unwrap(value)
+		end
+		
+		meta.__tostring = function(self)
+			return unwrap(self).Name
 		end
 		
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
@@ -245,25 +247,10 @@ function module.EZConvert()
 	end;
 
 	local FakeServices = {
-		Players = setmetatable({},{
-			__index = function(self2,Index2)
-				local Service = RealGame:GetService("Players")
-				local Index = Service[Index2]
-
-				if(Index and type(Index) == "function")then
-					return function(self,...)
-						return Index(self == self2 and Service or self,...)
-					end
-				else
-					if(string.lower(Index2) == "localplayer")then
-						return Sandbox(owner)
-					end
-					return Index
-				end
-			end,
-			__tostring = function(self)
-				return RealGame:GetService("Players").Name
-			end
+		Players = wrap(RealGame:GetService("Players"),{
+			properties = {
+				LocalPlayer = owner
+			}
 		}),
 		RunService = setmetatable({},{
 			__index = function(self2,Index2)
