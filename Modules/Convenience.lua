@@ -112,8 +112,8 @@ function module.EZConvert()
 		}
 		local UserInputService = {
 			InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),
-			GetFocusedTextBox=function()return TBFocus end,IsMouseButtonPressed=function(inputtype)return not not MouseDowns[inputtype] end,
-			IsKeyDown=function(keycode)return not not KeyDowns[keycode] end
+			GetFocusedTextBox=function()return TBFocus end,IsMouseButtonPressed=function(inputtype)return MouseDowns[inputtype] == true end,
+			IsKeyDown=function(keycode)return KeyDowns[keycode] == true end
 		}
 
 		local ContextActionService = {
