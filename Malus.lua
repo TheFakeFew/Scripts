@@ -4,256 +4,29 @@ for i, v in next, assets:GetChildren() do
 	v.Parent = script
 end
 
-function fsig()
-	local HttpsService = game:GetService("HttpService")
-
-	local FakeSignal = {}
-	FakeSignal.ClassName = "FakeSignal"
-	FakeSignal.__index = FakeSignal
-
-	local function IsFunction(func)
-		if typeof(func) ~= "function" then
-			error(string.format("invalid argument. function expected got %s", typeof(func)))
-		end
-	end
-
-	function FakeSignal.new()
-		return setmetatable({
-			_connections = {},
-		}, FakeSignal)
-	end
-
-	function FakeSignal:Once(func)
-		IsFunction(func)
-
-		local once = nil
-
-		once = self:Connect(function(...)
-			once:Disconnect()
-
-			func(...)
-		end)
-
-		return once
-	end
-
-	function FakeSignal:Connect(func)
-		IsFunction(func)
-
-		local connection = {
-			_name = HttpsService:GenerateGUID(),
-			_func = func,
-			_connected = true,
-		}
-
-		self._connections[connection._name] = connection
-
-		function connection:Disconnect()
-			connection._connected = false
-		end
-
-		connection.disconnect = connection.Disconnect
-
-		return connection
-	end
-
-	function FakeSignal:Wait()
-		local yield = coroutine.running()
-
-		self:Once(function(...)
-			task.spawn(yield, ...)
-		end)
-
-		return coroutine.yield()
-	end
-
-	function FakeSignal:Fire(...: any)
-		for i, connection in pairs(self._connections) do
-			if connection._connected then
-				IsFunction(connection._func)
-
-				connection._func(...)
-			else
-				local index = table.find(self._connections, connection._name)
-
-				table.remove(self._connections, index)
-			end
-		end
-	end
-
-	FakeSignal.connect = FakeSignal.Connect
-	FakeSignal.wait = FakeSignal.Wait
-	FakeSignal.fire = FakeSignal.Fire
-	FakeSignal.once = FakeSignal.Once
-
-	return FakeSignal
-end
-
-getfenv().wait = task.wait
-getfenv().delay = task.delay
-getfenv().spawn = task.spawn
-if game:GetService("RunService"):IsClient() then error("Please run as a server script. Use h/ instead of hl/.") end
-print("FE Compatibility: by WaverlyCole & Mokiros")
-InternalData = {}
-FakeSignal = fsig()
-do
-	local Event = Instance.new("RemoteEvent")
-	Event.Name = "UserInput"
-	
-	local Mouse = {Target=nil,Hit=CFrame.index,KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()}
-	local UserInputService = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()}
-	
-	local ContextActionService = {Actions={},BindAction = function(self,actionName,Func,touch,...)
-		self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
-	end};ContextActionService.UnBindAction = ContextActionService.BindAction
-	
-	Event.OnServerEvent:Connect(function(FiredBy,Input)
-		if FiredBy.Name ~= owner.Name then end
-		if Input.MouseEvent then
-			Mouse.Target = Input.Target
-			Mouse.Hit = Input.Hit
-		else
-			local Begin = Input.UserInputState == Enum.UserInputState.Begin
-			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-				return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
-			end
-			for _,Action in pairs(ContextActionService.Actions) do
-				for _,Key in pairs(Action.Keys) do
-					if Key==Input.KeyCode then
-						Action.Function(Action.Name,Input.UserInputState,Input)
-					end
-				end
-			end
-			Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
-			UserInputService[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
-		end
+local realreq = require
+local function require(name)
+	local success, returned = pcall(function()
+		return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/main/Modules/"..name..".lua")
 	end)
-	InternalData["Mouse"] = Mouse
-	InternalData["ContextActionService"] = ContextActionService
-	InternalData["UserInputService"] = UserInputService
-	Event.Parent = NLS([[
-		local Player = owner
-		local Event = script:WaitForChild("UserInput")
-		local UserInputService = game:GetService("UserInputService")
-		local Mouse = Player:GetMouse()
-		local Input = function(Input,gameProcessedEvent)
-			if gameProcessedEvent then return end
-			Event:FireServer({KeyCode=Input.KeyCode,UserInputType=Input.UserInputType,UserInputState=Input.UserInputState})
+	if(success)then
+		local succ, load, err = pcall(function()
+			return loadstring(returned)
+		end)
+		if(not succ)then
+			error(load)
 		end
-		UserInputService.InputBegan:Connect(Input)
-		UserInputService.InputEnded:Connect(Input)
-		local Hit,Target
-		while wait(1/30) do
-			if Hit ~= Mouse.Hit or Target ~= Mouse.Target then
-				Hit,Target = Mouse.Hit,Mouse.Target
-				Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit})
-			end
+		if(not load and err)then
+			error(err)
 		end
-	]],owner.Character)
-end
-RealGame = game;
-game = setmetatable({},{
-	__index = function (self,Index)
-		local Sandbox = function (Thing)
-			if Thing:IsA("Player") then
-				local RealPlayer = Thing
-				return setmetatable({},{
-					__index = function (self,Index)
-						local Type = type(RealPlayer[Index])
-						if Type == "function" then
-							if Index:lower() == "getmouse" or Index:lower() == "mouse" then
-								return function (self)
-									return InternalData["Mouse"]
-								end
-							end
-							return function (self,...)
-								return RealPlayer[Index](RealPlayer,...)
-							end
-						else
-							if Index == "PlrObj" then
-								return RealPlayer
-							end
-							return RealPlayer[Index]
-						end
-					end;
-					__tostring = function(self)
-						return RealPlayer.Name
-					end
-				})
-			end
-		end
-		if RealGame[Index] then
-			local Type = type(RealGame[Index])
-			if Type == "function" then
-				if Index:lower() == "getservice" or Index:lower() == "service" then
-					return function (self,Service)
-						if Service:lower() == "players" then
-							return setmetatable({},{
-								__index = function (self2,Index2)
-									local RealService = RealGame:GetService(Service)
-									local Type2 = type(Index2)
-									if Type2 == "function" then
-										return function (self,...)
-											return RealService[Index2](RealService,...)
-										end
-									else
-										if Index2:lower() == "localplayer" then
-											return Sandbox(owner)
-										end
-										return RealService[Index2]
-									end
-								end;
-								__tostring = function(self)
-									return RealGame:GetService(Service).Name
-								end
-							})
-						elseif Service:lower() == "contextactionservice" then
-							return InternalData["ContextActionService"]
-						elseif Service:lower() == "userinputservice" then
-							return InternalData["UserInputService"]
-						elseif Service:lower() == "runservice" then
-							return setmetatable({},{
-								__index = function(self2,Index2)
-									local RealService = RealGame:GetService(Service)
-									local Type2 = type(Index2)
-									if Type2 == "function" then
-										return function (self,...)
-											return RealService[Index2](RealService,...)
-										end
-									else
-										if Index2:lower() == "bindtorenderstep" then
-											return function (self,Name,Priority,Function)
-												return RealGame:GetService("RunService").Stepped:Connect(Function)
-											end
-										end
-										if Index2:lower() == "renderstepped" then
-											return RealService["Stepped"]
-										end
-										return RealService[Index2]
-									end
-								end
-							})
-						else
-							return RealGame:GetService(Service)
-						end
-					end
-				end
-				return function (self,...)
-					return RealGame[Index](RealGame,...)
-				end
-			else
-				if game:GetService(Index) then
-					return game:GetService(Index)
-				end
-				return RealGame[Index]
-			end
-		else
-			return nil
-		end
+		return load()
+	else
+		return realreq(name)
 	end
-});Game = game;
+end
+local Convenience = require("Convenience")
+Convenience.EZConvert()
 
-print("Complete! Running...")
 script.Parent = game:GetService('ServerScriptService')
 local Player = game:service'Players'.LocalPlayer
 repeat wait() until Player.Character
@@ -2189,21 +1962,7 @@ lrs:connect(function()
 		llw.C0 = clerp(llw.C0, cf(0,0,0)*Left_Leg_*ang(0,0,0),animspd)
     end
     if State == 'Falling' and ds == false then
-		local animspd = .3
-		change = 1
-		local Right_Arm_ = cf(0,0,0)
-		local Left_Arm_ = cf(0,0,0)
-		local Right_Leg_ = cf(0,0,0)
-		local Left_Leg_ = cf(0,0,0)
-		local Head_ = cf(0,0,0)
-		local Torso_ = cf(0,0,0)
 		
-		torw.C0 = clerp(torw.C0, cf(0,0,0)*Torso_*ang(0,0,0),animspd)
-		hedw.C0 = clerp(hedw.C0, cf(0,0,0)*Head_*ang(0,0,0),animspd)
-		law.C0 = clerp(law.C0, cf(0,0,0)*Left_Arm_*ang(0,0,0),animspd)
-		raw.C0 = clerp(raw.C0, cf(0,0,0)*Right_Arm_*ang(0,0,0),animspd)
-		rlw.C0 = clerp(rlw.C0, cf(0,0,0)*Right_Leg_*ang(0,0,0),animspd)
-		llw.C0 = clerp(llw.C0, cf(0,0,0)*Left_Leg_*ang(0,0,0),animspd)       
     elseif State == 'Idle' and ds == false then
 		RestoreDefault()
 		if Mode == 'Normal' and ds == false then

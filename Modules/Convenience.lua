@@ -1,552 +1,256 @@
 local module = {}
 
 function module.EZConvert()
-	task.wait(1/60)
-	if(getfenv().owner)then
-		if(getfenv().owner.Character)then
-			script.Parent = getfenv().owner.Character
-			if(getfenv().owner.Character:FindFirstChildOfClass("Humanoid"))then
-				getfenv().owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
+	function fsig()
+		local HttpsService = game:GetService("HttpService")
+	
+		local FakeSignal = {}
+		FakeSignal.ClassName = "FakeSignal"
+		FakeSignal.__index = FakeSignal
+	
+		local function IsFunction(func)
+			if typeof(func) ~= "function" then
+				error(string.format("invalid argument. function expected got %s", typeof(func)))
 			end
 		end
-	else
-		return error("This is made to be ran inside a sandbox.")
-	end
-	if(not getfenv().NLS)then
-		return error("This is made to be ran inside a sandbox.")
-	end
-	local function FakeEvent()
-		local function Signal()
-			local ScriptConnection = {}
-			function ScriptConnection.new(event,func,...)
-				return setmetatable({
-					Event=event;
-					Function=func;
-					Args={...};
-				},ScriptConnection);
-			end
-			function ScriptConnection:disconnect()
-				self.Event:disconnect(self)
-			end
-			ScriptConnection.Disconnect=ScriptConnection.disconnect;
-			ScriptConnection.__index=ScriptConnection
-			setmetatable(ScriptConnection,{__call=function(s,...)ScriptConnection.new(...) end})
-			return ScriptConnection;
+	
+		function FakeSignal.new()
+			return setmetatable({
+				_connections = {},
+			}, FakeSignal)
 		end
-		local signal = Signal().new
-		local fakeEvent = {}
-		function fakeEvent.new()
-			local conn = {
-				_connections={};
-				_yield={};
+	
+		function FakeSignal:Once(func)
+			IsFunction(func)
+	
+			local once = nil
+	
+			once = self:Connect(function(...)
+				once:Disconnect()
+	
+				func(...)
+			end)
+	
+			return once
+		end
+	
+		function FakeSignal:Connect(func)
+			IsFunction(func)
+	
+			local connection = {
+				_name = HttpsService:GenerateGUID(),
+				_func = func,
+				_connected = true,
 			}
-			setmetatable(conn,{__index=fakeEvent})
-			return conn;
-		end
-		function fakeEvent:fire(...)
-			self._yield={};
-			for i = 1,#self._connections do
-				local connection = self._connections[i]
-				coroutine.wrap(function(...) 
-					local succ,err = pcall(function(...) connection.Function(#connection.Args>0 and unpack(connection.Args) or ...) end,...)
-					assert(succ,err)
-				end)(...)
+	
+			self._connections[connection._name] = connection
+	
+			function connection:Disconnect()
+				connection._connected = false
 			end
+	
+			connection.disconnect = connection.Disconnect
+	
+			return connection
 		end
-		function fakeEvent:disconnect(event)
-			for i = 1,#self._connections do
-				if(self._connections[i]==event)then
-					table.remove(self._connections,i)
-				end
-			end
+	
+		function FakeSignal:Wait()
+			local yield = coroutine.running()
+	
+			self:Once(function(...)
+				task.spawn(yield, ...)
+			end)
+	
+			return coroutine.yield()
 		end
-		function fakeEvent:connect(func,...)
-			local obj = signal(self,func,...)
-			table.insert(self._connections,obj)
-			return obj
-		end
-		function fakeEvent:wait()
-			local guid = tostring(function() end):sub(13)
-			self._yield[guid]=true;
-			repeat task.wait() until self._yield[guid]~=true
-			self._yield[guid]=nil;
-		end
-		fakeEvent.Fire=fakeEvent.fire;
-		fakeEvent.Connect=fakeEvent.connect;
-		fakeEvent.Wait=fakeEvent.wait;
-		fakeEvent.Disconnect=fakeEvent.disconnect;
-		setmetatable(fakeEvent,{__call=fakeEvent.new})
-		return fakeEvent;
-	end
-	local fakeEvent = FakeEvent();
-	local sc = getfenv().script
-	local owner = getfenv().owner
-	if(game:service'RunService':IsServer())then
-		repeat task.wait() until sc.Parent and (sc.Parent:IsA'PlayerGui' or sc.Parent:IsA'Model' or sc.Parent.Parent:IsA'Model')
-		local Player;
-		local function check()
-			if(sc.Parent:IsA'PlayerGui')then
-				Player=sc.Parent.Parent
-				sc.Parent=Player.Character
-			else
-				Player = game:service'Players':GetPlayerFromCharacter(sc.Parent) or game:service'Players':GetPlayerFromCharacter(sc.Parent.Parent) or game:service'Players':FindFirstChild(sc.Parent.Name)
-			end
-		end
-		check()
-		if(not Player and owner.Character)then
-			sc.Parent=owner.Character
-			check()
-		end
-		local ScriptCreated = {}
-		assert(Player and Player:IsA'Player','Make sure the script is parented to Character or PlayerGUI!')
-		local event = Instance.new("RemoteEvent")
-		event.Name='INPUTEVENT_'..sc.Name..game:service'HttpService':GenerateGUID(0)
-		event.Parent=Player.Character;
-		local gcp = Instance.new("RemoteFunction")
-		gcp.Name='GetClientProperty'..event.Name
-		gcp.Parent=Player.Character;
-		local loudnesses = {}
-		local function GetClientProperty(inst,prop)
-			if(prop == 'PlaybackLoudness' and loudnesses[inst])then 
-				return loudnesses[inst] or 0
-			elseif(prop == 'PlaybackLoudness')then
-				return gcp:InvokeClient(Player,'RegSound',inst)
-			end
-			return gcp:InvokeClient(Player,inst,prop)
-		end
-		local ScriptCreated = {}
-		local FakeCam = {
-			real=workspace.CurrentCamera;
-			CoordinateFrame=CFrame.new();
-			CFrame=CFrame.new();
-			Parent=workspace;
-			FieldOfView=70
-		}
-		local FakeMouse = NLS([[local me = game:service'Players'.localPlayer;
-local pg = me:FindFirstChildOfClass'PlayerGui'
-local mouse = me:GetMouse();
-local UIS = game:service'UserInputService'
-local ch = me.Character;
-local cam = workspace.CurrentCamera
-local sentCamData = {}
-local sentMouseData = {}
-local sentUISData = {}
-local UserEvent = (function()
-	local Ret;
-	repeat task.wait() Ret = script:WaitForChild('Remote').Value until Ret
-	return Ret
-end)()
-UIS.InputChanged:connect(function(io,gpe)
-	if(gpe)then return end
-	local fakeIo = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,Delta=io.Delta,Position=io.Position,UserInputState=io.UserInputState}
-	UserEvent:FireServer{Type='UserInput',Event='InputChanged',Args={fakeIo,gpe and true or false}}
-end)
-UIS.InputBegan:connect(function(io,gpe)
-	if(gpe)then return end
-	local fakeIo = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,Delta=io.Delta,Position=io.Position,UserInputState=io.UserInputState}
-	UserEvent:FireServer{Type='UserInput',Event='InputBegan',Args={fakeIo,gpe and true or false}}
-end)
-UIS.InputEnded:connect(function(io,gpe)
-	if(gpe)then return end
-	local fakeIo = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,Delta=io.Delta,Position=io.Position,UserInputState=io.UserInputState}
-	UserEvent:FireServer{Type='UserInput',Event='InputEnded',Args={fakeIo,gpe and true or false}}
-end)
-mouse.KeyDown:connect(function(k)
-	UserEvent:FireServer{Type='Mouse',Event='KeyDown',Args={k}}
-end)
-mouse.KeyUp:connect(function(k)
-	UserEvent:FireServer{Type='Mouse',Event='KeyUp',Args={k}}
-end)
-mouse.Button1Down:connect(function()
-	UserEvent:FireServer{Type='Mouse',Event='Button1Down',Args={}}
-end)
-mouse.Button1Up:connect(function()
-	UserEvent:FireServer{Type='Mouse',Event='Button1Up',Args={}}
-end)
-mouse.Button2Down:connect(function()
-	UserEvent:FireServer{Type='Mouse',Event='Button2Down',Args={}}
-end)
-mouse.Button2Up:connect(function()
-	UserEvent:FireServer{Type='Mouse',Event='Button2Up',Args={}}
-end)
-UIS.TextBoxFocusReleased:connect(function(inst)
-    pcall(function()
-	    UserEvent:FireServer{Type='TextboxReplication',TextBox=inst,Text=inst.Text}
-    end)
-end)
-local ClientProp = ch:WaitForChild('GetClientProperty'..UserEvent.Name,30)
-local sounds = {}
-function regSound(o)
-	if(o:IsA'Sound')then
-		local lastLoudness = o.PlaybackLoudness
-		ClientProp:InvokeServer(o,lastLoudness)
-		table.insert(sounds,{o,lastLoudness})
-		--ClientProp:FireServer(o,o.PlaybackLoudness)
-	end
-end
-ClientProp.OnClientInvoke = function(inst,prop)
-	if(inst == 'RegSound')then
-		regSound(prop)
-		for i = 1, #sounds do
-			 if(sounds[i][1] == prop)then 
-				return sounds[i][2]
-			end 
-		end 
-	elseif(inst=='Ready')then
-		return true
-	elseif(inst=='Camera')then
-		return workspace.CurrentCamera[prop]
-	else
-		return inst[prop]
-	end
-end
-function matching(a,b)
-	for i,v in next, a do
-		if(b[i]~=v)then
-			return false;
-		end
-	end
-	for i,v in next, b do
-		if(a[i]~=v)then
-			return false;
-		end
-	end
-	return true;
-end
-coroutine.wrap(function()
-	while task.wait() do
-		local mData = {Target=mouse.Target,Hit=mouse.Hit,X=mouse.X,Y=mouse.Y}
-		local cData = {CFrame=cam.CFrame;CoordinateFrame=cam.CFrame;}
-		local uisData = {isFocused = UIS:GetFocusedTextBox()}
-		if(not matching(sentMouseData,mData))then
-			sentMouseData=mData
-			UserEvent:FireServer({Type='Mouse',Variables=sentMouseData})
-		end
-		if(not matching(sentCamData,cData))then
-			sentCamData=cData
-			UserEvent:FireServer({Type='Camera',Variables=sentCamData})
-		end
-		if(not matching(sentUISData, uisData))then
-			sentUISData=uisData
-			UserEvent:FireServer({Type='UIS',Variables=uisData})
-		end
-	end	
-end)()
-game:service'RunService'.Stepped:connect(function()
-	for i = 1, #sounds do
-		local tab = sounds[i]
-		local object,last=unpack(tab)
-		if(object.PlaybackLoudness ~= last)then
-			sounds[i][2]=object.PlaybackLoudness
-			ClientProp:InvokeServer(object,sounds[i][2])
-		end
-	end
-end)
-for _,v in next, workspace:GetDescendants() do regSound(v) end
-workspace.DescendantAdded:connect(regSound)
-me.Character.DescendantAdded:connect(regSound)]], Player.Character)
-		local remval = Instance.new("ObjectValue", FakeMouse)
-		remval.Name = "Remote"
-		FakeMouse:WaitForChild'Remote'.Value=event
-		local fakes={}
-		local reals = {}
-		local loudnesses = {}
-		local wrapObject
-		local function getReal(i)
-			return fakes[i] or i
-		end
-		local newObject = function()
-			local object = {}			
-			object.__index=function(self,idx)
-				local val = rawget(self,idx) or rawget(self,'real')[idx];
-				if(typeof(val)=='function')then
-					return function(self2,...)
-						local realFunc = rawget(self,'real')[idx]==val
-						if(realFunc and self2==self)then
-							self2=rawget(self,'real')
-						end
-						local ret = val(self2,...)
-						if(typeof(ret)=='Instance')then
-							local w,s = wrapObject(ret)
-							if(s)then ret = w end
-						end
-						return ret
-					end
-				end
-				if(typeof(val)=='Instance' and val~=rawget(self,'real'))then
-					local w,s = wrapObject(val)
-					if(s)then val = w end
-				end
-				return val
-			end
-			object.__newindex=function(self,idx,val)
-				if(val and typeof(val)=='table' and val.real)then
-					getReal(self)[idx]=val.real
+	
+		function FakeSignal:Fire(...: any)
+			for i, connection in pairs(self._connections) do
+				if connection._connected then
+					IsFunction(connection._func)
+	
+					connection._func(...)
 				else
-					getReal(self)[idx]=getReal(val)
+					local index = table.find(self._connections, connection._name)
+	
+					table.remove(self._connections, index)
 				end
 			end
-			object.__type='Instance'
-			object.__tostring=function(self)
-				return rawget(self,'real').Name
-			end
-			return object
 		end
-		function wrapObject(realobj)
-			local fakeobj = {real=realobj}
-			if(realobj.ClassName=='Sound')then
-				local needsLoudness=false;
-				local meta = newObject();
-				local origIndex = meta.__index
-				meta.__index=function(s,i)
-					if(i=='PlaybackLoudness')then
-						needsLoudness=true;
-						return loudnesses[realobj] or 0
-					else
-						return origIndex(s,i)
-					end
-				end
-				setmetatable(fakeobj,meta)
-				coroutine.wrap(function()
-					repeat task.wait() until needsLoudness;
-					GetClientProperty(realobj,'PlaybackLoudness')
-				end)()
-			elseif(realobj:IsA'TextBox')then
-				ScriptCreated[realobj]=true;
-				fakeobj.FocusLost=fakeEvent();
-				setmetatable(fakeobj,newObject())
-			elseif(realobj.ClassName=='ObjectValue' or realobj.ClassName=='BillboardGui' or realobj:IsA'GuiObject' or realobj:IsA'SoundEffect')then
-				setmetatable(fakeobj,newObject())
-			end
-			fakes[fakeobj]=realobj
-			reals[realobj]=fakeobj
-			local wrapped = getmetatable(fakeobj) and getmetatable(fakeobj).__index and true or false
-			return fakeobj, wrapped
-		end
-		local function Create_PrivImpl(objectType)
-			if type(objectType) ~= 'string' then
-				error("Argument of Create must be a string", 2)
-			end
-			return function(dat)
-				dat = dat or {}
-				local obj = Instance.new(objectType)
-				local parent = nil
-				local ctor = nil
-				for k, v in pairs(dat) do
-					if type(k) == 'string' then
-						if k == 'Parent' then
-							parent = v
-						else
-							obj[k] = v
-						end
-					elseif type(k) == 'number' then
-						if type(v) ~= 'userdata' then
-							error("Bad entry in Create body: Numeric keys must be paired with children, got a: "..type(v), 2)
-						end
-						v.Parent = obj
-					elseif type(k) == 'table' and k.__eventname then
-						if type(v) ~= 'function' then
-							error("Bad entry in Create body: Key `[Create.E\'"..k.__eventname.."\']` must have a function value\
-						got: "..tostring(v), 2)
-						end
-						obj[k.__eventname]:connect(v)
-					elseif k == t.Create then
-						if type(v) ~= 'function' then
-							error("Bad entry in Create body: Key `[Create]` should be paired with a constructor function, \
-						got: "..tostring(v), 2)
-						elseif ctor then
-							error("Bad entry in Create body: Only one constructor function is allowed", 2)
-						end
-						ctor = v
-					else
-						error("Bad entry ("..tostring(k).." => "..tostring(v)..") in Create body", 2)
-					end
-				end
-				if ctor then
-					ctor(obj)
-				end
-				if parent then
-					obj.Parent = parent
-				end
-				return obj
-			end
-		end
-		gcp.OnServerInvoke = function(plr,inst,play)
-			if plr~=Player then return end
-			if(inst and typeof(inst) == 'Instance' and inst:IsA'Sound')then
-				loudnesses[inst]=play
-			end
-		end
-		local realGame = game
-		local fakeGame={real=realGame};
-		local realInstance = Instance
-		local fakeInstance={new=function(objName,par)
-			local realobj = realInstance.new(objName)
-			local fakeobj,wrapped = wrapObject(realobj)
-			realobj.Parent=getReal(par)
-			return wrapped and fakeobj or realobj
-		end};
-		local fakePlayer={};
-		fakePlayer.real=Player;
-		fakePlayer.mouse={
-			KeyDown=fakeEvent();
-			KeyUp=fakeEvent();
-			Button1Down=fakeEvent();
-			Button1Up=fakeEvent();
-			Button2Down=fakeEvent();
-			Button2Up=fakeEvent();
-			Move=fakeEvent();
-			X=0;
-			Y=0;
-			Target=nil;
-			Hit=CFrame.new();
-		}
-		fakePlayer.GetMouse=function(self)
-			return self.mouse;	
-		end
-		fakePlayer.PlayerScripts={}
-		setmetatable(fakePlayer.PlayerScripts,newObject())
-		getmetatable(fakePlayer.PlayerScripts).__index=function()
-			return {{Disabled=true,Name="GONE"}}
-		end
-		local isTextboxFocused = false
-		local players = game:service'Players'
-		local services = {
-			Players={real=game:service'Players',LocalPlayer=fakePlayer,localPlayer=fakePlayer,GetPlayerFromCharacter=function(self,c)local plr = players:GetPlayerFromCharacter(c)if(plr==self.localPlayer.real)then return self.localPlayer else return plr end end};
-			UserInputService={real=game:service'UserInputService',_mb={},_keys={};InputBegan=fakeEvent(),InputEnded=fakeEvent(),InputChanged=fakeEvent(),GetFocusedTextBox=function(self)
-				return isTextboxFocused
-			end};
-			Debris={real=game:service'Debris',AddItem=function(self,item,timer)
-				if(fakes[item])then
-					item = fakes[item]
-				end
-				self.real:AddItem(item,timer)
-			end};
-			RunService={
-				_bound={},
-				_lastCall=tick();
-				real=game:service'RunService',
-				RenderStepped=game:service'RunService'.Stepped,
-				BindToRenderStep=function(self,n,_,func)
-					self._bound[n]=func;
-				end;
-				UnbindFromRenderStep=function(self,n,_,func)
-					self:BindToRenderStep(n)
-				end;
-			};
-		}
-		local MouseButton = {
-			[Enum.UserInputType.MouseButton1]=true;
-			[Enum.UserInputType.MouseButton2]=true;
-			[Enum.UserInputType.MouseButton3]=true;
-		}
-		services.Debris.addItem=services.Debris.AddItem
-		services.UserInputService.IsKeyDown=function(s,k)
-			return s._keys[k] and true or false
-		end
-		services.UserInputService.IsMouseButtonPressed=function(s,k)
-			return s._mb[k] and true or false
-		end
-		services.UserInputService.InputBegan:connect(function(k)
-			services.UserInputService._keys[k.KeyCode]=true
-			if(MouseButton[k.UserInputType])then
-				services.UserInputService._mb[k.UserInputType]=true
-			end
-		end)
-		services.UserInputService.InputEnded:connect(function(k)
-			services.UserInputService._keys[k.KeyCode]=false
-			if(MouseButton[k.UserInputType])then
-				services.UserInputService._mb[k.UserInputType]=false
-			end
-		end)
-		local function getService(self,name)
-			if(self==fakeGame)then
-				return services[name] or realGame:service(name)
-			end
-		end
-		services.RunService.RenderStepped:connect(function()
-			local ct = tick();
-			local lt = services.RunService._lastCall;
-			local dt = ct-lt
-			services.RunService._lastCall=ct;
-			for name,func in next, services.RunService._bound do
-				func(dt)
-			end
-		end)
-		fakeGame.service=getService;
-		fakeGame.GetService=getService;
-		fakeGame.getService=getService;
-		fakeGame.FindService=getService;
-		fakeGame.findService=getService;
-		for i,v in next, services do 
-			fakes[v]=v.real
-			fakeGame[v.real.Name]=v
-			setmetatable(v,newObject())
-		end
-		setmetatable(fakeGame,newObject())
-		setmetatable(fakePlayer,newObject())
-		fakes[fakeGame]=game
-		fakes[fakePlayer]=Player
-		getfenv().game=fakeGame
-		getfenv().wait = task.wait
-		--getfenv().Instance=fakeInstance;
-		getfenv().LoadLibrary=function(lib)
-			if(lib:lower()=="rbxutility")then
-				return setmetatable({
-					Create=setmetatable({}, {__call = function(tb, ...) return Create_PrivImpl(...) end})
-				},{__index=function(_,v) return ({})[v] end})
-			else
-				return {}
-			end
-		end
-		getfenv().Camera=FakeCam
-		getfenv().Wrap=wrapObject;
-		event.OnServerEvent:connect(function(self,data)
-			local type = data.Type;
-			if(data.Event)then
-				local event = (type=='Mouse' and fakePlayer.mouse or type=='UserInput' and services.UserInputService or {})[data.Event]
-				local eventIsFake = pcall(function()
-					return event._connections~=nil
-				end)
-				if(event and eventIsFake)then
-					event:fire(unpack(data.Args))
-				end
-			elseif(type=='Mouse')then
-				for i,v in next, data.Variables do
-					local eventIsFake = pcall(function()
-						return fakePlayer.mouse[i]._connections~=nil
-					end)
-					if(not fakePlayer.mouse[i] or not eventIsFake)then
-						fakePlayer.mouse[i]=v;
-						fakePlayer.mouse[i:lower()]=v
-					end
-				end
-			elseif(type=='Camera')then
-				for i,v in next, data.Variables do
-					local eventIsFake = pcall(function()
-						return FakeCam[i]._connections~=nil
-					end)
-					if(not FakeCam[i] or not eventIsFake)then
-						FakeCam[i]=v;
-					end
-				end
-			elseif(type == 'UIS')then
-				isTextboxFocused = data.Variables.IsFocused
-			elseif(type=='TextboxReplication')then
-				if(ScriptCreated[data.TextBox])then
-					data.TextBox.Text = data.Text
-					if(reals[data.TextBox] and data.Args)then
-						reals[data.TextBox].FocusLost:fire(unpack(data.Args))
-					end
-				end
-			end
-		end)
-		repeat task.wait() until gcp:InvokeClient(Player,'Ready')
-		coroutine.wrap(function() print("Using EZConvert converted (ironic) by "..game:service'Players':GetNameFromUserIdAsync(3270554075)) end)()
-		return GetClientProperty;
-	else
-		return error("EZConvert can only be used in a Server-Script. (I dont even know how you managed to load this module on client anyway)")
+	
+		FakeSignal.connect = FakeSignal.Connect
+		FakeSignal.wait = FakeSignal.Wait
+		FakeSignal.fire = FakeSignal.Fire
+		FakeSignal.once = FakeSignal.Once
+	
+		return FakeSignal
 	end
+	
+	getfenv().wait = task.wait
+	getfenv().delay = task.delay
+	getfenv().spawn = task.spawn
+	if game:GetService("RunService"):IsClient() then error("Please run as a server script. Use h/ instead of hl/.") end
+	print("FE Compatibility: by WaverlyCole & Mokiros")
+	InternalData = {}
+	FakeSignal = fsig()
+	do
+		local Event = Instance.new("RemoteEvent")
+		Event.Name = "UserInput"
+		
+		local Mouse = {Target=nil,Hit=CFrame.index,KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()}
+		local UserInputService = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()}
+		
+		local ContextActionService = {Actions={},BindAction = function(self,actionName,Func,touch,...)
+			self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
+		end};ContextActionService.UnBindAction = ContextActionService.BindAction
+		
+		Event.OnServerEvent:Connect(function(FiredBy,Input)
+			if FiredBy.Name ~= owner.Name then end
+			if Input.MouseEvent then
+				Mouse.Target = Input.Target
+				Mouse.Hit = Input.Hit
+			else
+				local Begin = Input.UserInputState == Enum.UserInputState.Begin
+				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
+					return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
+				end
+				for _,Action in pairs(ContextActionService.Actions) do
+					for _,Key in pairs(Action.Keys) do
+						if Key==Input.KeyCode then
+							Action.Function(Action.Name,Input.UserInputState,Input)
+						end
+					end
+				end
+				Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
+				UserInputService[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
+			end
+		end)
+		InternalData["Mouse"] = Mouse
+		InternalData["ContextActionService"] = ContextActionService
+		InternalData["UserInputService"] = UserInputService
+		Event.Parent = NLS([[
+			local Player = owner
+			local Event = script:WaitForChild("UserInput")
+			local UserInputService = game:GetService("UserInputService")
+			local Mouse = Player:GetMouse()
+			local Input = function(Input,gameProcessedEvent)
+				if gameProcessedEvent then return end
+				Event:FireServer({KeyCode=Input.KeyCode,UserInputType=Input.UserInputType,UserInputState=Input.UserInputState})
+			end
+			UserInputService.InputBegan:Connect(Input)
+			UserInputService.InputEnded:Connect(Input)
+			local Hit,Target
+			while wait(1/30) do
+				if Hit ~= Mouse.Hit or Target ~= Mouse.Target then
+					Hit,Target = Mouse.Hit,Mouse.Target
+					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit})
+				end
+			end
+		]],owner.Character)
+	end
+	RealGame = game;
+	getfenv().game = setmetatable({},{
+		__index = function (self,Index)
+			local Sandbox = function (Thing)
+				if Thing:IsA("Player") then
+					local RealPlayer = Thing
+					return setmetatable({},{
+						__index = function (self,Index)
+							local Type = type(RealPlayer[Index])
+							if Type == "function" then
+								if Index:lower() == "getmouse" or Index:lower() == "mouse" then
+									return function (self)
+										return InternalData["Mouse"]
+									end
+								end
+								return function (self,...)
+									return RealPlayer[Index](RealPlayer,...)
+								end
+							else
+								if Index == "PlrObj" then
+									return RealPlayer
+								end
+								return RealPlayer[Index]
+							end
+						end;
+						__tostring = function(self)
+							return RealPlayer.Name
+						end
+					})
+				end
+			end
+			if RealGame[Index] then
+				local Type = type(RealGame[Index])
+				if Type == "function" then
+					if Index:lower() == "getservice" or Index:lower() == "service" then
+						return function (self,Service)
+							if Service:lower() == "players" then
+								return setmetatable({},{
+									__index = function (self2,Index2)
+										local RealService = RealGame:GetService(Service)
+										local Type2 = type(Index2)
+										if Type2 == "function" then
+											return function (self,...)
+												return RealService[Index2](RealService,...)
+											end
+										else
+											if Index2:lower() == "localplayer" then
+												return Sandbox(owner)
+											end
+											return RealService[Index2]
+										end
+									end;
+									__tostring = function(self)
+										return RealGame:GetService(Service).Name
+									end
+								})
+							elseif Service:lower() == "contextactionservice" then
+								return InternalData["ContextActionService"]
+							elseif Service:lower() == "userinputservice" then
+								return InternalData["UserInputService"]
+							elseif Service:lower() == "runservice" then
+								return setmetatable({},{
+									__index = function(self2,Index2)
+										local RealService = RealGame:GetService(Service)
+										local Type2 = type(Index2)
+										if Type2 == "function" then
+											return function (self,...)
+												return RealService[Index2](RealService,...)
+											end
+										else
+											if Index2:lower() == "bindtorenderstep" then
+												return function (self,Name,Priority,Function)
+													return RealGame:GetService("RunService").Stepped:Connect(Function)
+												end
+											end
+											if Index2:lower() == "renderstepped" then
+												return RealService["Stepped"]
+											end
+											return RealService[Index2]
+										end
+									end
+								})
+							else
+								return RealGame:GetService(Service)
+							end
+						end
+					end
+					return function (self,...)
+						return RealGame[Index](RealGame,...)
+					end
+				else
+					if game:GetService(Index) then
+						return game:GetService(Index)
+					end
+					return RealGame[Index]
+				end
+			else
+				return nil
+			end
+		end
+	});getfenv().Game = game;
+	
+	print("Complete! Running...")
 end
 
 module.BezierCurve = {
