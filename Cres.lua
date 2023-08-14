@@ -4197,7 +4197,7 @@ while true do
 	sick.Looped = true
 	sick.Pitch = 1
 	sick.Volume = 2
-	sick.Parent = Effects
+	sick.Parent = Torso
 	sick.Playing = PLAYSONG
 end
 Humanoid.Name = "CRESEE"
