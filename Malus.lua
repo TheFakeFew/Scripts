@@ -3,32 +3,110 @@ local assets = loaded:Get("MalusAssets")
 for i, v in next, assets:GetChildren() do
 	v.Parent = script
 end
+
+function fsig()
+	local HttpsService = game:GetService("HttpService")
+
+	local FakeSignal = {}
+	FakeSignal.ClassName = "FakeSignal"
+	FakeSignal.__index = FakeSignal
+
+	local function IsFunction(func)
+		if typeof(func) ~= "function" then
+			error(string.format("invalid argument. function expected got %s", typeof(func)))
+		end
+	end
+
+	function FakeSignal.new()
+		return setmetatable({
+			_connections = {},
+		}, FakeSignal)
+	end
+
+	function FakeSignal:Once(func)
+		IsFunction(func)
+
+		local once = nil
+
+		once = self:Connect(function(...)
+			once:Disconnect()
+
+			func(...)
+		end)
+
+		return once
+	end
+
+	function FakeSignal:Connect(func)
+		IsFunction(func)
+
+		local connection = {
+			_name = HttpsService:GenerateGUID(),
+			_func = func,
+			_connected = true,
+		}
+
+		self._connections[connection._name] = connection
+
+		function connection:Disconnect()
+			connection._connected = false
+		end
+
+		connection.disconnect = connection.Disconnect
+
+		return connection
+	end
+
+	function FakeSignal:Wait()
+		local yield = coroutine.running()
+
+		self:Once(function(...)
+			task.spawn(yield, ...)
+		end)
+
+		return coroutine.yield()
+	end
+
+	function FakeSignal:Fire(...: any)
+		for i, connection in pairs(self._connections) do
+			if connection._connected then
+				IsFunction(connection._func)
+
+				connection._func(...)
+			else
+				local index = table.find(self._connections, connection._name)
+
+				table.remove(self._connections, index)
+			end
+		end
+	end
+
+	FakeSignal.connect = FakeSignal.Connect
+	FakeSignal.wait = FakeSignal.Wait
+	FakeSignal.fire = FakeSignal.Fire
+	FakeSignal.once = FakeSignal.Once
+
+	return FakeSignal
+end
+
 getfenv().wait = task.wait
 getfenv().delay = task.delay
 getfenv().spawn = task.spawn
 if game:GetService("RunService"):IsClient() then error("Please run as a server script. Use h/ instead of hl/.") end
 print("FE Compatibility: by WaverlyCole & Mokiros")
 InternalData = {}
+FakeSignal = fsig()
 do
 	local Event = Instance.new("RemoteEvent")
 	Event.Name = "UserInput"
-	local function NewFakeEvent()
-		local Fake = {fakeEvent=true,Connect=function(self,Func)self.Function=Func end}Fake.connect = Fake.Connect
-		return Fake
-	end
-	local Mouse = {Target=nil,Hit=CFrame.new(),KeyUp=NewFakeEvent(),KeyDown=NewFakeEvent(),Button1Up=NewFakeEvent(),Button1Down=NewFakeEvent()}
-	local UserInputService = {InputBegan=NewFakeEvent(),InputEnded=NewFakeEvent()}
+	
+	local Mouse = {Target=nil,Hit=CFrame.index,KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()}
+	local UserInputService = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()}
+	
 	local ContextActionService = {Actions={},BindAction = function(self,actionName,Func,touch,...)
 		self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
 	end};ContextActionService.UnBindAction = ContextActionService.BindAction
-	local function TriggerEvent(self,Event,...)
-		local Trigger = Mouse[Event]
-		if Trigger and Trigger.fakeEvent and Trigger.Function then
-			Trigger.Function(...)
-		end
-	end
-	Mouse.TrigEvent = TriggerEvent
-	UserInputService.TrigEvent = TriggerEvent
+	
 	Event.OnServerEvent:Connect(function(FiredBy,Input)
 		if FiredBy.Name ~= owner.Name then end
 		if Input.MouseEvent then
@@ -37,7 +115,7 @@ do
 		else
 			local Begin = Input.UserInputState == Enum.UserInputState.Begin
 			if Input.UserInputType == Enum.UserInputType.MouseButton1 then
-				return Mouse:TrigEvent(Begin and "Button1Down" or "Button1Up")
+				return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
 			end
 			for _,Action in pairs(ContextActionService.Actions) do
 				for _,Key in pairs(Action.Keys) do
@@ -46,8 +124,8 @@ do
 					end
 				end
 			end
-			Mouse:TrigEvent(Begin and "KeyDown" or "KeyUp",Input.KeyCode.Name:lower())
-			UserInputService:TrigEvent(Begin and "InputBegan" or "InputEnded",Input,false)
+			Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
+			UserInputService[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
 		end
 	end)
 	InternalData["Mouse"] = Mouse
@@ -529,7 +607,7 @@ local BindKey = function(Name, Key, Function)
 				warn('You must Walking enabled to use this key')
 			end
 		end
-	end)        
+	end)
 end
 
 local pitches = {}
@@ -696,7 +774,7 @@ function FindNearestTorso(Position, Distance, SinglePlayer)
 end
 
 local function ExpellWithForce(Origin, Radius, Force, OnHit, Break, Ignore)
-	Origin = Origin or Vector3.new()
+	Origin = Origin or Vector3.zero
 	Origin = typeof(Origin) == 'Vector3' and Origin or Origin.p
 	Ignore = Ignore or {};
 	Ignore = typeof(Ignore) == 'table' and Ignore or {};
