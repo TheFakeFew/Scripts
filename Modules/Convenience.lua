@@ -91,7 +91,6 @@ function module.EZConvert()
 
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
-	getfenv().spawn = task.spawn
 
 	print("starting converter")
 	local InternalData = {}
