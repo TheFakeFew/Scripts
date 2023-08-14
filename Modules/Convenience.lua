@@ -102,6 +102,8 @@ function module.EZConvert()
 		Event.Name = "UserInput"
 
 		local TBFocus = nil
+		local MouseDowns = {}
+		local KeyDowns = {}
 
 		local Mouse = {
 			Target=nil,Hit=CFrame.index,
@@ -110,7 +112,8 @@ function module.EZConvert()
 		}
 		local UserInputService = {
 			InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),
-			GetFocusedTextBox=function()return TBFocus end
+			GetFocusedTextBox=function()return TBFocus end,IsMouseButtonPressed=function(inputtype)return not not MouseDowns[inputtype] end,
+			IsKeyDown=function(keycode)return not not KeyDowns[keycode] end
 		}
 
 		local ContextActionService = {
@@ -131,8 +134,10 @@ function module.EZConvert()
 			else
 				local Begin = Input.UserInputState == Enum.UserInputState.Begin
 				if(Input.UserInputType == Enum.UserInputType.MouseButton1)then
+					MouseDowns[Input.UserInputType] = Begin
 					return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
 				end
+				
 				for _,Action in pairs(ContextActionService.Actions) do
 					for _,Key in pairs(Action.Keys) do
 						if(Key==Input.KeyCode)then
@@ -140,6 +145,8 @@ function module.EZConvert()
 						end
 					end
 				end
+				
+				MouseDowns[Enum.KeyCode[Input.KeyCode.Name]] = Begin
 				Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
 				UserInputService[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
 			end
