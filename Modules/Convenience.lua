@@ -246,7 +246,9 @@ function module.EZConvert()
 			print(Index, Index2, typeof(Index2))
 			if type(Index2) == "function" then
 				if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
+					print('hi getservice')
 					return function(self,Service)
+						print(Service)
 						return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 					end
 				end
