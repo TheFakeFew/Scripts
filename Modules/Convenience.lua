@@ -175,17 +175,17 @@ function module.EZConvert()
 		]],owner.Character)
 	end
 	local RealGame = game;
-	local realObjects = {}
+	local realObjects = {};
+	local wrappedObjects = {}
 	
 	local function unwrap(object)
 		return realObjects[object] or object
 	end
 	
 	local function wrap(object, settings)
+		local custommethods, customproperties = settings.methods or {},settings.properties or {};
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
-		local custommethods = settings.methods or {}
-		local customproperties = settings.properties or {}
 		
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or object[index]
@@ -194,19 +194,23 @@ function module.EZConvert()
 					return custommethods[index]
 				end
 				
-				return function(self2, ...)
-					return fetched(unwrap(self2), ...)
+				return function(self, ...)
+					return fetched(unwrap(self), ...)
 				end
 			else
 				if(customproperties[index])then
 					return customproperties[index]
 				end
 				
-				return wrap(fetched)
+				return wrappedObjects[unwrap(fetched)] or wrap(unwrap(fetched))
 			end
 		end
 		
-		realObjects[proxy] = object
+		meta.__newindex = function(self, index, value)
+			unwrap(self)[unwrap(index)] = unwrap(value)
+		end
+		
+		realObjects[proxy] = object;wrappedObjects[object] = proxy;
 		
 		return proxy
 	end
