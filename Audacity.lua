@@ -2638,9 +2638,10 @@ if Head:FindFirstChild("face") then
 	sick.Pitch = 1
 	sick.SoundId = "rbxassetid://"..Song
 	sick.Name = "BanishV3Music"
-if sick.Parent ~= Torso then
+	sick.Looped = true
+	if sick.Parent ~= Torso then
 		sick = IT("Sound",Torso)
-end
+	end
 end
 
 --//=================================\\

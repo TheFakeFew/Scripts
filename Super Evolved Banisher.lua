@@ -54,7 +54,6 @@ LeftShoulder = Torso["Left Shoulder"]
 RightHip = Torso["Right Hip"]
 LeftHip = Torso["Left Hip"]
 local sick = Instance.new("Sound",Torso)
-sick.Parent = Character
 sick.SoundId = "rbxassetid://13713216762"
 sick.Looped = true
 sick.Pitch = 1
