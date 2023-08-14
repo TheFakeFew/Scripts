@@ -93,7 +93,7 @@ function module.EZConvert()
 	print("Starting FE Convert")
 	InternalData = {}
 	FakeSignal = fsig()
-	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity}
+	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity,CoordinateFrame=CFrame.identity}
 	do
 		local Event = Instance.new("RemoteEvent")
 		Event.Name = "UserInput"
@@ -114,6 +114,7 @@ function module.EZConvert()
 				Mouse.Hit = Input.Hit
 				TBFocus = Input.TextBox
 				FakeCamera.CFrame = Input.CameraCF
+				FakeCamera.CoordinateFrame = Input.CameraCF
 			else
 				local Begin = Input.UserInputState == Enum.UserInputState.Begin
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
