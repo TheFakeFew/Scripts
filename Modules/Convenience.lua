@@ -134,6 +134,7 @@ function module.EZConvert()
 		InternalData["Mouse"] = Mouse
 		InternalData["ContextActionService"] = ContextActionService
 		InternalData["UserInputService"] = UserInputService
+
 		Event.Parent = NLS([[
 			local Player = owner
 			local Event = script:WaitForChild("UserInput")
@@ -156,7 +157,7 @@ function module.EZConvert()
 	end
 	RealGame = game;
 
-	local Sandbox = function (Thing)
+	local Sandbox = function(Thing)
 		if Thing:IsA("Player") then
 			local RealPlayer = Thing
 			return setmetatable({},{
@@ -183,7 +184,7 @@ function module.EZConvert()
 	end;
 
 	getfenv().game = setmetatable({},{
-		__index = function (self,Index)
+		__index = function(self,Index)
 			if RealGame[Index] then
 				print(Index, RealGame[Index])
 				if typeof(RealGame[Index]) == "function" then
@@ -195,7 +196,7 @@ function module.EZConvert()
 								return setmetatable({},{
 									__index = function (self2,Index2)
 										if typeof(RealService[Index2]) == "function" then
-											return function (self,...)
+											return function(self,...)
 												return RealService[Index2](RealService,...)
 											end
 										else
@@ -218,7 +219,7 @@ function module.EZConvert()
 											end
 										else
 											if string.lower(Index2) == "bindtorenderstep" then
-												return function (self,Name,Priority,Function)
+												return function(self,Name,Priority,Function)
 													return RealGame:GetService("RunService").Stepped:Connect(Function)
 												end
 											end
@@ -235,7 +236,7 @@ function module.EZConvert()
 						end
 					end
 
-					return function (self,...)
+					return function(self,...)
 						return RealGame[Index](RealGame,...)
 					end
 				else
