@@ -89,7 +89,7 @@ function module.EZConvert()
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
 	getfenv().spawn = task.spawn
-	
+
 	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
 	print("starting converter")
 	InternalData = {}
@@ -197,6 +197,7 @@ function module.EZConvert()
 	local FakeServices = {
 		Players = setmetatable({},{
 			__index = function(self2,Index2)
+				print(Index2)
 				if typeof(RealGame:GetService("Players")[Index2]) == "function" then
 					return function(self,...)
 						return RealGame:GetService("Players")[Index2](RealGame:GetService("Players"),...)
@@ -238,8 +239,9 @@ function module.EZConvert()
 			print(Index, RealGame[Index])
 			if RealGame[Index] then
 				if typeof(RealGame[Index]) == "function" then
-					if string.lower(Index) == "getservice" or string.lower(Index) == "service" then
+					if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
 						return function(self,Service)
+							print(Service)
 							return FakeServices[Services] or InternalData[Service] or RealGame:GetService(Service)
 						end
 					end
