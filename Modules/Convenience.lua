@@ -277,6 +277,9 @@ function module.EZConvert()
 		end
 	});getfenv().Game = game;
 	getfenv().Camera=FakeCamera;
+	if(not getfenv().LoadAssets)then
+		getfenv().LoadAssets = require
+	end
 
 	task.wait(.5)
 
