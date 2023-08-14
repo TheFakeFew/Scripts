@@ -155,42 +155,45 @@ function module.EZConvert()
 		]],owner.Character)
 	end
 	RealGame = game;
+
+	local Sandbox = function (Thing)
+		if Thing:IsA("Player") then
+			local RealPlayer = Thing
+			return setmetatable({},{
+				__index = function (self,Index)
+					if typeof(RealPlayer[Index]) == "function" then
+						if string.lower(Index) == "getmouse" or string.lower(Index) == "mouse" then
+							return function (self)
+								return InternalData["Mouse"]
+							end
+						end
+
+						return function (self,...)
+							return RealPlayer[Index](RealPlayer,...)
+						end
+					else
+						return Index == "PlrObj" and RealPlayer or RealPlayer[Index]
+					end
+				end;
+				__tostring = function(self)
+					return RealPlayer.Name
+				end
+			})
+		end
+	end;
+
 	getfenv().game = setmetatable({},{
 		__index = function (self,Index)
-			local Sandbox = function (Thing)
-				if Thing:IsA("Player") then
-					local RealPlayer = Thing
-					return setmetatable({},{
-						__index = function (self,Index)
-							if type(RealPlayer[Index]) == "function" then
-								if string.lower(Index) == "getmouse" or string.lower(Index) == "mouse" then
-									return function (self)
-										return InternalData["Mouse"]
-									end
-								end
-
-								return function (self,...)
-									return RealPlayer[Index](RealPlayer,...)
-								end
-							else
-								return Index == "PlrObj" and RealPlayer or RealPlayer[Index]
-							end
-						end;
-						__tostring = function(self)
-							return RealPlayer.Name
-						end
-					})
-				end
-			end
 			if RealGame[Index] then
-				if type(RealGame[Index]) == "function" then
+				if typeof(RealGame[Index]) == "function" then
+
 					if string.lower(Index) == "getservice" or string.lower(Index) == "service" then
 						return function (self,Service)
-							if Service:lower() == "players" then
+							local RealService = RealGame:GetService(Service)
+							if string.lower(Service) == "players" then
 								return setmetatable({},{
 									__index = function (self2,Index2)
-										local RealService = RealGame:GetService(Service)
-										if type(RealService[Index2]) == "function" then
+										if typeof(RealService[Index2]) == "function" then
 											return function (self,...)
 												return RealService[Index2](RealService,...)
 											end
@@ -200,20 +203,15 @@ function module.EZConvert()
 											end
 											return RealService[Index2]
 										end
-									end;
+									end,
 									__tostring = function(self)
 										return RealGame:GetService(Service).Name
 									end
 								})
-							elseif Service:lower() == "contextactionservice" then
-								return InternalData["ContextActionService"]
-							elseif Service:lower() == "userinputservice" then
-								return InternalData["UserInputService"]
-							elseif Service:lower() == "runservice" then
+							elseif string.lower(Service) == "runservice" then
 								return setmetatable({},{
 									__index = function(self2,Index2)
-										local RealService = RealGame:GetService(Service)
-										if type(RealService[Index2]) == "function" then
+										if typeof(RealService[Index2]) == "function" then
 											return function (self,...)
 												return RealService[Index2](RealService,...)
 											end
@@ -231,10 +229,11 @@ function module.EZConvert()
 									end
 								})
 							else
-								return RealGame:GetService(Service)
+								return InternalData[Service] or RealGame:GetService(Service)
 							end
 						end
 					end
+
 					return function (self,...)
 						return RealGame[Index](RealGame,...)
 					end
@@ -244,8 +243,6 @@ function module.EZConvert()
 					end
 					return RealGame[Index]
 				end
-			else
-				return nil
 			end
 		end
 	});getfenv().Game = game;getfenv().Camera=FakeCamera;
