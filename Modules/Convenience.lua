@@ -182,14 +182,16 @@ function module.EZConvert()
 		return realObjects[object] or object
 	end
 	
-	local function wrap(object, settings)
-		local custommethods, customproperties = settings.methods or {},settings.properties or {};
+	local function wrap(object, setting)
+		local custommethods = setting.methods or {}
+		local customproperties = setting.properties or {};
+		
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
 		
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or object[index]
-			if(fetched and type(fetched) == "function")then
+			if(type(fetched) == "function")then
 				if(custommethods[index])then
 					return custommethods[index]
 				end
@@ -210,9 +212,7 @@ function module.EZConvert()
 			unwrap(self)[index] = unwrap(value)
 		end
 		
-		meta.__tostring = function(self)
-			return unwrap(self).Name
-		end
+		meta.__tostring = function(self) return tostring(unwrap(self)) end
 		
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
 		
