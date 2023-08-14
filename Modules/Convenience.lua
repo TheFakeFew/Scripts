@@ -189,7 +189,7 @@ function module.EZConvert()
 		
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or object[index]
-			print(fetched, type(fetched))
+			print(index, custommethods[index], fetched, type(fetched))
 			if(fetched and type(fetched) == "function")then
 				if(custommethods[index])then
 					print("custom method")
@@ -204,12 +204,12 @@ function module.EZConvert()
 					return customproperties[index]
 				end
 				
-				return wrappedObjects[unwrap(fetched)] or wrap(unwrap(fetched))
+				return wrappedObjects[unwrap(fetched)] or wrap(fetched)
 			end
 		end
 		
 		meta.__newindex = function(self, index, value)
-			unwrap(self)[index] = value
+			unwrap(self)[index] = unwrap(value)
 		end
 		
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
