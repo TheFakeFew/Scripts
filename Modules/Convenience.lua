@@ -190,13 +190,12 @@ function module.EZConvert()
 								return setmetatable({},{
 									__index = function (self2,Index2)
 										local RealService = RealGame:GetService(Service)
-										local Type2 = type(Index2)
-										if Type2 == "function" then
+										if type(RealService[Index2]) == "function" then
 											return function (self,...)
 												return RealService[Index2](RealService,...)
 											end
 										else
-											if Index2:lower() == "localplayer" then
+											if string.lower(Index2) == "localplayer" then
 												return Sandbox(owner)
 											end
 											return RealService[Index2]
@@ -214,18 +213,17 @@ function module.EZConvert()
 								return setmetatable({},{
 									__index = function(self2,Index2)
 										local RealService = RealGame:GetService(Service)
-										local Type2 = type(Index2)
-										if Type2 == "function" then
+										if type(RealService[Index2]) == "function" then
 											return function (self,...)
 												return RealService[Index2](RealService,...)
 											end
 										else
-											if Index2:lower() == "bindtorenderstep" then
+											if string.lower(Index2) == "bindtorenderstep" then
 												return function (self,Name,Priority,Function)
 													return RealGame:GetService("RunService").Stepped:Connect(Function)
 												end
 											end
-											if Index2:lower() == "renderstepped" then
+											if string.lower(Index2) == "renderstepped" then
 												return RealService["Stepped"]
 											end
 											return RealService[Index2]
