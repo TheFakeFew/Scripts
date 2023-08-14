@@ -1,6 +1,9 @@
 local module = {}
 
 function module.EZConvert()
+	if not getfenv().owner or not getfenv().NLS then error("this is made to be ran in a sandbox") end
+	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
+
 	function fsig()
 		local HttpsService = game:GetService("HttpService")
 	
@@ -90,7 +93,6 @@ function module.EZConvert()
 	getfenv().delay = task.delay
 	getfenv().spawn = task.spawn
 
-	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
 	print("starting converter")
 	InternalData = {}
 	FakeSignal = fsig()
