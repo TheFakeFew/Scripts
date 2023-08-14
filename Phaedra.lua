@@ -577,11 +577,13 @@ function SHAKECAM(POSITION, RANGE, INTENSITY, TIME)
 					local FADE = true
 					if HUMANOID and game:GetService("Players"):FindFirstChild(Player.Name) then
 						local FADER = SHAKE / TIMER
-						for i = 1, TIMER do
-							wait()
-							HUMANOID.CameraOffset = VT(MRANDOM(-(SHAKE - FADER * i), SHAKE - FADER * i) / 10, MRANDOM(-(SHAKE - FADER * i), SHAKE - FADER * i) / 10, MRANDOM(-(SHAKE - FADER * i), SHAKE - FADER * i) / 10)
-						end
-						HUMANOID.CameraOffset = VT(0, 0, 0)
+						spawn(function()
+							for i = 1, TIMER do
+								wait()
+								HUMANOID.CameraOffset = VT(MRANDOM(-(SHAKE - FADER * i), SHAKE - FADER * i) / 10, MRANDOM(-(SHAKE - FADER * i), SHAKE - FADER * i) / 10, MRANDOM(-(SHAKE - FADER * i), SHAKE - FADER * i) / 10)
+							end
+							HUMANOID.CameraOffset = VT(0, 0, 0)
+						end)
 					end
 				end
 			end
