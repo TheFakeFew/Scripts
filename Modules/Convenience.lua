@@ -195,7 +195,7 @@ function module.EZConvert()
 				end
 				
 				return function(self2, ...)
-					return fetched(unwrap(object), ...)
+					return fetched(unwrap(self2), ...)
 				end
 			else
 				if(customproperties[index])then
