@@ -1,93 +1,93 @@
 local module = {}
 
+function module.fsig()
+	local HttpsService = game:GetService("HttpService")
+
+	local FakeSignal = {}
+	FakeSignal.ClassName = "FakeSignal"
+	FakeSignal.__index = FakeSignal
+
+	local function IsFunction(func)
+		if typeof(func) ~= "function" then
+			error(string.format("invalid argument. function expected got %s", typeof(func)))
+		end
+	end
+
+	function FakeSignal.new()
+		return setmetatable({
+			_connections = {},
+		}, FakeSignal)
+	end
+
+	function FakeSignal:Once(func)
+		IsFunction(func)
+
+		local once = nil
+
+		once = self:Connect(function(...)
+			once:Disconnect()
+
+			func(...)
+		end)
+
+		return once
+	end
+
+	function FakeSignal:Connect(func)
+		IsFunction(func)
+
+		local connection = {
+			_name = HttpsService:GenerateGUID(),
+			_func = func,
+			_connected = true,
+		}
+
+		self._connections[connection._name] = connection
+
+		function connection:Disconnect()
+			connection._connected = false
+		end
+
+		connection.disconnect = connection.Disconnect
+
+		return connection
+	end
+
+	function FakeSignal:Wait()
+		local yield = coroutine.running()
+
+		self:Once(function(...)
+			task.spawn(yield, ...)
+		end)
+
+		return coroutine.yield()
+	end
+
+	function FakeSignal:Fire(...: any)
+		for i, connection in pairs(self._connections) do
+			if connection._connected then
+				IsFunction(connection._func)
+
+				connection._func(...)
+			else
+				local index = table.find(self._connections, connection._name)
+
+				table.remove(self._connections, index)
+			end
+		end
+	end
+
+	FakeSignal.connect = FakeSignal.Connect
+	FakeSignal.wait = FakeSignal.Wait
+	FakeSignal.fire = FakeSignal.Fire
+	FakeSignal.once = FakeSignal.Once
+
+	return FakeSignal
+end
+
 function module.EZConvert()
 	if not getfenv().owner or not getfenv().NLS then error("this is made to be ran in a sandbox") end
 	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
-
-	local function fsig()
-		local HttpsService = game:GetService("HttpService")
-
-		local FakeSignal = {}
-		FakeSignal.ClassName = "FakeSignal"
-		FakeSignal.__index = FakeSignal
-
-		local function IsFunction(func)
-			if typeof(func) ~= "function" then
-				error(string.format("invalid argument. function expected got %s", typeof(func)))
-			end
-		end
-
-		function FakeSignal.new()
-			return setmetatable({
-				_connections = {},
-			}, FakeSignal)
-		end
-
-		function FakeSignal:Once(func)
-			IsFunction(func)
-
-			local once = nil
-
-			once = self:Connect(function(...)
-				once:Disconnect()
-
-				func(...)
-			end)
-
-			return once
-		end
-
-		function FakeSignal:Connect(func)
-			IsFunction(func)
-
-			local connection = {
-				_name = HttpsService:GenerateGUID(),
-				_func = func,
-				_connected = true,
-			}
-
-			self._connections[connection._name] = connection
-
-			function connection:Disconnect()
-				connection._connected = false
-			end
-
-			connection.disconnect = connection.Disconnect
-
-			return connection
-		end
-
-		function FakeSignal:Wait()
-			local yield = coroutine.running()
-
-			self:Once(function(...)
-				task.spawn(yield, ...)
-			end)
-
-			return coroutine.yield()
-		end
-
-		function FakeSignal:Fire(...: any)
-			for i, connection in pairs(self._connections) do
-				if connection._connected then
-					IsFunction(connection._func)
-
-					connection._func(...)
-				else
-					local index = table.find(self._connections, connection._name)
-
-					table.remove(self._connections, index)
-				end
-			end
-		end
-
-		FakeSignal.connect = FakeSignal.Connect
-		FakeSignal.wait = FakeSignal.Wait
-		FakeSignal.fire = FakeSignal.Fire
-		FakeSignal.once = FakeSignal.Once
-
-		return FakeSignal
-	end
 
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
@@ -95,7 +95,7 @@ function module.EZConvert()
 
 	print("starting converter")
 	local InternalData = {}
-	local FakeSignal = fsig()
+	local FakeSignal = module.fsig()
 	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity,CoordinateFrame=CFrame.identity}
 	do
 		local Event = Instance.new("RemoteEvent")
