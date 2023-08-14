@@ -1714,7 +1714,6 @@ function ComboUp()
 	if combo == 0 and canatk == true then
 		canatk = false
 		Attack1()
-		combo = 1
 		canatk = true
 		spawn(function()
 			ds = true
@@ -1723,57 +1722,6 @@ function ComboUp()
 				ds = false
 			end
 			if combo == 1 and not ds then
-				combo = 0
-			end
-		end)
-		return
-	end
-	if combo == 1 and canatk == true then
-		canatk = false
-		--print'2'
-		Attack2()
-		combo = 2
-		canatk = true
-		spawn(function()
-			ds = true
-			lwait(ComboResetTime)
-			if canatk == true then
-				ds = false
-			end
-			if combo == 2 and not ds then
-				combo = 0
-			end
-		end)
-		return
-	end
-	if combo == 2 and canatk == true then
-		canatk = false
-		Attack3()
-		combo = 3
-		canatk = true
-		spawn(function()
-			ds = true
-			lwait(ComboResetTime)
-			if canatk == true then
-				ds = false
-			end
-			if combo == 3 and not ds then
-				combo = 0
-			end
-		end)
-		return
-	end
-	if combo == 3 and canatk == true then
-		canatk = false
-		Attack4()
-		combo = 0
-		lwait(ComboResetTime)
-		canatk = true
-		spawn(function()
-			if canatk == true then
-				ds = false
-			end
-			if combo == 0 and not ds then
 				combo = 0
 			end
 		end)
