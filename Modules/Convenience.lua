@@ -296,7 +296,9 @@ function module.EZConvert()
 	servicemethods.FindService = servicemethods.GetService;servicemethods.findService = servicemethods.GetService;
 	
 	getfenv().game = wrap(RealGame, {
-		methods = servicemethods
+		methods = {
+			table.unpack(servicemethods)
+		}
 	})
 	getfenv().Game = game;
 	
