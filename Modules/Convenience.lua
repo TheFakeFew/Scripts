@@ -297,8 +297,7 @@ function module.EZConvert()
 			return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 		end
 	};
-	gamemethods.getService = gamemethods.GetService
-	gamemethods.service = gamemethods.GetService;gamemethods.Service = gamemethods.GetService;
+	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
 	getfenv().game = wrap(RealGame, {
