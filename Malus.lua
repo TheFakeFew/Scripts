@@ -1,9 +1,3 @@
-local loaded = LoadAssets(13233384945)
-local assets = loaded:Get("MalusAssets")
-for i, v in next, assets:GetChildren() do
-	v.Parent = script
-end
-
 local realreq = require
 local function require(name)
 	local success, returned = pcall(function()
@@ -26,6 +20,12 @@ local function require(name)
 end
 local Convenience = require("Convenience")
 Convenience.EZConvert()
+
+local loaded = LoadAssets(13233384945)
+local assets = loaded:Get("MalusAssets")
+for i, v in next, assets:GetChildren() do
+	v.Parent = script
+end
 
 script.Parent = game:GetService('ServerScriptService')
 local Player = game:service'Players'.LocalPlayer

@@ -9,9 +9,6 @@
 --------------------//
 -------------------||
 
-getfenv().wait = task.wait
-getfenv().delay = task.delay
-
 local realreq = require
 local function require(name)
 	local success, returned = pcall(function()

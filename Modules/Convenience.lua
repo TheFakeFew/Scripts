@@ -247,6 +247,8 @@ function module.EZConvert()
 		end
 	});getfenv().Game = game;getfenv().Camera=FakeCamera;
 	
+	task.wait(.5)
+
 	print("Complete! Running...")
 end
 

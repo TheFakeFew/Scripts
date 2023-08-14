@@ -20,6 +20,7 @@ local function require(name)
 end
 local Convenience = require("Convenience")
 Convenience.EZConvert()
+
 warn ("SCRIPT MADE BY LifeBest")
 warn (" original maker shackluster")
 script.Name = "Banisher Gun V3 / 1"

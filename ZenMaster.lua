@@ -1,8 +1,3 @@
-local loaded = LoadAssets(13233384945)
-local assets = loaded:Get("ZenAssets")
-for i,v in next, assets:GetChildren() do
-	v.Parent = script
-end
 local realreq = require
 local function require(name)
 	local success, returned = pcall(function()
@@ -25,9 +20,13 @@ local function require(name)
 end
 local Convenience = require("Convenience")
 Convenience.EZConvert()
-getfenv().wait = task.wait
-getfenv().delay = task.delay
-getfenv().spawn = task.spawn
+
+local loaded = LoadAssets(13233384945)
+local assets = loaded:Get("ZenAssets")
+for i,v in next, assets:GetChildren() do
+	v.Parent = script
+end
+
 Player = game:GetService("Players").LocalPlayer
 Mouse = Player:GetMouse()
 PlayerGui = Player.PlayerGui
