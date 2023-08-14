@@ -247,7 +247,7 @@ function module.EZConvert()
 				return nil
 			end
 		end
-	});getfenv().Game = game;
+	});getfenv().Game = game;getfenv().Camera={};
 	
 	print("Complete! Running...")
 end
