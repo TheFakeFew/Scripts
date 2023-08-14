@@ -183,8 +183,14 @@ function module.EZConvert()
 	end
 	
 	local function wrap(object, setting)
-		local custommethods = setting.methods or {}
-		local customproperties = setting.properties or {};
+		local custommethods = {}
+		local customproperties = {}
+		pcall(function()
+			custommethods = setting.methods
+		end)
+		pcall(function()
+			customproperties = setting.properties
+		end)
 		
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
