@@ -185,6 +185,7 @@ function module.EZConvert()
 	getfenv().game = setmetatable({},{
 		__index = function (self,Index)
 			if RealGame[Index] then
+				print(Index, RealGame[index])
 				if typeof(RealGame[Index]) == "function" then
 
 					if string.lower(Index) == "getservice" or string.lower(Index) == "service" then
