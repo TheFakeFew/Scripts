@@ -158,12 +158,12 @@ function module.EZConvert()
 			UserInputService.InputBegan:Connect(Input)
 			UserInputService.InputEnded:Connect(Input)
 			local Hit,Target,FT,FCF
-			while wait(1/30) do
+			game:GetService("RunService").Heartbeat:Connect(function()
 				if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() or workspace.CurrentCamera.CFrame ~= FCF then
 					Hit,Target,FT,FCF = Mouse.Hit,Mouse.Target,UserInputService:GetFocusedTextBox(),workspace.CurrentCamera.CFrame
 					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
 				end
-			end
+			end)
 		]],owner.Character)
 	end
 	RealGame = game;
@@ -236,23 +236,21 @@ function module.EZConvert()
 	getfenv().game = setmetatable({},{
 		__index = function(self,Index)
 			print(Index, RealGame[Index])
-			if RealGame[Index] then
-				if typeof(RealGame[Index]) == "function" then
-					if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
-						return function(self,Service)
-							return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
-						end
+			if typeof(RealGame[Index]) == "function" then
+				if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
+					return function(self,Service)
+						return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 					end
-
-					return function(self,...)
-						return RealGame[Index](RealGame,...)
-					end
-				else
-					if game:GetService(Index) then
-						return game:GetService(Index)
-					end
-					return RealGame[Index]
 				end
+
+				return function(self,...)
+					return RealGame[Index](RealGame,...)
+				end
+			else
+				if game:GetService(Index) then
+					return game:GetService(Index)
+				end
+				return RealGame[Index]
 			end
 		end
 	});getfenv().Game = game;
