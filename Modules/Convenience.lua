@@ -96,9 +96,11 @@ function module.EZConvert()
 	do
 		local Event = Instance.new("RemoteEvent")
 		Event.Name = "UserInput"
+
+		local TBFocus = false
 		
 		local Mouse = {Target=nil,Hit=CFrame.index,KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()}
-		local UserInputService = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()}
+		local UserInputService = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),GetFocusedTextBox=function() return TBFocus end}
 		
 		local ContextActionService = {Actions={},BindAction = function(self,actionName,Func,touch,...)
 			self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
@@ -109,6 +111,7 @@ function module.EZConvert()
 			if Input.MouseEvent then
 				Mouse.Target = Input.Target
 				Mouse.Hit = Input.Hit
+				TBFocus = Input.TextBox
 			else
 				local Begin = Input.UserInputState == Enum.UserInputState.Begin
 				if Input.UserInputType == Enum.UserInputType.MouseButton1 then
@@ -139,11 +142,11 @@ function module.EZConvert()
 			end
 			UserInputService.InputBegan:Connect(Input)
 			UserInputService.InputEnded:Connect(Input)
-			local Hit,Target
+			local Hit,Target,FT
 			while wait(1/30) do
-				if Hit ~= Mouse.Hit or Target ~= Mouse.Target then
+				if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() then
 					Hit,Target = Mouse.Hit,Mouse.Target
-					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit})
+					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"] = UserInputService:GetFocusedTextBox()})
 				end
 			end
 		]],owner.Character)
