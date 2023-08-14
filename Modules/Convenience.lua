@@ -292,19 +292,17 @@ function module.EZConvert()
 		})
 	}
 	
-	local servicemethods = {
+	local gamemethods = {
 		GetService = function(self, Service)
 			return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 		end
 	};
-	servicemethods.getService = servicemethods.GetService
-	servicemethods.service = servicemethods.GetService;servicemethods.Service = servicemethods.GetService;
-	servicemethods.FindService = servicemethods.GetService;servicemethods.findService = servicemethods.GetService;
+	gamemethods.getService = gamemethods.GetService
+	gamemethods.service = gamemethods.GetService;gamemethods.Service = gamemethods.GetService;
+	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
 	getfenv().game = wrap(RealGame, {
-		methods = {
-			table.unpack(servicemethods)
-		}
+		methods = gamemethods
 	})
 	getfenv().Game = game;
 	
