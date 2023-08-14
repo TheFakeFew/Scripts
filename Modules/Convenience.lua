@@ -183,56 +183,53 @@ function module.EZConvert()
 		end
 	end;
 
+	local FakeServices = {
+		Players = setmetatable({},{
+			__index = function(self2,Index2)
+				if typeof(RealGame:GetService("Players")[Index2]) == "function" then
+					return function(self,...)
+						return RealGame:GetService("Players")[Index2](RealGame:GetService("Players"),...)
+					end
+				else
+					if string.lower(Index2) == "localplayer" then
+						return Sandbox(owner)
+					end
+					return RealGame:GetService("Players")[Index2]
+				end
+			end,
+			__tostring = function(self)
+				return RealGame:GetService("Players").Name
+			end
+		}),
+		RunService = setmetatable({},{
+			__index = function(self2,Index2)
+				if typeof(RealGame:GetService("RunService")[Index2]) == "function" then
+					return function (self,...)
+						return RealGame:GetService("RunService")[Index2](RealGame:GetService("RunService"),...)
+					end
+				else
+					if string.lower(Index2) == "bindtorenderstep" then
+						return function(self,Name,Priority,Function)
+							return RealGame:GetService("RunService").Stepped:Connect(Function)
+						end
+					end
+					if string.lower(Index2) == "renderstepped" then
+						return RealGame:GetService("RunService")["Stepped"]
+					end
+					return RealGame:GetService("RunService")[Index2]
+				end
+			end
+		})
+	}
+
 	getfenv().game = setmetatable({},{
 		__index = function(self,Index)
+			print(Index, RealGame[Index])
 			if RealGame[Index] then
-				print(Index, RealGame[Index])
 				if typeof(RealGame[Index]) == "function" then
-
 					if string.lower(Index) == "getservice" or string.lower(Index) == "service" then
-						return function (self,Service)
-							local RealService = RealGame:GetService(Service)
-							if string.lower(Service) == "players" then
-								return setmetatable({},{
-									__index = function (self2,Index2)
-										if typeof(RealService[Index2]) == "function" then
-											return function(self,...)
-												return RealService[Index2](RealService,...)
-											end
-										else
-											if string.lower(Index2) == "localplayer" then
-												return Sandbox(owner)
-											end
-											return RealService[Index2]
-										end
-									end,
-									__tostring = function(self)
-										return RealGame:GetService(Service).Name
-									end
-								})
-							elseif string.lower(Service) == "runservice" then
-								return setmetatable({},{
-									__index = function(self2,Index2)
-										if typeof(RealService[Index2]) == "function" then
-											return function (self,...)
-												return RealService[Index2](RealService,...)
-											end
-										else
-											if string.lower(Index2) == "bindtorenderstep" then
-												return function(self,Name,Priority,Function)
-													return RealGame:GetService("RunService").Stepped:Connect(Function)
-												end
-											end
-											if string.lower(Index2) == "renderstepped" then
-												return RealService["Stepped"]
-											end
-											return RealService[Index2]
-										end
-									end
-								})
-							else
-								return InternalData[Service] or RealGame:GetService(Service)
-							end
+						return function(self,Service)
+							return FakeServices[Services] or InternalData[Service] or RealGame:GetService(Service)
 						end
 					end
 
@@ -247,7 +244,8 @@ function module.EZConvert()
 				end
 			end
 		end
-	});getfenv().Game = game;getfenv().Camera=FakeCamera;
+	});getfenv().Game = game;
+	getfenv().Camera=FakeCamera;
 	
 	task.wait(.5)
 
