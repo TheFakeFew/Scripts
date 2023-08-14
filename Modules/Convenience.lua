@@ -4,105 +4,105 @@ function module.EZConvert()
 	if not getfenv().owner or not getfenv().NLS then error("this is made to be ran in a sandbox") end
 	if game:GetService("RunService"):IsClient() then error("why are you running this on client") end
 
-	function fsig()
+	local function fsig()
 		local HttpsService = game:GetService("HttpService")
-	
+
 		local FakeSignal = {}
 		FakeSignal.ClassName = "FakeSignal"
 		FakeSignal.__index = FakeSignal
-	
+
 		local function IsFunction(func)
 			if typeof(func) ~= "function" then
 				error(string.format("invalid argument. function expected got %s", typeof(func)))
 			end
 		end
-	
+
 		function FakeSignal.new()
 			return setmetatable({
 				_connections = {},
 			}, FakeSignal)
 		end
-	
+
 		function FakeSignal:Once(func)
 			IsFunction(func)
-	
+
 			local once = nil
-	
+
 			once = self:Connect(function(...)
 				once:Disconnect()
-	
+
 				func(...)
 			end)
-	
+
 			return once
 		end
-	
+
 		function FakeSignal:Connect(func)
 			IsFunction(func)
-	
+
 			local connection = {
 				_name = HttpsService:GenerateGUID(),
 				_func = func,
 				_connected = true,
 			}
-	
+
 			self._connections[connection._name] = connection
-	
+
 			function connection:Disconnect()
 				connection._connected = false
 			end
-	
+
 			connection.disconnect = connection.Disconnect
-	
+
 			return connection
 		end
-	
+
 		function FakeSignal:Wait()
 			local yield = coroutine.running()
-	
+
 			self:Once(function(...)
 				task.spawn(yield, ...)
 			end)
-	
+
 			return coroutine.yield()
 		end
-	
+
 		function FakeSignal:Fire(...: any)
 			for i, connection in pairs(self._connections) do
 				if connection._connected then
 					IsFunction(connection._func)
-	
+
 					connection._func(...)
 				else
 					local index = table.find(self._connections, connection._name)
-	
+
 					table.remove(self._connections, index)
 				end
 			end
 		end
-	
+
 		FakeSignal.connect = FakeSignal.Connect
 		FakeSignal.wait = FakeSignal.Wait
 		FakeSignal.fire = FakeSignal.Fire
 		FakeSignal.once = FakeSignal.Once
-	
+
 		return FakeSignal
 	end
-	
+
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
 	getfenv().spawn = task.spawn
 
 	print("starting converter")
-	InternalData = {}
-	FakeSignal = fsig()
+	local InternalData = {}
+	local FakeSignal = fsig()
 	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity,CoordinateFrame=CFrame.identity}
 	do
 		local Event = Instance.new("RemoteEvent")
 		Event.Name = "UserInput"
 
 		local TBFocus = nil
-		
+
 		local Mouse = {
 			Target=nil,Hit=CFrame.index,
 			KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),
@@ -112,16 +112,16 @@ function module.EZConvert()
 			InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),
 			GetFocusedTextBox=function()return TBFocus end
 		}
-		
+
 		local ContextActionService = {
 			Actions={},
 			BindAction = function(self,actionName,Func,touch,...)
 				self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
 			end
 		};ContextActionService.UnBindAction = ContextActionService.BindAction
-		
+
 		Event.OnServerEvent:Connect(function(FiredBy,Input)
-			if FiredBy.Name ~= owner.Name then end
+			if FiredBy.Name ~= owner.Name then return end
 			if Input.MouseEvent then
 				Mouse.Target = Input.Target
 				Mouse.Hit = Input.Hit
@@ -168,9 +168,9 @@ function module.EZConvert()
 			end)
 		]],owner.Character)
 	end
-	RealGame = game;
+	local RealGame = game;
 
-	local Sandbox = function(Thing)
+	local function Sandbox(Thing)
 		if Thing:IsA("Player") then
 			local RealPlayer = Thing
 			return setmetatable({},{
@@ -188,7 +188,7 @@ function module.EZConvert()
 							return Index2(RealPlayer,...)
 						end
 					else
-						return Index == "PlrObj" and RealPlayer or Index2
+						return Index2
 					end
 				end;
 				__tostring = function(self)
@@ -202,7 +202,7 @@ function module.EZConvert()
 		Players = setmetatable({},{
 			__index = function(self2,Index2)
 				local Index = RealGame:GetService("Players")[Index2]
-				print(Index2, Index)
+				print(Index2, Index, type(Index))
 				if type(Index) == "function" then
 					return function(self,...)
 						return Index(RealGame:GetService("Players"),...)
@@ -243,13 +243,9 @@ function module.EZConvert()
 	getfenv().game = setmetatable({},{
 		__index = function(self,Index)
 			local Index2 = RealGame[Index]
-			print(Index, Index2, typeof(Index2))
 			if type(Index2) == "function" then
-				print('hi im function')
 				if string.lower(Index) == "getservice" or string.lower(Index) == "service" or string.lower(Index) == "findservice" then
-					print('hi getservice')
 					return function(self,Service)
-						print(Service)
 						return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 					end
 				end
@@ -266,7 +262,7 @@ function module.EZConvert()
 		end
 	});getfenv().Game = game;
 	getfenv().Camera=FakeCamera;
-	
+
 	task.wait(.5)
 
 	print("finished")
