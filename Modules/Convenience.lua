@@ -200,6 +200,7 @@ function module.EZConvert()
 		Players = setmetatable({},{
 			__index = function(self2,Index2)
 				local Index = RealGame:GetService("Players")[Index2]
+				print(Index2, Index)
 				if type(Index) == "function" then
 					return function(self,...)
 						return Index(RealGame:GetService("Players"),...)
