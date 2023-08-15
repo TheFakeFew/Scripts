@@ -213,67 +213,34 @@ function module.EZConvert()
 		end
 
 		meta.__tostring = function(self) return tostring(unwrap(self)) end
+		meta.__metatable = "The metatable is locked"
 
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
 
 		return proxy
 	end
-
-	local function Sandbox(Thing)
-		if Thing:IsA("Player") then
-			local RealPlayer = Thing
-			return setmetatable({},{
-				__index = function(self2,Index)
-					local Index2 = RealPlayer[Index]
-					if(Index2 and type(Index2) == "function")then
-						if(string.lower(Index) == "getmouse" or string.lower(Index) == "mouse")then
-							return function(self)
-								return InternalData["Mouse"]
-							end
-						end
-
-						return function(self,...)
-							return Index2(self == self2 and RealPlayer or self,...)
-						end
-					else
-						return Index2
-					end
-				end;
-				__tostring = function(self)
-					return RealPlayer.Name
-				end
-			})
-		end
-	end;
+	
+	local sandboxedOwner = wrap(owner, {
+		methods = {
+			GetMouse = function(self)
+				return InternalData["Mouse"]
+			end,
+		}
+	})
 
 	local FakeServices = {
 		Players = wrap(RealGame:GetService("Players"),{
-			properties = {LocalPlayer = owner}
+			properties = {LocalPlayer = sandboxedOwner}
 		}),
-		RunService = setmetatable({},{
-			__index = function(self2,Index2)
-				local Service = RealGame:GetService("RunService")
-				local Index = Service[Index2]
-				if(Index and type(Index) == "function")then
-					if(string.lower(Index2) == "bindtorenderstep")then
-						return function(self,Name,Priority,Function)
-							return Service.Stepped:Connect(Function)
-						end
-					end
-
-					return function(self,...)
-						return Index(self == self2 and Service or self,...)
-					end
-				else
-					if(string.lower(Index2) == "renderstepped")then
-						return Service["Stepped"]
-					end
-					return Index
+		RunService = wrap(RealGame:GetService("RunService"), {
+			methods = {
+				BindToRenderStep = function(self, Name, Priority, Function)
+					return RealGame:GetService("RunService").Stepped:Connect(Function)
 				end
-			end,
-			__tostring = function(self)
-				return RealGame:GetService("RunService").Name
-			end
+			},
+			properties = {
+				RenderStepped = RealGame:GetService("RunService").Stepped
+			}
 		})
 	}
 	
@@ -296,8 +263,6 @@ function module.EZConvert()
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
 		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
 	end
-
-	task.wait(.5)
 
 	print("finished")
 end
