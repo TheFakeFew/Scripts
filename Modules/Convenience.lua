@@ -278,9 +278,8 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 
-	getfenv().game = wrap(RealGame, {methods = gamemethods});
-	getfenv().Game = game;
-	getfenv().workspace = game:GetService("Workspace")
+	getfenv().game = wrap(RealGame, {methods = gamemethods});getfenv().Game = game;
+	--getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
 
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
