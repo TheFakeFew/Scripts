@@ -184,13 +184,13 @@ function module.EZConvert()
 
 	local function wrap(object, settings)
 		settings = (settings and type(settings) == "table") and settings or {};
-		local custommethods, customproperties = settings.methods or {}, settings.customproperties or {};
+		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
 
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
 
 		meta.__index = function(self, index)
-			local fetched = custommethods[index] or object[index]
+			local fetched = custommethods[index] or customproperties[index] or object[index]
 			if(type(fetched) == "function")then
 				if(custommethods[index])then
 					return custommethods[index]
