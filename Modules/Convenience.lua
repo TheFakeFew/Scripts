@@ -196,8 +196,8 @@ function module.EZConvert()
 	end
 
 	local function wrap(object, settings)
-		if(not object or typeof(object) ~= "Instance")then return end
-		if(wrappedObjects[object])then return wrappedObjects[object] end
+		if(wrappedObjects[unwrap(object)])then return wrappedObjects[object] end
+		if(not object or typeof(object) ~= "Instance")then return object end
 
 		settings = (settings and type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
@@ -222,7 +222,7 @@ function module.EZConvert()
 					return prop
 				end
 
-				return wrappedObjects[unwrap(fetched)] or (typeof(fetched) == "Instance" and wrap(fetched) or fetched)
+				return wrap(fetched)
 			end
 		end
 
