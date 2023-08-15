@@ -295,6 +295,7 @@ function module.EZConvert()
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 
 	getfenv().game = sandbox(RealGame, {methods = gamemethods});getfenv().Game = game;
+	getfenv().script = sandbox(script);
 	--getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
 
 	getfenv().Camera = FakeCamera;
