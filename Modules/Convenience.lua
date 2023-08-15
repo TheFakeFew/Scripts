@@ -255,7 +255,15 @@ function module.EZConvert()
 	getfenv().game = wrap(RealGame, {methods = gamemethods})
 	getfenv().Game = game;
 	
-	getfenv().Camera=FakeCamera;
+	getfenv().Camera = FakeCamera;
+	local realInstance = Instance
+	getfenv().Instance = {
+		new = function(type, parent)
+			local inst = realInstance.new(type, unwrap(parent))
+			return wrap(inst)
+		end,
+	}
+	
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
 	end
