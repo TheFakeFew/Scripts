@@ -194,10 +194,18 @@ function module.EZConvert()
 		end
 		return table.unpack(unwrapped)
 	end
+	
+	local globalMethods = {}
 
 	local function wrap(object, settings)
 		settings = (settings and type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
+		
+		for i, v in next, globalMethods do
+			if(not custommethods[i])then
+				custommethods[i] = v
+			end
+		end
 
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
@@ -234,6 +242,12 @@ function module.EZConvert()
 
 		return proxy
 	end
+	
+	globalMethods = {
+		Clone = function(self)
+			return wrap(unwrap(self):Clone())
+		end,
+	}
 
 	local sandboxedOwner = wrap(owner, {
 		methods = {
