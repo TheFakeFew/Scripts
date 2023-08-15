@@ -179,7 +179,7 @@ function module.EZConvert()
 	local realObjects = {};
 	local wrappedObjects = {}
 
-	local function unwrap(...)
+	function unwrap(...)
 		local unwrapped = {}
 		for i,v in next, {...} do
 			if(type(v) == "table")then
@@ -195,7 +195,7 @@ function module.EZConvert()
 		return table.unpack(unwrapped)
 	end
 	
-	local function wrap(...)
+	function wrap(...)
 		local wrapped = {}
 		for i,v in next, {...} do
 			if(type(v) == "table")then
@@ -211,7 +211,7 @@ function module.EZConvert()
 		return table.unpack(wrapped)
 	end
 
-	local function sandbox(object, settings)
+	function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
 
 		settings = (settings and type(settings) == "table") and settings or {};
