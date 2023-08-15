@@ -201,11 +201,11 @@ function module.EZConvert()
 			if(type(v) == "table")then
 				local wrappedtable = {}
 				for i, v in next, v do
-					wrappedtable[i] = sandbox(v)
+					wrappedtable[i] = wrap(v)
 				end
 				table.insert(wrapped, wrappedtable)
 			else
-				table.insert(wrapped, sandbox(v))
+				table.insert(wrapped, wrappedObjects[unwrap(v)] or sandbox(v))
 			end
 		end
 		return table.unpack(wrapped)
