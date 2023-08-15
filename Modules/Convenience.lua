@@ -252,17 +252,22 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
-	getfenv().game = wrap(RealGame, {methods = gamemethods})
+	getfenv().game = wrap(RealGame, {methods = gamemethods});
 	getfenv().Game = game;
 	
 	getfenv().Camera = FakeCamera;
-	local realInstance = Instance
+	getfenv().owner = sandboxedOwner;
+	
+	local realInstance = Instance;
 	getfenv().Instance = {
 		new = function(type, parent)
-			local inst = realInstance.new(type, unwrap(parent))
+			local inst = realInstance.new(type)
+			if(parent)then
+				inst.Parent = unwrap(parent)
+			end
 			return wrap(inst)
 		end,
-	}
+	};
 	
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
