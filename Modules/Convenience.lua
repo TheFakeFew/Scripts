@@ -178,8 +178,12 @@ function module.EZConvert()
 	local realObjects = {};
 	local wrappedObjects = {}
 
-	local function unwrap(object)
-		return realObjects[object] or object
+	local function unwrap(...)
+		local unwrapped = {}
+		for i,v in next, {...} do
+			table.insert(unwrapped, realObjects[v] or v)
+		end
+		return table.unpack(unwrapped)
 	end
 
 	local function wrap(object, settings)
@@ -198,7 +202,7 @@ function module.EZConvert()
 				end
 
 				return function(self, ...)
-					return fetched(unwrap(self), ...)
+					return fetched(unwrap(self, ...))
 				end
 			else
 				local prop = customproperties[index]
@@ -211,7 +215,6 @@ function module.EZConvert()
 		end
 
 		meta.__newindex = function(self, index, value)
-			print("setting",index,unwrap(value))
 			unwrap(self)[index] = unwrap(value)
 		end
 
