@@ -213,6 +213,7 @@ function module.EZConvert()
 
 	function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
+		if(not object or typeof(object) ~= "Instance")then return object end
 
 		settings = (settings and type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
