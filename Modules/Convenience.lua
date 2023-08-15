@@ -193,9 +193,8 @@ function module.EZConvert()
 			local fetched = custommethods[index] or customproperties[index] or object[index]
 			if(type(fetched) == "function")then
 				local method = custommethods[index]
-				
-				if(custommethods[index])then
-					return custommethods[index]
+				if(method)then
+					return method
 				end
 
 				return function(self, ...)
