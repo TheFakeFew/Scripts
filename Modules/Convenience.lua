@@ -213,8 +213,8 @@ function module.EZConvert()
 					return method
 				end
 
-				return function(self, ...)
-					return wrap(fetched(unwrap(self, ...)))
+				return function(...)
+					return wrap(fetched(unwrap(...)))
 				end
 			else
 				local prop = customproperties[index]
@@ -279,7 +279,7 @@ function module.EZConvert()
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 
 	getfenv().game = wrap(RealGame, {methods = gamemethods});getfenv().Game = game;
-	getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
+	--getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
 
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
