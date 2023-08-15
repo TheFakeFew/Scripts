@@ -196,7 +196,7 @@ function module.EZConvert()
 	end
 
 	local function wrap(object, settings)
-		if(wrappedObjects[unwrap(object)])then return wrappedObjects[object] end
+		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
 		if(not object or typeof(object) ~= "Instance")then return object end
 
 		settings = (settings and type(settings) == "table") and settings or {};
@@ -530,37 +530,37 @@ function module.RegionHitbox:Parse(part : Instance)
 	return returned
 end
 
+local function getCorners(frame)
+	local corners, rot = {}, math.rad(frame.Rotation)
+	local center = frame.AbsolutePosition + frame.AbsoluteSize/2
+	local world_cords = {
+		Vector2.new(frame.AbsolutePosition.x, frame.AbsolutePosition.y),
+		Vector2.new(frame.AbsolutePosition.x + frame.AbsoluteSize.x, frame.AbsolutePosition.y),
+		Vector2.new(frame.AbsolutePosition.x + frame.AbsoluteSize.x, frame.AbsolutePosition.y + frame.AbsoluteSize.y),
+		Vector2.new(frame.AbsolutePosition.x, frame.AbsolutePosition.y + frame.AbsoluteSize.y),
+	}
+	for i, corner in ipairs(world_cords) do
+		local x = center.x + (corner.x - center.x) * math.cos(rot) - (corner.y - center.y) * math.sin(rot)
+		local y = center.y + (corner.x - center.x) * math.sin(rot) + (corner.y - center.y) * math.cos(rot)
+		corners[i] = Vector2.new(x, y)
+	end
+	return corners
+end
+
+local function dot2d(x,y)
+	return x.X*y.X+x.Y*y.Y
+end
+
+local function getAxis(c1, c2)
+	local axis = {}
+	axis[1] = (c1[2] - c1[1]).unit
+	axis[2] = (c1[4] - c1[1]).unit
+	axis[3] = (c2[2] - c2[1]).unit
+	axis[4] = (c2[4] - c2[1]).unit
+	return axis
+end
+
 module["2DCollision"] = function(shape1, shape2)
-	local function getCorners(frame)
-		local corners, rot = {}, math.rad(frame.Rotation)
-		local center = frame.AbsolutePosition + frame.AbsoluteSize/2
-		local world_cords = {
-			Vector2.new(frame.AbsolutePosition.x, frame.AbsolutePosition.y),
-			Vector2.new(frame.AbsolutePosition.x + frame.AbsoluteSize.x, frame.AbsolutePosition.y),
-			Vector2.new(frame.AbsolutePosition.x + frame.AbsoluteSize.x, frame.AbsolutePosition.y + frame.AbsoluteSize.y),
-			Vector2.new(frame.AbsolutePosition.x, frame.AbsolutePosition.y + frame.AbsoluteSize.y),
-		}
-		for i, corner in ipairs(world_cords) do
-			local x = center.x + (corner.x - center.x) * math.cos(rot) - (corner.y - center.y) * math.sin(rot)
-			local y = center.y + (corner.x - center.x) * math.sin(rot) + (corner.y - center.y) * math.cos(rot)
-			corners[i] = Vector2.new(x, y)
-		end
-		return corners
-	end
-
-	local function dot2d(x,y)
-		return x.X*y.X+x.Y*y.Y
-	end
-
-	local function getAxis(c1, c2)
-		local axis = {}
-		axis[1] = (c1[2] - c1[1]).unit
-		axis[2] = (c1[4] - c1[1]).unit
-		axis[3] = (c2[2] - c2[1]).unit
-		axis[4] = (c2[4] - c2[1]).unit
-		return axis
-	end
-
 	local c1, c2 = getCorners(shape1), getCorners(shape2)
 	local axis = getAxis(c1, c2)
 	local scalars, mtv = {}, Vector2.new(math.huge, math.huge)
@@ -585,46 +585,47 @@ module["2DCollision"] = function(shape1, shape2)
 	return true, mtv
 end
 
-module["2DRaycast"] = function(From, To, Parameters)
-	local DetectCollision = module["2DCollision"]
-	local function CanCollide(Object)
-		return (Object:FindFirstChild("CanCollide") and true or false)
+local DetectCollision = module["2DCollision"]
+local function ToOffset(Offset,XorY)
+	return Offset*(Parameters.Frame).AbsoluteSize[XorY or "X"]
+end
+local function UDimToVector2(UDi)
+	if(UDi.X.Scale ~= 0)then
+		UDi = UDim2.new(0, UDi.X.Offset + ToOffset(UDi.X.Scale, "X"), UDi.Y.Scale, UDi.Y.Offset)
 	end
+	if(UDi.Y.Scale ~= 0)then
+		UDi = UDim2.new(0, UDi.X.Offset, 0, UDi.Y.Offset + ToOffset(UDi.Y.Scale, "Y"))
+	end
+	return Vector2.new(UDi.X.Offset, UDi.Y.Offset)
+end
+local function CeilOrFloor(Number)
+	local Floor = false
+	if(Number > 0)and(Number > 0.001)then
+		return math.ceil(Number)
+	elseif(Number < 0)and(Number < -0.001)then
+		return math.floor(Number)
+	else
+		return 0
+	end
+end
+local function IsIgnored(Object)
+	for i,v in next, (Parameters.FilterDescendantsInstances or {}) do
+		if(v == Object or Object:IsDescendantOf(v))then
+			return true
+		end
+	end
+	return false
+end
+local function CanCollide(Object)
+	return (Object:FindFirstChild("CanCollide") and true or false)
+end
+
+module["2DRaycast"] = function(From, To, Parameters)
 	if(not Parameters)then
 		return error("Must specify parameters.")
 	end
 	if(not Parameters.Frame)then
 		return error("Parameters must include Frame parameter.")
-	end
-	local function ToOffset(Offset,XorY)
-		return Offset*(Parameters.Frame).AbsoluteSize[XorY or "X"]
-	end
-	local function UDimToVector2(UDi)
-		if(UDi.X.Scale ~= 0)then
-			UDi = UDim2.new(0, UDi.X.Offset + ToOffset(UDi.X.Scale, "X"), UDi.Y.Scale, UDi.Y.Offset)
-		end
-		if(UDi.Y.Scale ~= 0)then
-			UDi = UDim2.new(0, UDi.X.Offset, 0, UDi.Y.Offset + ToOffset(UDi.Y.Scale, "Y"))
-		end
-		return Vector2.new(UDi.X.Offset, UDi.Y.Offset)
-	end
-	local function CeilOrFloor(Number)
-		local Floor = false
-		if(Number > 0)and(Number > 0.001)then
-			return math.ceil(Number)
-		elseif(Number < 0)and(Number < -0.001)then
-			return math.floor(Number)
-		else
-			return 0
-		end
-	end
-	local function IsIgnored(Object)
-		for i,v in next, (Parameters.FilterDescendantsInstances or {}) do
-			if(v == Object or Object:IsDescendantOf(v))then
-				return true
-			end
-		end
-		return false
 	end
 	if(typeof(From) == "UDim2")then
 		From = UDimToVector2(From)
