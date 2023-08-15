@@ -111,7 +111,7 @@ function module.EZConvert()
 		}
 		local UserInputService = {
 			properties = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()},
-			
+
 			methods = {GetFocusedTextBox=function(self)return TBFocus end,IsMouseButtonPressed=function(self,inputtype)return MouseDowns[inputtype] == true end,
 			IsKeyDown=function(self,keycode)return KeyDowns[keycode] == true end}
 		}
@@ -182,7 +182,15 @@ function module.EZConvert()
 	local function unwrap(...)
 		local unwrapped = {}
 		for i,v in next, {...} do
-			table.insert(unwrapped, realObjects[v] or v)
+			if(type(v) == "table")then
+				local unwrappedtable = {}
+				for i, v in next, v do
+					unwrappedtable[i] = realObjects[v] or v
+				end
+				table.insert(unwrapped, unwrappedtable)
+			else
+				table.insert(unwrapped, realObjects[v] or v)
+			end
 		end
 		return table.unpack(unwrapped)
 	end
@@ -210,7 +218,7 @@ function module.EZConvert()
 				if(prop)then
 					return prop
 				end
-				
+
 				return wrappedObjects[unwrap(fetched)] or (typeof(fetched) == "Instance" and wrap(fetched) or fetched)
 			end
 		end
@@ -226,7 +234,7 @@ function module.EZConvert()
 
 		return proxy
 	end
-	
+
 	local sandboxedOwner = wrap(owner, {
 		methods = {
 			GetMouse = function(self)
@@ -258,7 +266,7 @@ function module.EZConvert()
 		}),
 		UserInputService = wrap(RealGame:GetService("UserInputService"), InternalData.UserInputService)
 	}
-	
+
 	local gamemethods = {
 		GetService = function(self, Service)
 			return FakeServices[Service] or InternalData[Service] or wrap(RealGame:GetService(Service))
@@ -266,21 +274,21 @@ function module.EZConvert()
 	};
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
-	
+
 	getfenv().game = wrap(RealGame, {methods = gamemethods});
 	getfenv().Game = game;
 	getfenv().workspace = game:GetService("Workspace")
-	
+
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
-	
+
 	local realInstance = Instance;
 	getfenv().Instance = {
 		new = function(...)
-			return wrap(realInstance.new(...))
+			return wrap(realInstance.new(unwrap(...)))
 		end,
 	};
-	
+
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
 	end
