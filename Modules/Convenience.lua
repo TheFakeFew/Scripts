@@ -194,8 +194,24 @@ function module.EZConvert()
 		end
 		return table.unpack(unwrapped)
 	end
+	
+	local function wrap(...)
+		local wrapped = {}
+		for i,v in next, {...} do
+			if(type(v) == "table")then
+				local wrappedtable = {}
+				for i, v in next, v do
+					wrappedtable[i] = sandbox(v)
+				end
+				table.insert(wrapped, wrappedtable)
+			else
+				table.insert(wrapped, sandbox(v))
+			end
+		end
+		return table.unpack(wrapped)
+	end
 
-	local function wrap(object, settings)
+	local function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
 
 		settings = (settings and type(settings) == "table") and settings or {};
@@ -237,7 +253,7 @@ function module.EZConvert()
 		return proxy
 	end
 
-	local sandboxedOwner = wrap(owner, {
+	local sandboxedOwner = sandbox(owner, {
 		methods = {
 			GetMouse = function(self)
 				return InternalData["Mouse"]
@@ -246,10 +262,10 @@ function module.EZConvert()
 	})
 
 	local FakeServices = {
-		Players = wrap(RealGame:GetService("Players"),{
+		Players = sandbox(RealGame:GetService("Players"),{
 			properties = {LocalPlayer = sandboxedOwner}
 		}),
-		RunService = wrap(RealGame:GetService("RunService"), {
+		RunService = sandbox(RealGame:GetService("RunService"), {
 			methods = {
 				BindToRenderStep = function(self, Name, Priority, Function)
 					return RealGame:GetService("RunService").Stepped:Connect(Function)
@@ -259,25 +275,25 @@ function module.EZConvert()
 				RenderStepped = RealGame:GetService("RunService").Stepped
 			}
 		}),
-		TweenService = wrap(RealGame:GetService("TweenService"), {
+		TweenService = sandbox(RealGame:GetService("TweenService"), {
 			methods = {
 				Create = function(self, ...)
 					return RealGame:GetService("TweenService"):Create(unwrap(...))
 				end,
 			}
 		}),
-		UserInputService = wrap(RealGame:GetService("UserInputService"), InternalData.UserInputService)
+		UserInputService = sandbox(RealGame:GetService("UserInputService"), InternalData.UserInputService)
 	}
 
 	local gamemethods = {
 		GetService = function(self, Service)
-			return FakeServices[Service] or InternalData[Service] or wrap(RealGame:GetService(Service))
+			return FakeServices[Service] or InternalData[Service] or sandbox(RealGame:GetService(Service))
 		end
 	};
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 
-	getfenv().game = wrap(RealGame, {methods = gamemethods});getfenv().Game = game;
+	getfenv().game = sandbox(RealGame, {methods = gamemethods});getfenv().Game = game;
 	--getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
 
 	getfenv().Camera = FakeCamera;
