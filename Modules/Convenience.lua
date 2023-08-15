@@ -110,9 +110,10 @@ function module.EZConvert()
 			Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()
 		}
 		local UserInputService = {
-			InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new(),
-			GetFocusedTextBox=function(self)return TBFocus end,IsMouseButtonPressed=function(self,inputtype)return MouseDowns[inputtype] == true end,
-			IsKeyDown=function(self,keycode)return KeyDowns[keycode] == true end
+			properties = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()},
+			
+			methods = {GetFocusedTextBox=function(self)return TBFocus end,IsMouseButtonPressed=function(self,inputtype)return MouseDowns[inputtype] == true end,
+			IsKeyDown=function(self,keycode)return KeyDowns[keycode] == true end}
 		}
 
 		local ContextActionService = {
@@ -147,7 +148,7 @@ function module.EZConvert()
 
 				KeyDowns[Enum.KeyCode[Input.KeyCode.Name]] = Begin
 				Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
-				UserInputService[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
+				UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
 			end
 		end)
 		InternalData["Mouse"] = Mouse
@@ -247,12 +248,20 @@ function module.EZConvert()
 			properties = {
 				RenderStepped = RealGame:GetService("RunService").Stepped
 			}
-		})
+		}),
+		TweenService = wrap(RealGame:GetService("TweenService"), {
+			methods = {
+				Create = function(self, ...)
+					return RealGame:GetService("TweenService"):Create(unwrap(...))
+				end,
+			}
+		}),
+		UserInputService = wrap(RealGame:GetService("UserInputService"), InternalData.UserInputService)
 	}
 	
 	local gamemethods = {
 		GetService = function(self, Service)
-			return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
+			return FakeServices[Service] or InternalData[Service] or wrap(RealGame:GetService(Service))
 		end
 	};
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
@@ -260,18 +269,15 @@ function module.EZConvert()
 	
 	getfenv().game = wrap(RealGame, {methods = gamemethods});
 	getfenv().Game = game;
+	getfenv().workspace = game:GetService("Workspace")
 	
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
 	
 	local realInstance = Instance;
 	getfenv().Instance = {
-		new = function(type, parent)
-			local inst = realInstance.new(type)
-			if(parent)then
-				inst.Parent = unwrap(parent)
-			end
-			return wrap(inst)
+		new = function(...)
+			return wrap(realInstance.new(...))
 		end,
 	};
 	
