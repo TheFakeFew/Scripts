@@ -177,31 +177,25 @@ function module.EZConvert()
 	local RealGame = game;
 	local realObjects = {};
 	local wrappedObjects = {}
-	
+
 	local function unwrap(object)
 		return realObjects[object] or object
 	end
-	
-	local function wrap(object, setting)
-		local custommethods = {}
-		local customproperties = {}
-		pcall(function()
-			custommethods = setting.methods
-		end)
-		pcall(function()
-			customproperties = setting.properties
-		end)
-		
+
+	local function wrap(object, settings)
+		settings = (settings and type(settings) == "table") and settings or {};
+		local custommethods, customproperties = settings.methods or {}, settings.customproperties or {};
+
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
-		
+
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or object[index]
 			if(type(fetched) == "function")then
 				if(custommethods[index])then
 					return custommethods[index]
 				end
-				
+
 				return function(self, ...)
 					return fetched(unwrap(self), ...)
 				end
@@ -209,19 +203,19 @@ function module.EZConvert()
 				if(customproperties[index])then
 					return customproperties[index]
 				end
-				
+
 				return wrappedObjects[unwrap(fetched)] or wrap(fetched)
 			end
 		end
-		
+
 		meta.__newindex = function(self, index, value)
 			unwrap(self)[index] = unwrap(value)
 		end
-		
+
 		meta.__tostring = function(self) return tostring(unwrap(self)) end
-		
+
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
-		
+
 		return proxy
 	end
 
@@ -254,9 +248,7 @@ function module.EZConvert()
 
 	local FakeServices = {
 		Players = wrap(RealGame:GetService("Players"),{
-			properties = {
-				LocalPlayer = owner
-			}
+			properties = {LocalPlayer = owner}
 		}),
 		RunService = setmetatable({},{
 			__index = function(self2,Index2)
@@ -293,9 +285,7 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
-	getfenv().game = wrap(RealGame, {
-		methods = gamemethods
-	})
+	getfenv().game = wrap(RealGame, {methods = gamemethods})
 	getfenv().Game = game;
 	
 	getfenv().Camera=FakeCamera;
