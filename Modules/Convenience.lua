@@ -227,7 +227,7 @@ function module.EZConvert()
 		end
 
 		meta.__newindex = function(self, index, value)
-			unwrap(self)[index] = unwrap(value)
+			unwrap(self)[unwrap(index)] = unwrap(value)
 		end
 
 		meta.__tostring = function(self) return tostring(unwrap(self)) end
@@ -290,8 +290,8 @@ function module.EZConvert()
 			return wrap(realInstance.new(unwrap(...)))
 		end,
 	};
-	local realtype, realtypeof = type, typeof
-	getfenv().type = function(...) return realtype(unwrap(...)) end;getfenv().typeof = function(...) return realtypeof(unwrap(...)) end;
+	--local realtype, realtypeof = type, typeof
+	--getfenv().type = function(...) return realtype(unwrap(...)) end;getfenv().typeof = function(...) return realtypeof(unwrap(...)) end;
 
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
