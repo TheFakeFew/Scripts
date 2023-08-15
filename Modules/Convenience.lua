@@ -279,7 +279,7 @@ function module.EZConvert()
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 
 	getfenv().game = wrap(RealGame, {methods = gamemethods});getfenv().Game = game;
-	--getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
+	getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
 
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
@@ -291,7 +291,7 @@ function module.EZConvert()
 		end,
 	};
 	local realtype, realtypeof = type, typeof
-	--getfenv().type = function(...) return realtype(unwrap(...)) end;getfenv().typeof = function(...) return realtypeof(unwrap(...)) end;
+	getfenv().type = function(...) return realtype(unwrap(...)) end;getfenv().typeof = function(...) return realtypeof(unwrap(...)) end;
 
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
