@@ -203,8 +203,8 @@ function module.EZConvert()
 				if(customproperties[index])then
 					return customproperties[index]
 				end
-
-				return wrappedObjects[unwrap(fetched)] or wrap(fetched)
+				
+				return wrappedObjects[unwrap(fetched)] or (typeof(fetched) == "Instance" and wrap(fetched) or fetched)
 			end
 		end
 
