@@ -86,7 +86,11 @@ function module.fsig()
 end
 
 function module.EZConvert()
-	if(not getfenv().owner or not getfenv().NLS)then error("this is made to be ran in a sandbox") end
+	if(not getfenv().owner)then
+		getfenv().owner = (script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))) or error("no owner")
+	end
+	
+	if(not getfenv().NLS)then error("this is made to be ran in a sandbox") end
 	if(game:GetService("RunService"):IsClient())then error("why are you running this on client") end
 
 	getfenv().wait = task.wait
