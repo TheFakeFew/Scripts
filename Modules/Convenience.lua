@@ -297,6 +297,7 @@ function module.EZConvert()
 	env.owner = sandboxedOwner;
 	env.script = wrap(script)
 	
+	env.Instance = wrap(env.Instance)
 	env.LoadAssets = wrap(env.LoadAssets)
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
