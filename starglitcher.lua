@@ -1430,7 +1430,7 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 		end
 		local c = Create("ObjectValue")({
 			Name = "creator",
-			Value = RealGame:service("Players")[owner.Name],
+			Value = game:service("Players")[owner.Name],
 			Parent = h
 		})
 		game:GetService("Debris"):AddItem(c, 0.5)
@@ -1598,7 +1598,7 @@ function Damagefunc(Part, hit, minim, maxim, knockback, Type, Property, Delay, H
 		game:GetService("Debris"):AddItem(debounce, Delay)
 		c = Instance.new("ObjectValue")
 		c.Name = "creator"
-		c.Value = RealGame:service("Players")[owner.Name];
+		c.Value = game:service("Players")[owner.Name];
 		c.Parent = h
 		game:GetService("Debris"):AddItem(c, 0.5)
 	end
