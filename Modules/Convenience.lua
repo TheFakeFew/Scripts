@@ -180,12 +180,14 @@ function module.EZConvert()
 		]],owner.Character)
 	end
 	local RealGame = game;
+	local _type = type;
+	local _typeof = typeof;
 	local realObjects = setmetatable({}, {__mode = "v"});
 	local wrappedObjects = setmetatable({}, {__mode = "k"});
 
 	function unwrap(...)
 		if(select("#",...)==1)then
-			if(type(...) == "table")then
+			if(_type(...) == "table")then
 				local unwrappedtable = {}
 				for i, v in next, (...) do
 					unwrappedtable[i] = unwrap(v)
@@ -197,7 +199,7 @@ function module.EZConvert()
 		end
 		local unwrapped = {}
 		for i,v in next, {...} do
-			if(type(v) == "table")then
+			if(_type(v) == "table")then
 				local unwrappedtable = {}
 				for i, v in next, v do
 					unwrappedtable[i] = unwrap(v)
@@ -212,13 +214,13 @@ function module.EZConvert()
 
 	function wrap(...)
 		if(select("#",...)==1)then
-			if(type(...) == "table")then
+			if(_type(...) == "table")then
 				local wrappedtable = {}
 				for i, v in next, (...) do
 					wrappedtable[i] = wrap(v)
 				end
 				return wrappedtable
-			elseif(type(...) == "function")then
+			elseif(_type(...) == "function")then
 				return wrapfunction(...)
 			else
 				return wrappedObjects[unwrap(...)] or sandbox(...)
@@ -226,13 +228,13 @@ function module.EZConvert()
 		end
 		local wrapped = {}
 		for i,v in next, {...} do
-			if(type(v) == "table")then
+			if(_type(v) == "table")then
 				local wrappedtable = {}
 				for i, v in next, v do
 					wrappedtable[i] = wrap(v)
 				end
 				wrapped[i] = wrappedtable
-			elseif(type(v) == "function")then
+			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
 			else
 				wrapped[i] = wrappedObjects[unwrap(v)] or sandbox(v)
@@ -251,7 +253,7 @@ function module.EZConvert()
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
 		if(not object or typeof(object) ~= "Instance")then return object end
 
-		settings = (settings and type(settings) == "table") and settings or {};
+		settings = (settings and _type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
 
 		local proxy = newproxy(true)
@@ -259,7 +261,7 @@ function module.EZConvert()
 
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or customproperties[index] or object[index]
-			if(type(fetched) == "function")then
+			if(_type(fetched) == "function")then
 				return custommethods[index] or wrap(fetched)
 			else
 				return customproperties[index] or wrap(fetched)
@@ -323,8 +325,8 @@ function module.EZConvert()
 
 	env.Instance = wrap(env.Instance)
 
-	--env.type = wrap(type)
-	--env.typeof = wrap(typeof)
+	env.type = wrap(_type)
+	env.typeof = wrap(_typeof)
 
 	env.LoadLibrary=function(lib)
 		if(lib == "RbxUtility")then
