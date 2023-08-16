@@ -289,6 +289,7 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
+	local env = getfenv(2)
 	local protected = {}
 	
 	protected.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});protected.Game = protected.game;
@@ -297,13 +298,14 @@ function module.EZConvert()
 	protected.Camera = FakeCamera;
 	protected.owner = sandboxedOwner;
 	
-	local env = setmetatable(getfenv(2), {
+	local newenv = setmetatable(protected, {
 		__index = function(self, index)
-			return wrap(rawget(self, index) or protected[index])
+			return wrap(rawget(self, index) or env[index])
 		end,
 		__metatable = "The metatable is locked"
 	})
-	setfenv(2, env)
+
+	setfenv(2, newenv)
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
 		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
