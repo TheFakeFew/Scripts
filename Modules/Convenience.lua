@@ -288,7 +288,7 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
-	local oldenv = {}
+	local oldenv = getfenv(2)
 	local env = {}
 	
 	env.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});env.Game = env.game;
