@@ -636,7 +636,6 @@ end
 
 function Shoot(startP,endP)
 	local part,pos,norm,dist = CastRay(startP,endP,1500)
-	if(not part or not part:IsA("BasePart"))then return end
 	if(part and part.Parent and part.Parent ~= workspace)then
 		local part = part
 		local who = part.Parent;
