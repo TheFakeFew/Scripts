@@ -234,7 +234,6 @@ function module.EZConvert()
 		meta.__newindex = function(self, index, value)
 			unwrap(self)[index] = unwrap(value)
 		end
-		
 		meta.__tostring = function(self) return tostring(unwrap(self)) end
 		meta.__type = "Instance"
 		meta.__metatable = "The metatable is locked"
@@ -273,29 +272,46 @@ function module.EZConvert()
 				end,
 			}
 		}),
-		UserInputService = sandbox(RealGame:GetService("UserInputService"), InternalData.UserInputService)
+		Debris = sandbox(RealGame:GetService("Debris"), {
+			methods = {
+				AddItem = function(self, ...)
+					return RealGame:GetService("Debris"):AddItem(unwrap(...))
+				end,
+			}
+		}),
+		UserInputService = sandbox(RealGame:GetService("UserInputService"), InternalData.UserInputService),
+		Workspace = sandbox(workspace)
 	}
 
 	local gamemethods = {
 		GetService = function(self, Service)
-			return FakeServices[Service] or InternalData[Service] or sandbox(RealGame:GetService(Service))
+			return FakeServices[Service] or InternalData[Service] or RealGame:GetService(Service)
 		end
 	};
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 
-	getfenv().game = sandbox(RealGame, {methods = gamemethods});getfenv().Game = game;
+	getfenv().game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});getfenv().Game = game;
+	getfenv().workspace = FakeServices.Workspace;getfenv().Workspace = workspace;
 	getfenv().script = sandbox(script);
 
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
 
-	local realInstance = Instance;
+	local _Instance = Instance;
 	getfenv().Instance = {
 		new = function(...)
-			return wrap(realInstance.new(unwrap(...)))
+			return wrap(_Instance.new(unwrap(...)))
 		end,
 	};
+	local _type = type;
+	local _typeof = typeof;
+	getfenv().type = function(...)
+		return _type(unwrap(...))
+	end
+	getfenv().typeof = function(...)
+		return _typeof(unwrap(...))
+	end
 
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
