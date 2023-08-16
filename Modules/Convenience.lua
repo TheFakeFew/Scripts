@@ -308,14 +308,14 @@ function module.EZConvert()
 			return wrap(_Instance.new(unwrap(...)))
 		end,
 	};
-	local _type = type;
+	--[[local _type = type;
 	local _typeof = typeof;
 	getfenv().type = function(...)
 		return _type(unwrap(...))
 	end
 	getfenv().typeof = function(...)
 		return _typeof(unwrap(...))
-	end
+	end]]
 
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
