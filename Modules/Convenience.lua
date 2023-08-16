@@ -209,7 +209,7 @@ function module.EZConvert()
 				table.insert(unwrapped, index, realObjects[v] or v)
 			end
 		end
-		return table.unpack(unwrapped, 1, index)
+		return table.unpack(unwrapped, 0, index)
 	end
 
 	function wrap(...)
@@ -242,7 +242,7 @@ function module.EZConvert()
 				table.insert(wrapped, index, wrappedObjects[unwrap(v)] or sandbox(v))
 			end
 		end
-		return table.unpack(wrapped, 1, index)
+		return table.unpack(wrapped, 0, index)
 	end
 
 	function wrapfunction(f)
