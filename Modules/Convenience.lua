@@ -185,9 +185,7 @@ function module.EZConvert()
 
 	function unwrap(...)
 		if(select("#",...)==1)then
-			if(realObjects[...])then
-				return realObjects[...]
-			end
+			return realObjects[...] or v
 		end
 		local unwrapped = {}
 		for i,v in next, {...} do
@@ -206,9 +204,7 @@ function module.EZConvert()
 
 	function wrap(...)
 		if(select("#",...)==1)then
-			if(wrappedObjects[...])then
-				return wrappedObjects[...]
-			end
+			return wrappedObjects[...] or sandbox(...)
 		end
 		local wrapped = {}
 		for i,v in next, {...} do
