@@ -198,7 +198,7 @@ function module.EZConvert()
 		local unwrapped = {}
 		local index = 0
 		for i,v in next, {...} do
-			index = index + 1
+			index += 1
 			if(type(v) == "table")then
 				local unwrappedtable = {}
 				for i, v in next, v do
@@ -209,7 +209,7 @@ function module.EZConvert()
 				table.insert(unwrapped, index, realObjects[v] or v)
 			end
 		end
-		return table.unpack(unwrapped, 1, table.maxn(unwrapped))
+		return table.unpack(unwrapped, 1, index)
 	end
 
 	function wrap(...)
@@ -229,7 +229,7 @@ function module.EZConvert()
 		local wrapped = {}
 		local index = 0
 		for i,v in next, {...} do
-			index = index + 1
+			index += 1
 			if(type(v) == "table")then
 				local wrappedtable = {}
 				for i, v in next, v do
@@ -242,7 +242,7 @@ function module.EZConvert()
 				table.insert(wrapped, index, wrappedObjects[unwrap(v)] or sandbox(v))
 			end
 		end
-		return table.unpack(wrapped, 1, table.maxn(wrapped))
+		return table.unpack(wrapped, 1, index)
 	end
 
 	function wrapfunction(f)
