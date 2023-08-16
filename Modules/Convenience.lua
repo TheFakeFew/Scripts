@@ -298,7 +298,31 @@ function module.EZConvert()
 	env.script = wrap(script)
 	
 	env.Instance = wrap(env.Instance)
-	env.LoadAssets = wrap(env.LoadAssets)
+	
+	getfenv().type = wrap(type)
+	getfenv().typeof = wrap(typeof)
+	
+	local _LoadAssets = env.LoadAssets
+	env.LoadAssets = function(id)
+		local Assets = _LoadAssets(id)
+		return {
+			Get = function(self, ...)
+				return Assets:Get(unwrap(...))
+			end,
+			Exists = function(self, ...)
+				return Assets:Exists(unwrap(...))
+			end,
+			GetNames = function(self, ...)
+				return Assets:GetNames(unwrap(...))
+			end,
+			GetArray = function(self, ...)
+				return Assets:GetArray(unwrap(...))
+			end,
+			GetDictionary = function(self, ...)
+				return Assets:GetDictionary(unwrap(...))
+			end
+		}
+	end
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
 		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
