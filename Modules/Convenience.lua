@@ -299,8 +299,8 @@ function module.EZConvert()
 	
 	env.Instance = wrap(env.Instance)
 	
-	env.type = wrap(type)
-	env.typeof = wrap(typeof)
+	--env.type = wrap(type)
+	--env.typeof = wrap(typeof)
 	
 	local _LoadAssets = env.LoadAssets
 	env.LoadAssets = function(id)
