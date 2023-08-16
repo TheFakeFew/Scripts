@@ -192,7 +192,7 @@ function module.EZConvert()
 				end
 				return unwrappedtable
 			else
-				return realObjects[v] or v
+				return realObjects[...] or (...)
 			end
 		end
 		local unwrapped = {}
@@ -219,9 +219,9 @@ function module.EZConvert()
 				end
 				return wrappedtable
 			elseif(type(...) == "function")then
-				return wrapfunction(v)
+				return wrapfunction(...)
 			else
-				return wrappedObjects[unwrap(v)] or sandbox(v)
+				return wrappedObjects[unwrap(...)] or sandbox(...)
 			end
 		end
 		local wrapped = {}
