@@ -185,7 +185,15 @@ function module.EZConvert()
 
 	function unwrap(...)
 		if(select("#",...)==1)then
-			return realObjects[...] or v
+			if(type(...) == "table")then
+				local unwrappedtable = {}
+				for i, v in next, (...) do
+					unwrappedtable[i] = unwrap(v)
+				end
+				return unwrappedtable
+			else
+				return realObjects[v] or v
+			end
 		end
 		local unwrapped = {}
 		for i,v in next, {...} do
@@ -204,7 +212,17 @@ function module.EZConvert()
 
 	function wrap(...)
 		if(select("#",...)==1)then
-			return wrappedObjects[...] or sandbox(...)
+			if(type(...) == "table")then
+				local wrappedtable = {}
+				for i, v in next, (...) do
+					wrappedtable[i] = wrap(v)
+				end
+				return wrappedtable
+			elseif(type(...) == "function")then
+				return wrapfunction(v)
+			else
+				return wrappedObjects[unwrap(v)] or sandbox(v)
+			end
 		end
 		local wrapped = {}
 		for i,v in next, {...} do
