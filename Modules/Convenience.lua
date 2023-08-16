@@ -89,7 +89,7 @@ function module.EZConvert()
 	if(not getfenv().owner)then
 		getfenv().owner = (script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))) or error("no owner")
 	end
-	
+
 	if(not getfenv().NLS)then error("this is made to be ran in a sandbox") end
 	if(game:GetService("RunService"):IsClient())then error("why are you running this on client") end
 
@@ -196,18 +196,20 @@ function module.EZConvert()
 			end
 		end
 		local unwrapped = {}
+		local index = 0
 		for i,v in next, {...} do
+			index = index + 1
 			if(type(v) == "table")then
 				local unwrappedtable = {}
 				for i, v in next, v do
 					unwrappedtable[i] = unwrap(v)
 				end
-				table.insert(unwrapped, unwrappedtable)
+				table.insert(unwrapped, index, unwrappedtable)
 			else
-				table.insert(unwrapped, realObjects[v] or v)
+				table.insert(unwrapped, index, realObjects[v] or v)
 			end
 		end
-		return table.unpack(unwrapped)
+		return table.unpack(unwrapped, 1, table.maxn(unwrapped))
 	end
 
 	function wrap(...)
@@ -225,22 +227,24 @@ function module.EZConvert()
 			end
 		end
 		local wrapped = {}
+		local index = 0
 		for i,v in next, {...} do
+			index = index + 1
 			if(type(v) == "table")then
 				local wrappedtable = {}
 				for i, v in next, v do
 					wrappedtable[i] = wrap(v)
 				end
-				table.insert(wrapped, wrappedtable)
+				table.insert(wrapped, index, wrappedtable)
 			elseif(type(v) == "function")then
-				table.insert(wrapped, wrapfunction(v))
+				table.insert(wrapped, index, wrapfunction(v))
 			else
-				table.insert(wrapped, wrappedObjects[unwrap(v)] or sandbox(v))
+				table.insert(wrapped, index, wrappedObjects[unwrap(v)] or sandbox(v))
 			end
 		end
-		return table.unpack(wrapped)
+		return table.unpack(wrapped, 1, table.maxn(wrapped))
 	end
-	
+
 	function wrapfunction(f)
 		return function(...)
 			return wrap(f(unwrap(...)))
@@ -311,21 +315,21 @@ function module.EZConvert()
 	};
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
-	
+
 	local env = getfenv(2)
-	
+
 	env.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});env.Game = env.game;
 	env.workspace = FakeServices.Workspace;env.Workspace = env.workspace;
-	
+
 	env.Camera = FakeCamera;
 	env.owner = sandboxedOwner;
 	env.script = wrap(script)
-	
+
 	env.Instance = wrap(env.Instance)
-	
+
 	--env.type = wrap(type)
 	--env.typeof = wrap(typeof)
-	
+
 	env.LoadLibrary=function(lib)
 		if(lib == "RbxUtility")then
 			return {
@@ -345,7 +349,7 @@ function module.EZConvert()
 			return {}
 		end
 	end
-	
+
 	local _LoadAssets = env.LoadAssets
 	env.LoadAssets = function(id)
 		local Assets = _LoadAssets(id)
