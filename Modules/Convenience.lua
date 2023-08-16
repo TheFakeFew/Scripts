@@ -289,7 +289,7 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
-	local env = wrap(getfenv())
+	local env = wrap(getfenv(2))
 	
 	env.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});env.Game = game;
 	env.workspace = FakeServices.Workspace;env.Workspace = workspace;
