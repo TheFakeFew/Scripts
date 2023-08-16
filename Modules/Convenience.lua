@@ -288,7 +288,7 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
-	local oldenv = getfenv(2)
+	local oldenv = getfenv(1)
 	local env = {}
 	
 	env.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});env.Game = env.game;
@@ -297,7 +297,7 @@ function module.EZConvert()
 	env.Camera = FakeCamera;
 	env.owner = sandboxedOwner;
 	
-	setfenv(2, setmetatable(env, {
+	setfenv(1, setmetatable(env, {
 		__index = function(self, index)
 			return rawget(self, index) or wrap(oldenv[index])
 		end,
