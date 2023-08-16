@@ -300,7 +300,7 @@ function module.EZConvert()
 	
 	local newenv = setmetatable(protected, {
 		__index = function(self, index)
-			return wrap(rawget(self, index) or env[index])
+			return rawget(self, index) or wrap(env[index])
 		end,
 		__metatable = "The metatable is locked"
 	})
