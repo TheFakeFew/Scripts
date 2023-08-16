@@ -289,7 +289,13 @@ function module.EZConvert()
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
 	
-	local env = wrap(getfenv(2))
+	local env = setmetatable(getfenv(2), {
+		__index = function(self, index)
+			return wrap(rawget(self, index))
+		end,
+		__metatable = "The metatable is locked"
+	})
+	setfenv(2, env)
 	
 	env.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});env.Game = game;
 	env.workspace = FakeServices.Workspace;env.Workspace = workspace;
