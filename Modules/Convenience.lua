@@ -180,8 +180,8 @@ function module.EZConvert()
 		]],owner.Character)
 	end
 	local RealGame = game;
-	local realObjects = {};
-	local wrappedObjects = {}
+	local realObjects = setmetatable({}, {__mode = "v"});
+	local wrappedObjects = setmetatable({}, {__mode = "k"});
 
 	function unwrap(...)
 		local unwrapped = {}
@@ -214,6 +214,12 @@ function module.EZConvert()
 		end
 		return table.unpack(wrapped)
 	end
+	
+	function wrapfunction(f)
+		return function(...)
+			return wrap(f(unwrap(...)))
+		end
+	end
 
 	function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
@@ -228,9 +234,7 @@ function module.EZConvert()
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or customproperties[index] or object[index]
 			if(type(fetched) == "function")then
-				return custommethods[index] or function(...)
-					return wrap(fetched(unwrap(...)))
-				end
+				return custommethods[index] or wrapfunction(fetched)
 			else
 				return customproperties[index] or wrap(fetched)
 			end
@@ -269,20 +273,8 @@ function module.EZConvert()
 				RenderStepped = RealGame:GetService("RunService").Stepped
 			}
 		}),
-		TweenService = sandbox(RealGame:GetService("TweenService"), {
-			methods = {
-				Create = function(self, ...)
-					return RealGame:GetService("TweenService"):Create(unwrap(...))
-				end,
-			}
-		}),
-		Debris = sandbox(RealGame:GetService("Debris"), {
-			methods = {
-				AddItem = function(self, ...)
-					return RealGame:GetService("Debris"):AddItem(unwrap(...))
-				end,
-			}
-		}),
+		TweenService = sandbox(RealGame:GetService("TweenService")),
+		Debris = sandbox(RealGame:GetService("Debris")),
 		UserInputService = sandbox(RealGame:GetService("UserInputService"), InternalData.UserInputService),
 		Workspace = sandbox(workspace)
 	}
@@ -302,24 +294,13 @@ function module.EZConvert()
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
 
-	local _Instance = Instance;
-	getfenv().Instance = {
-		new = function(...)
-			return wrap(_Instance.new(unwrap(...)))
-		end,
-	};
-	--[[local _type = type;
-	local _typeof = typeof;
-	getfenv().type = function(...)
-		return _type(unwrap(...))
-	end
-	getfenv().typeof = function(...)
-		return _typeof(unwrap(...))
-	end]]
+	getfenv().Instance = wrap(getfenv().Instance)
 
-	if(not getfenv().LoadAssets)then
-		getfenv().LoadAssets = require
-	end
+	getfenv().type = wrapfunction(getfenv().type)
+	getfenv().typeof = wrapfunction(getfenv().typeof)
+	
+	getfenv().require = wrapfunction(getfenv().require)
+	getfenv().LoadAssets = wrapfunction(getfenv().LoadAssets or getfenv().require)
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
 		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
