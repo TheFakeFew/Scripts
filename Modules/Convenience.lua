@@ -194,7 +194,7 @@ function module.EZConvert()
 		end
 		return table.unpack(unwrapped)
 	end
-	
+
 	function wrap(...)
 		local wrapped = {}
 		for i,v in next, {...} do
@@ -218,36 +218,31 @@ function module.EZConvert()
 		settings = (settings and type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
 
-		local proxy = newproxy(true)
-		local meta = getmetatable(proxy)
-
-		meta.__index = function(self, index)
-			local fetched = custommethods[index] or customproperties[index] or object[index]
-			if(type(fetched) == "function")then
-				local method = custommethods[index]
-				if(method)then
-					return method
-				end
-
-				return function(...)
-					return wrap(fetched(unwrap(...)))
-				end
-			else
-				local prop = customproperties[index]
-				if(prop)then
-					return prop
-				end
-
-				return wrap(fetched)
-			end
+		local proxy = {}
+		for i, v in next, custommethods do
+			proxy[i]=v
 		end
-
-		meta.__newindex = function(self, index, value)
-			unwrap(self)[unwrap(index)] = unwrap(value)
+		for i, v in next, customproperties do
+			proxy[i]=v
 		end
-
-		meta.__tostring = function(self) return tostring(unwrap(self)) end
-		meta.__metatable = "The metatable is locked"
+		
+		setmetatable(proxy, {
+			__index = function(self, index)
+				local fetched = custommethods[index] or customproperties[index] or object[index]
+				if(type(fetched) == "function")then
+					return function(...)
+						return wrap(fetched(unwrap(...)))
+					end
+				else
+					return wrap(fetched)
+				end
+			end,
+			__newindex = function(self, index, value)
+				unwrap(self)[index] = unwrap(value)
+			end,
+			__tostring = function(self) return tostring(unwrap(self)) end,
+			__metatable = "The metatable is locked"
+		})
 
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
 
@@ -296,7 +291,6 @@ function module.EZConvert()
 
 	getfenv().game = sandbox(RealGame, {methods = gamemethods});getfenv().Game = game;
 	getfenv().script = sandbox(script);
-	--getfenv().workspace = game:GetService("Workspace");getfenv().Workspace=game:GetService("Workspace");
 
 	getfenv().Camera = FakeCamera;
 	getfenv().owner = sandboxedOwner;
@@ -307,8 +301,6 @@ function module.EZConvert()
 			return wrap(realInstance.new(unwrap(...)))
 		end,
 	};
-	--local realtype, realtypeof = type, typeof
-	--getfenv().type = function(...) return realtype(unwrap(...)) end;getfenv().typeof = function(...) return realtypeof(unwrap(...)) end;
 
 	if(not getfenv().LoadAssets)then
 		getfenv().LoadAssets = require
