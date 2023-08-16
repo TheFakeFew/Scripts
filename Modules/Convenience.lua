@@ -305,7 +305,7 @@ function module.EZConvert()
 	local _LoadAssets = env.LoadAssets
 	env.LoadAssets = function(id)
 		local Assets = _LoadAssets(id)
-		return {
+		return wrap({
 			Get = function(self, ...)
 				return Assets:Get(unwrap(...))
 			end,
@@ -321,7 +321,7 @@ function module.EZConvert()
 			GetDictionary = function(self, ...)
 				return Assets:GetDictionary(unwrap(...))
 			end
-		}
+		})
 	end
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
