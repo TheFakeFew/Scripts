@@ -302,6 +302,26 @@ function module.EZConvert()
 	--env.type = wrap(type)
 	--env.typeof = wrap(typeof)
 	
+	env.LoadLibrary=function(lib)
+		if(lib == "RbxUtility")then
+			return {
+				Create=function(inst)
+					local instance = env.Instance.new(inst)
+					return function(tab)
+						if(tab)then
+							for i,v in next, tab do
+								instance[i]=v
+							end
+						end
+						return instance
+					end
+				end
+			}
+		else
+			return {}
+		end
+	end
+	
 	local _LoadAssets = env.LoadAssets
 	env.LoadAssets = function(id)
 		local Assets = _LoadAssets(id)
