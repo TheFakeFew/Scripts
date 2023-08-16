@@ -218,31 +218,26 @@ function module.EZConvert()
 		settings = (settings and type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
 
-		local proxy = {}
-		for i, v in next, custommethods do
-			proxy[i]=v
+		local proxy = newproxy(true)
+		local meta = getmetatable(proxy)
+
+		meta.__index = function(self, index)
+			local fetched = custommethods[index] or customproperties[index] or object[index]
+			if(type(fetched) == "function")then
+				return custommethods[index] or function(...)
+					return wrap(fetched(unwrap(...)))
+				end
+			else
+				return customproperties[index] or wrap(fetched)
+			end
 		end
-		for i, v in next, customproperties do
-			proxy[i]=v
+		meta.__newindex = function(self, index, value)
+			unwrap(self)[index] = unwrap(value)
 		end
 		
-		setmetatable(proxy, {
-			__index = function(self, index)
-				local fetched = custommethods[index] or customproperties[index] or object[index]
-				if(type(fetched) == "function")then
-					return function(...)
-						return wrap(fetched(unwrap(...)))
-					end
-				else
-					return wrap(fetched)
-				end
-			end,
-			__newindex = function(self, index, value)
-				unwrap(self)[index] = unwrap(value)
-			end,
-			__tostring = function(self) return tostring(unwrap(self)) end,
-			__metatable = "The metatable is locked"
-		})
+		meta.__tostring = function(self) return tostring(unwrap(self)) end
+		meta.__type = "Instance"
+		meta.__metatable = "The metatable is locked"
 
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
 
