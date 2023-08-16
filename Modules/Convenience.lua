@@ -1,5 +1,8 @@
 local module = {}
 
+local _type = type;
+local _typeof = typeof;
+
 function module.fsig()
 	local HttpsService = game:GetService("HttpService")
 
@@ -8,8 +11,8 @@ function module.fsig()
 	FakeSignal.__index = FakeSignal
 
 	local function IsFunction(func)
-		if typeof(func) ~= "function" then
-			error(string.format("invalid argument. function expected got %s", typeof(func)))
+		if _typeof(func) ~= "function" then
+			error(string.format("invalid argument. function expected got %s", _typeof(func)))
 		end
 	end
 
@@ -180,13 +183,14 @@ function module.EZConvert()
 		]],owner.Character)
 	end
 	local RealGame = game;
-	local _type = type;
-	local _typeof = typeof;
 	local realObjects = setmetatable({}, {__mode = "v"});
 	local wrappedObjects = setmetatable({}, {__mode = "k"});
 
 	function unwrap(...)
 		if(select("#",...)==1)then
+			if wrappedObjects[...] then
+				return (...)
+			end
 			if(_type(...) == "table")then
 				local unwrappedtable = {}
 				for i, v in next, (...) do
@@ -214,6 +218,9 @@ function module.EZConvert()
 
 	function wrap(...)
 		if(select("#",...)==1)then
+			if realObjects[...] then
+				return (...)
+			end
 			if(_type(...) == "table")then
 				local wrappedtable = {}
 				for i, v in next, (...) do
@@ -251,7 +258,7 @@ function module.EZConvert()
 
 	function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
-		if(not object or typeof(object) ~= "Instance")then return object end
+		if(not object or _typeof(object) ~= "Instance")then return object end
 
 		settings = (settings and _type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
@@ -417,8 +424,8 @@ module.BezierCurve = {
 module.RegionHitbox = {}
 
 function module.RegionHitbox:Parse(part : Instance)
-	if(typeof(part) ~= "Instance")then
-		return error('Expected type Instance got '..typeof(part))
+	if(_typeof(part) ~= "Instance")then
+		return error('Expected type Instance got '.._typeof(part))
 	end
 	local returned = {}
 	returned.Part = part
@@ -459,26 +466,26 @@ function module.RegionHitbox:Parse(part : Instance)
 	connections[#connections+1] = MainLoop
 
 	function returned:AddIgnore(Ignored : Instance | {})
-		if(typeof(Ignored) == "Instance")then
+		if(_typeof(Ignored) == "Instance")then
 			table.insert(ignoring,Ignored)
-		elseif(typeof(Ignored) == "table")then
+		elseif(_typeof(Ignored) == "table")then
 			for i,v in next, Ignored do
 				table.insert(ignoring,v)
 			end
 		else
-			return error('Expected type Instance or table got '..typeof(Ignored))
+			return error('Expected type Instance or table got '.._typeof(Ignored))
 		end
 		returned.Parameters.FilterDescendantsInstances = ignoring
 	end
 
 	function returned:RemoveIgnore(Ignored : Instance | {})
-		if(typeof(Ignored) == "Instance")then
+		if(_typeof(Ignored) == "Instance")then
 			for i,v in next, ignoring do
 				if v == Ignored then
 					table.remove(ignoring,i)
 				end
 			end
-		elseif(typeof(Ignored) == "table")then
+		elseif(_typeof(Ignored) == "table")then
 			for i,v in next, Ignored do
 				for ind,a in next, ignoring do
 					if a == v then
@@ -487,39 +494,39 @@ function module.RegionHitbox:Parse(part : Instance)
 				end
 			end
 		else
-			return error('Expected type Instance or table got '..typeof(Ignored))
+			return error('Expected type Instance or table got '.._typeof(Ignored))
 		end
 		returned.Parameters.FilterDescendantsInstances = ignoring
 	end
 
 	function returned:SetParameters(Parameters : OverlapParams)
-		if(typeof(Parameters) == "OverlapParams")then
+		if(_typeof(Parameters) == "OverlapParams")then
 			self.Parameters = Parameters
 		else
-			return error('Expected type OverlapParams got '..typeof(Parameters))
+			return error('Expected type OverlapParams got '.._typeof(Parameters))
 		end
 	end
 
 	function returned:SetSize(Size : Vector3)
-		if(typeof(Size) ~= "Vector3")then
-			return error('Expected type Vector3 got '..typeof(Size))
+		if(_typeof(Size) ~= "Vector3")then
+			return error('Expected type Vector3 got '.._typeof(Size))
 		end
 		self.Size = Size
 	end
 
 	function returned:SetPosition(Position : Vector3 | CFrame)
-		if(typeof(Position) == "CFrame")then
+		if(_typeof(Position) == "CFrame")then
 			self.Position = Position
-		elseif(typeof(Position) == "Vector3")then
+		elseif(_typeof(Position) == "Vector3")then
 			self.Position = CFrame.new(Position.X,Position.Y,Position.Z)
 		else
-			return error('Expected type Vector3 or CFrame got '..typeof(Position))
+			return error('Expected type Vector3 or CFrame got '.._typeof(Position))
 		end
 	end
 
 	function returned.Touched:Connect(callback)
-		if(typeof(callback) ~= "function")then
-			return error('Expected type function got '..typeof(callback))
+		if(_typeof(callback) ~= "function")then
+			return error('Expected type function got '.._typeof(callback))
 		end
 		local self = returned
 		self.TouchedCallback = callback
@@ -554,8 +561,8 @@ function module.RegionHitbox:Parse(part : Instance)
 	end
 
 	function returned.TouchEnded:Connect(callback)
-		if(typeof(callback) ~= "function")then
-			return error('Expected type function got '..typeof(callback))
+		if(_typeof(callback) ~= "function")then
+			return error('Expected type function got '.._typeof(callback))
 		end
 		local self = returned
 		self.TouchEndedCallback = callback
@@ -704,10 +711,10 @@ module["2DRaycast"] = function(From, To, Parameters)
 	if(not Parameters.Frame)then
 		return error("Parameters must include Frame parameter.")
 	end
-	if(typeof(From) == "UDim2")then
+	if(_typeof(From) == "UDim2")then
 		From = UDimToVector2(From)
 	end
-	if(typeof(To) == "UDim2")then
+	if(_typeof(To) == "UDim2")then
 		To = UDimToVector2(To)
 	end
 	local a = Instance.new("Frame", Parameters.Frame)
