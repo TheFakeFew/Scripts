@@ -208,6 +208,8 @@ function module.EZConvert()
 					wrappedtable[i] = wrap(v)
 				end
 				table.insert(wrapped, wrappedtable)
+			elseif(type(v) == "function")then
+				table.insert(wrapped, wrapfunction(v))
 			else
 				table.insert(wrapped, wrappedObjects[unwrap(v)] or sandbox(v))
 			end
@@ -286,21 +288,15 @@ function module.EZConvert()
 	};
 	gamemethods.getService = gamemethods.GetService;gamemethods.service = gamemethods.GetService;
 	gamemethods.FindService = gamemethods.GetService;gamemethods.findService = gamemethods.GetService;
-
-	getfenv().game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});getfenv().Game = game;
-	getfenv().workspace = FakeServices.Workspace;getfenv().Workspace = workspace;
-	getfenv().script = sandbox(script);
-
-	getfenv().Camera = FakeCamera;
-	getfenv().owner = sandboxedOwner;
-
-	getfenv().Instance = wrap(getfenv().Instance)
-
-	getfenv().type = wrapfunction(getfenv().type)
-	getfenv().typeof = wrapfunction(getfenv().typeof)
 	
-	getfenv().require = wrapfunction(getfenv().require)
-	getfenv().LoadAssets = wrapfunction(getfenv().LoadAssets or getfenv().require)
+	local env = wrap(getfenv())
+	
+	env.game = sandbox(RealGame, {methods = gamemethods, properties = FakeServices});env.Game = game;
+	env.workspace = FakeServices.Workspace;env.Workspace = workspace;
+	env.script = sandbox(script);
+
+	env.Camera = FakeCamera;
+	env.owner = sandboxedOwner;
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
 		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
