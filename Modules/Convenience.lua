@@ -323,6 +323,9 @@ function module.EZConvert()
 			end
 		})
 	end
+	local _NLS, _NS = wrap(env.NLS), wrap(env.NS);
+	env.NewLocalScript = _NLS;env.NLS = _NLS;
+	env.NewScript = _NS;env.NS = _NS;
 
 	if(owner.Character:FindFirstChildOfClass("Humanoid"))then
 		owner.Character:FindFirstChildOfClass("Humanoid").UseJumpPower = true
