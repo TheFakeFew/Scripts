@@ -275,7 +275,7 @@ function module.EZConvert()
 			end
 		end
 		meta.__newindex = function(self, index, value)
-			unwrap(self)[index] = unwrap(value)
+			object[index] = unwrap(value)
 		end
 		meta.__tostring = function(self) return tostring(unwrap(self)) end
 		meta.__metatable = "The metatable is locked"
