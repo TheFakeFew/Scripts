@@ -325,11 +325,12 @@ function ball(url, threshold, scale)
 
 	local dt = data.data
 
-	for i, v in next, dt do
+	for i = 1, #dt do
 		if i % 120 == 0 or i == 1 then
 			task.wait(1/60)
 			TextLabel.Text = "["..i.."/"..data.cuboids.." pixels]"
 		end
+		local v = dt[i]
 
 		local x = (v["startX"] + v["endX"])/50 local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
 		local z = (v["startZ"] + v["endZ"])/50 local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
@@ -357,15 +358,14 @@ end
 function clearparts()
 	print('starting slowclear')
 	local start = tick()
-	local index = 0
-	for i, v in next, GetChildren(script) do
-		index=i
+	local index = GetChildren(script)
+	for i = 1, #index do
 		if i % 200 == 0 or i == 1 then
 			task.wait(1/60)
 		end
-		Destroy(v)
+		Destroy(index[i])
 	end
-	print("successfully slowcleared "..index.." parts. took "..round(tick() - start, 2).." seconds")
+	print("successfully slowcleared "..#index.." parts. took "..round(tick() - start, 2).." seconds")
 end
 
 local handler = NLS([=[
