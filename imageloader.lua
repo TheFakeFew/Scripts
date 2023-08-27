@@ -2,6 +2,10 @@ if(not owner)then
 	getfenv(1).owner = script.Parent:IsA("PlayerGui") and script.Parent.Parent or game:GetService('Players'):GetPlayerFromCharacter(script.Parent)
 end
 
+local next = next
+local Destroy = game.Destroy
+local GetChildren = game.GetChildren
+
 local function Decode(str)
 	local StringLength = #str
 
@@ -321,12 +325,11 @@ function ball(url, threshold, scale)
 
 	local dt = data.data
 
-	for i = 1, #dt do
+	for i, v in next, dt do
 		if i % 120 == 0 or i == 1 then
 			task.wait()
 			TextLabel.Text = "["..i.."/"..data.cuboids.." pixels]"
 		end
-		local v = dt[i]
 
 		local x = (v["startX"] + v["endX"])/50 local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
 		local z = (v["startZ"] + v["endZ"])/50 local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
@@ -346,7 +349,7 @@ function ball(url, threshold, scale)
 
 	dt = nil
 	table.clear(data)
-	pcall(game.Destroy, ExamplePart)
+	Destroy(ExamplePart)
 
 	print("image loaded. took "..round(tick() - start, 2).." seconds")
 end
@@ -354,12 +357,12 @@ end
 function clearparts()
 	print('starting slowclear')
 	local start = tick()
-	local parts = script:GetChildren()
-	for i = 1, #parts do
-		if i % 450 == 0 or i == 1 then
+	local parts = GetChildren(script)
+	for i, v in next, parts do
+		if i % 300 == 0 or i == 1 then
 			task.wait()
 		end
-		pcall(game.Destroy, parts[i])
+		Destroy(v)
 	end
 	print("successfully slowcleared "..(#parts).." parts. took "..round(tick() - start, 2).." seconds")
 	table.clear(parts)
