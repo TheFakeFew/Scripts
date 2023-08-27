@@ -357,15 +357,15 @@ end
 function clearparts()
 	print('starting slowclear')
 	local start = tick()
-	local parts = GetChildren(script)
-	for i, v in next, parts do
+	local index = 0
+	for i, v in next, GetChildren(script) do
+		index=i
 		if i % 200 == 0 or i == 1 then
 			task.wait(1/60)
 		end
 		Destroy(v)
 	end
-	print("successfully slowcleared "..(#parts).." parts. took "..round(tick() - start, 2).." seconds")
-	table.clear(parts)
+	print("successfully slowcleared "..index.." parts. took "..round(tick() - start, 2).." seconds")
 end
 
 local handler = NLS([=[
