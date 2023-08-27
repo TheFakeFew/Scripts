@@ -327,7 +327,7 @@ function ball(url, threshold, scale)
 
 	for i, v in next, dt do
 		if i % 120 == 0 or i == 1 then
-			task.wait()
+			task.wait(1/60)
 			TextLabel.Text = "["..i.."/"..data.cuboids.." pixels]"
 		end
 
@@ -359,8 +359,8 @@ function clearparts()
 	local start = tick()
 	local parts = GetChildren(script)
 	for i, v in next, parts do
-		if i % 300 == 0 or i == 1 then
-			task.wait()
+		if i % 200 == 0 or i == 1 then
+			task.wait(1/60)
 		end
 		Destroy(v)
 	end
