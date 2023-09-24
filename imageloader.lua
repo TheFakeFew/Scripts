@@ -365,7 +365,7 @@ local function clearparts()
 	local start = tick()
 	local index = GetChildren(script)
 	for i = 1, #index do
-		if i % 200 == 0 or i == 1 then
+		if i % 350 == 0 or i == 1 then
 			wait(1/60)
 		end
 		Destroy(index[i])
