@@ -3,8 +3,13 @@ if(not owner)then
 end
 
 local next = next
+local wait = task.wait
 local Destroy = game.Destroy
 local GetChildren = game.GetChildren
+local inew = Instance.new
+local vnew = Vector3.new
+local cnew = Color3.new
+local script = script
 
 local function Decode(str)
 	local StringLength = #str
@@ -257,11 +262,11 @@ local Objects = Decode('AAAxIQlTY3JlZW5HdWkhBE5hbWUhAnVpIQxSZXNldE9uU3Bhd24CIQ5a
 local ui = Objects[1]
 ui.Parent = owner.PlayerGui
 
-function round(num, numDecimalPlaces)
+local function round(num, numDecimalPlaces)
 	return tonumber(string.format("%." .. (numDecimalPlaces or 0) .. "f", num))
 end
 
-function ball(url, threshold, scale)
+local function ball(url, threshold, scale)
 	local start = tick()
 
 	scale = 0.05 * scale
@@ -327,7 +332,7 @@ function ball(url, threshold, scale)
 
 	for i = 1, #dt do
 		if i % 120 == 0 or i == 1 then
-			task.wait(1/60)
+			wait(1/60)
 			TextLabel.Text = "["..i.."/"..data.cuboids.." pixels]"
 		end
 		local v = dt[i]
@@ -335,16 +340,16 @@ function ball(url, threshold, scale)
 		local x = (v["startX"] + v["endX"])/50 local sizex = ((v["endX"]-v["startX"])*0.08)+0.08
 		local z = (v["startZ"] + v["endZ"])/50 local sizez = ((v["endZ"]-v["startZ"])*0.08)+0.08
 
-		local c = Instance.new("Part")
+		local c = inew("Part")
 		c.CanCollide = false
 		c.CastShadow = false
 		c.CanQuery = false
 		c.CanTouch = false
 		c.Anchored = true
 		c.TopSurface = "Smooth"
-		c.Position = tpos + Vector3.new(x*2,0,z*2) * scale
-		c.Size = Vector3.new(sizex,0.08,sizez) * scale
-		c.Color = Color3.new(v["color"].R, v["color"].G, v["color"].B)
+		c.Position = tpos + vnew(x*2,0,z*2) * scale
+		c.Size = vnew(sizex,0.08,sizez) * scale
+		c.Color = cnew(v["color"].R, v["color"].G, v["color"].B)
 		c.Parent = script
 	end
 
@@ -355,13 +360,13 @@ function ball(url, threshold, scale)
 	print("image loaded. took "..round(tick() - start, 2).." seconds")
 end
 
-function clearparts()
+local function clearparts()
 	print('starting slowclear')
 	local start = tick()
 	local index = GetChildren(script)
 	for i = 1, #index do
 		if i % 200 == 0 or i == 1 then
-			task.wait(1/60)
+			wait(1/60)
 		end
 		Destroy(index[i])
 	end
