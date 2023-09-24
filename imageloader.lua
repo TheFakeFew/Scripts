@@ -331,7 +331,7 @@ local function ball(url, threshold, scale)
 	local dt = data.data
 
 	for i = 1, #dt do
-		if i % 120 == 0 or i == 1 then
+		if i % 180 == 0 or i == 1 then
 			wait(1/60)
 			TextLabel.Text = "["..i.."/"..data.cuboids.." pixels]"
 		end
