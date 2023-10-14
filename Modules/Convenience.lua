@@ -2,7 +2,7 @@ local module = {}
 
 local _type = type;
 local _typeof = typeof;
-local select, next, unpack, pack, maxn = select, next, unpack, table.pack, table.maxn
+local select, next, unpack, pack, maxn, newproxy, getmetatable, setmetatable = select, next, unpack, table.pack, table.maxn, newproxy, getmetatable, setmetatable
 
 function module.fsig()
 	local HttpsService = game:GetService("HttpService")
