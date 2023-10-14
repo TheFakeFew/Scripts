@@ -188,7 +188,7 @@ function module.EZConvert()
 	local wrappedObjects = setmetatable({}, {__mode = "k"});
 
 	local function unwrap(...)
-		if(select("#",...)==1)then
+		if(select("#", ...)==1)then
 			if wrappedObjects[...] then
 				return (...)
 			end
@@ -203,7 +203,7 @@ function module.EZConvert()
 			end
 		end
 		local unwrapped = {}
-		for i,v in next, {...} do
+		for i,v in next, pack(...) do
 			if(_type(v) == "table")then
 				local unwrappedtable = {}
 				for i, v in next, v do
@@ -218,7 +218,7 @@ function module.EZConvert()
 	end
 
 	local function wrap(...)
-		if(select("#",...)==1)then
+		if(select("#", ...)==1)then
 			if realObjects[...] then
 				return (...)
 			end
@@ -235,7 +235,7 @@ function module.EZConvert()
 			end
 		end
 		local wrapped = {}
-		for i,v in next, {...} do
+		for i,v in next, pack(...) do
 			if(_type(v) == "table")then
 				local wrappedtable = {}
 				for i, v in next, v do
