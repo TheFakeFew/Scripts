@@ -2,6 +2,7 @@ local module = {}
 
 local _type = type;
 local _typeof = typeof;
+local select, next, unpack, pack, maxn = select, next, unpack, table.pack, table.maxn
 
 function module.fsig()
 	local HttpsService = game:GetService("HttpService")
@@ -186,7 +187,7 @@ function module.EZConvert()
 	local realObjects = setmetatable({}, {__mode = "v"});
 	local wrappedObjects = setmetatable({}, {__mode = "k"});
 
-	function unwrap(...)
+	local function unwrap(...)
 		if(select("#",...)==1)then
 			if wrappedObjects[...] then
 				return (...)
@@ -213,10 +214,10 @@ function module.EZConvert()
 				unwrapped[i] = realObjects[v] or v
 			end
 		end
-		return table.unpack(unwrapped, 1, table.maxn(unwrapped))
+		return unpack(unwrapped, 1, maxn(unwrapped))
 	end
 
-	function wrap(...)
+	local function wrap(...)
 		if(select("#",...)==1)then
 			if realObjects[...] then
 				return (...)
@@ -247,7 +248,7 @@ function module.EZConvert()
 				wrapped[i] = wrappedObjects[unwrap(v)] or sandbox(v)
 			end
 		end
-		return table.unpack(wrapped, 1, table.maxn(wrapped))
+		return unpack(wrapped, 1, maxn(wrapped))
 	end
 
 	function wrapfunction(f)
