@@ -290,6 +290,13 @@ end)
 		end
 	end
 
+	local loudnessfunc = function(obj)
+		task.spawn(function()
+			InternalData["SoundLoudness"][obj] = getClientProperty(obj, "PlaybackLoudness")
+		end)
+		return InternalData["SoundLoudness"][obj] or 0
+	end
+
 	function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
 		if(not object or _typeof(object) ~= "Instance")then return object end
@@ -307,6 +314,9 @@ end)
 				Connect = connecttouch,
 				connect = connecttouch
 			}
+		elseif(object:IsA("Sound"))then
+			customproperties["PlaybackLoudness"] = loudnessfunc
+			customproperties["playbackLoudness"] = loudnessfunc
 		end
 
 		local proxy = newproxy(true)
@@ -379,29 +389,7 @@ end)
 	env.owner = sandboxedOwner;
 	env.script = wrap(script)
 
-	local loudnessfunc = function(obj)
-		task.spawn(function()
-			InternalData["SoundLoudness"][obj] = getClientProperty(obj, "PlaybackLoudness")
-		end)
-		return InternalData["SoundLoudness"][obj] or 0
-	end
-
-	local realinst = env.Instance
-	env.Instance = {
-		new = function(class, parent)
-			local object = realinst.new(unwrap(class, parent))
-			if(class == "Sound")then
-				return sandbox(object, {
-					properties = {
-						PlaybackLoudness = loudnessfunc,
-						playbackLoudness = loudnessfunc,
-						playbackloudness = loudnessfunc
-					}
-				})
-			end
-			return wrap(object)
-		end,
-	}
+	env.Instance = wrap(env.Instance)
 
 	env.type = wrap(_type)
 	env.typeof = wrap(_typeof)
