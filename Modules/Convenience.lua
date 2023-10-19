@@ -326,12 +326,14 @@ end)
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
 
 		if(object:IsA("BasePart"))then
+			local function connecttouch(self, callback)
+				return object.Touched:Connect(function(obj)
+					callback(wrap(obj))
+				end)
+			end
 			customproperties["Touched"] = {
-				Connect = function(self, callback)
-					return object.Touched:Connect(function(obj)
-						callback(wrap(obj))
-					end)
-				end
+				Connect = connecttouch,
+				connect = connecttouch
 			}
 		end
 
