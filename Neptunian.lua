@@ -19,7 +19,7 @@ local function require(name)
 	end
 end
 local Convenience = require("Convenience")
-Convenience.EZConvert()
+Convenience.EZConvert(true)
 cors = {}
 mas = Instance.new("Model",game:GetService("Lighting"))
 Model0 = Instance.new("Model")

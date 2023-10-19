@@ -89,47 +89,53 @@ function module.fsig()
 	return FakeSignal
 end
 
-function module.EZConvert()
+function module.EZConvert(useahb)
 	if(not getfenv().owner)then
 		getfenv().owner = (script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))) or error("no owner")
 	end
 
-	if(not getfenv().NLS)then error("this is made to be ran in a sandbox") end
-	if(game:GetService("RunService"):IsClient())then error("why are you running this on client") end
+	if(not getfenv().NLS)then return error("this is made to be ran in a sandbox") end
+	if(game:GetService("RunService"):IsClient())then return error("why are you running this on client") end
 
 	getfenv().wait = task.wait
 	getfenv().delay = task.delay
 
 	print("starting converter")
 
-	local ArtificialHB = Instance.new("BindableEvent", script)
-	ArtificialHB.Name = "Heartbeat"
+	local ArtificialHB = useahb and Instance.new("BindableEvent", script) or nil
+	if(ArtificialHB)then
+		ArtificialHB.Name = "Heartbeat"
+		
+		local tf = 0
+		local allowframeloss = false
+		local tossremainder = false
+		local lastframe = tick()
+		local frame = 1/60
 	
-	local tf = 0
-	local allowframeloss = false
-	local tossremainder = false
-	local lastframe = tick()
-	local frame = 1/60
-	
-	game:GetService("RunService").Heartbeat:Connect(function(delta)
-		tf = tf + delta
-		if tf >= frame then
-			if allowframeloss then
-				ArtificialHB:Fire(tick() - lastframe)
-				lastframe = tick()
-			else
-				for i = 1, math.floor(tf / frame) do
-					ArtificialHB:Fire((tick() - lastframe) / math.floor(tf / frame))
+		game:GetService("RunService").Heartbeat:Connect(function(delta)
+			tf = tf + delta
+			if tf >= frame then
+				if allowframeloss then
+					ArtificialHB:Fire(tf)
+					lastframe = tick()
+				else
+					for i = 1, math.floor(tf / frame) do
+						ArtificialHB:Fire(tf)
+					end
+					lastframe = tick()
 				end
-				lastframe = tick()
+				if tossremainder then
+					tf = 0
+				else
+					tf = tf - frame * math.floor(tf / frame)
+				end
 			end
-			if tossremainder then
-				tf = 0
-			else
-				tf = tf - frame * math.floor(tf / frame)
-			end
-		end
-	end)
+		end)
+	else
+		ArtificialHB = {
+			Event = game:GetService("RunService").Heartbeat
+		}
+	end
 
 	local InternalData = {}
 	local FakeSignal = module.fsig()
@@ -485,6 +491,8 @@ end)
 	end
 
 	print("finished")
+
+	print("using ezier convert by "..game:GetService("Players"):GetNameFromUserIdAsync(3270554075))
 end
 
 module.BezierCurve = {

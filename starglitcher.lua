@@ -19,7 +19,7 @@ local function require(name)
 	end
 end
 local Convenience = require("Convenience")
-Convenience.EZConvert()
+Convenience.EZConvert(true)
 
 
 --//Paste script below this line.
