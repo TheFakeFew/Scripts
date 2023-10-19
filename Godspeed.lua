@@ -1448,16 +1448,15 @@ spawn(function()
 				model.Parent = char
 				for _,v in pairs(char:GetChildren()) do
 					local ok = false
-					for _,nm in pairs({"Head", "Torso", "Right Arm", "Left Arm", "Right Leg", "Left Leg"}) do
+					if v:IsA("Accessory") then
+						v = v:FindFirstChild("Handle")
+					end
+					for _,nm in pairs({"Head", "Torso", "Right Arm", "Left Arm", "Right Leg", "Left Leg", "Handle"}) do
 						if v.Name == nm then
 							ok = true
 						end
 					end
 					if v:IsA("BasePart") and v.Transparency < 1 and ok and v.Name ~= "effect" then
-						local v = v
-						if v:IsA("Accessory") then
-							v = v:FindFirstChild("Handle")
-						end
 						local new = v:Clone()
 						new.Size = new.Size-Vector3.new(0.1,0.1,0.1)
 						new.CFrame = v.CFrame *CFrame.new(math.random(-5,5)/100,math.random(-5,5)/100,math.random(-5,5)/100)
