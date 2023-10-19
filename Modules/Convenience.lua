@@ -213,7 +213,6 @@ game:GetService("RunService").Heartbeat:Connect(function(delta)
 
 	if(dt >= 1/60)then
 		dt = 0
-		print('sending loudness')
 		for i, v in next, sounds do loudnesses[v] = v.PlaybackLoudness end
 		Func:InvokeServer("loudness", loudnesses)
 	end
