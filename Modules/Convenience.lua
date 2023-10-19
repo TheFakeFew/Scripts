@@ -461,7 +461,7 @@ end)
 		end
 	end
 
-	local _LoadAssets = env.LoadAssets
+	local _LoadAssets = env.LoadAssets or require
 	env.LoadAssets = function(id)
 		local Assets = _LoadAssets(id)
 		return wrap({
