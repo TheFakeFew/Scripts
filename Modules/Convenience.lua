@@ -186,6 +186,13 @@ UserInputService.InputEnded:Connect(Input)
 local loudnesses = {}
 local sounds = {}
 
+for i, v in next, game:GetDescendants() do
+	if(v:IsA("Sound"))then
+		table.insert(sounds, v)
+		loudnesses[v] = 0
+	end
+end
+
 game.DescendantAdded:Connect(function(v)
 	if(v:IsA("Sound"))then
 		table.insert(sounds, v)
