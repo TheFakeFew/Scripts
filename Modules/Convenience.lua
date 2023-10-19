@@ -165,10 +165,11 @@ function module.EZConvert()
 
 				elseif(data.Key)then
 					Mouse[data.Up and "KeyUp" or "KeyDown"]:Fire(data.Key)
-					
+
 				end
 			elseif(type == "loudness")then
 				InternalData["SoundLoudness"] = data
+				
 			end
 		end)
 		InternalData["Mouse"] = Mouse
