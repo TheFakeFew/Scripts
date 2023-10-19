@@ -103,82 +103,84 @@ function module.EZConvert()
 	print("starting converter")
 	local InternalData = {}
 	local FakeSignal = module.fsig()
+	local realowner = owner
 	local FakeCamera = {FieldOfView=0,CFrame=CFrame.identity,CoordinateFrame=CFrame.identity}
-	do
-		local Event = Instance.new("RemoteEvent")
-		Event.Name = "UserInput"
-		local RemFunc = Instance.new("RemoteFunction")
-		RemFunc.Name = "UserEvent"
+	local Event = Instance.new("RemoteEvent")
+	Event.Name = "UserInput"
+	local RemFunc = Instance.new("RemoteFunction")
+	RemFunc.Name = "UserEvent"
 
-		local TBFocus = nil
-		local MouseDowns = {}
-		local KeyDowns = {}
+	local TBFocus = nil
+	local MouseDowns = {}
+	local KeyDowns = {}
 
-		local Mouse = {
-			Target=nil,Hit=CFrame.index,
-			KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),
-			Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()
-		}
-		local UserInputService = {
-			properties = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()},
+	local Mouse = {
+		Target=nil,Hit=CFrame.index,
+		KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),
+		Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()
+	}
+	local UserInputService = {
+		properties = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()},
 
-			methods = {GetFocusedTextBox=function(self)return TBFocus end,IsMouseButtonPressed=function(self,inputtype)return MouseDowns[inputtype] == true end,
-			IsKeyDown=function(self,keycode)return KeyDowns[keycode] == true end}
-		}
+		methods = {GetFocusedTextBox=function(self)return TBFocus end,IsMouseButtonPressed=function(self,inputtype)return MouseDowns[inputtype] == true end,
+		IsKeyDown=function(self,keycode)return KeyDowns[keycode] == true end}
+	}
 
-		local ContextActionService = {
-			Actions={},
-			BindAction = function(self,actionName,Func,touch,...)
-				self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
-			end
-		};ContextActionService.UnBindAction = ContextActionService.BindAction
+	local ContextActionService = {
+		Actions={},
+		BindAction = function(self,actionName,Func,touch,...)
+			self.Actions[actionName] = Func and {Name=actionName,Function=Func,Keys={...}} or nil
+		end
+	};ContextActionService.UnBindAction = ContextActionService.BindAction
 
-		InternalData["SoundLoudness"] = {}
+	InternalData["SoundLoudness"] = {}
 
-		Event.OnServerEvent:Connect(function(FiredBy, type, data)
-			if(FiredBy.Name ~= owner.Name)then return end
-			if(type == "mouse")then
-				if data.MouseEvent then
-					Mouse.Target = data.Target
-					Mouse.Hit = data.Hit
-					TBFocus = data.TextBox
-					FakeCamera.CFrame = data.CameraCF
-					FakeCamera.CoordinateFrame = data.CameraCF
+	Event.OnServerEvent:Connect(function(FiredBy, type, data)
+		if(FiredBy.Name ~= owner.Name)then return end
+		if(type == "mouse")then
+			if data.MouseEvent then
+				Mouse.Target = data.Target
+				Mouse.Hit = data.Hit
+				TBFocus = data.TextBox
+				FakeCamera.CFrame = data.CameraCF
+				FakeCamera.CoordinateFrame = data.CameraCF
 
-				elseif(data.UserInputState)then
-					local Begin = data.UserInputState == Enum.UserInputState.Begin
-					if(data.UserInputType == Enum.UserInputType.MouseButton1)then
-						MouseDowns[data.UserInputType] = Begin
-						return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
-					end
+			elseif(data.UserInputState)then
+				local Begin = data.UserInputState == Enum.UserInputState.Begin
+				if(data.UserInputType == Enum.UserInputType.MouseButton1)then
+					MouseDowns[data.UserInputType] = Begin
+					return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
+				end
 
-					for _,Action in pairs(ContextActionService.Actions) do
-						for _,Key in pairs(Action.Keys) do
-							if(Key==data.KeyCode)then
-								Action.Function(Action.Name,data.UserInputState,data)
-							end
+				for _,Action in pairs(ContextActionService.Actions) do
+					for _,Key in pairs(Action.Keys) do
+						if(Key==data.KeyCode)then
+							Action.Function(Action.Name,data.UserInputState,data)
 						end
 					end
-
-					KeyDowns[Enum.KeyCode[data.KeyCode.Name]] = Begin
-					UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(data,false)
-
-				elseif(data.Key)then
-					Mouse[data.Up and "KeyUp" or "KeyDown"]:Fire(data.Key)
-
 				end
-			elseif(type == "loudness")then
-				InternalData["SoundLoudness"][data[1]] = data[2]
+
+				KeyDowns[Enum.KeyCode[data.KeyCode.Name]] = Begin
+				UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(data,false)
+
+			elseif(data.Key)then
+				Mouse[data.Up and "KeyUp" or "KeyDown"]:Fire(data.Key)
 
 			end
-		end)
-		InternalData["Mouse"] = Mouse
-		InternalData["ContextActionService"] = ContextActionService
-		InternalData["UserInputService"] = UserInputService
+		end
+	end)
+	InternalData["Mouse"] = Mouse
+	InternalData["ContextActionService"] = ContextActionService
+	InternalData["UserInputService"] = UserInputService
 
-		local ls = NLS([[
+	function getClientProperty(object, prop)
+		return RemFunc:InvokeClient(realowner, "getprop", object, prop)
+	end
+
+	local ls = NLS([[
 			local Player = owner
 local Event = script:WaitForChild("UserInput")
+local Func = script:WaitForChild("UserEvent")
 local UserInputService = game:GetService("UserInputService")
 local Mouse = Player:GetMouse()
 local Input = function(Input,gameProcessedEvent)
@@ -196,31 +198,11 @@ Mouse.KeyUp:Connect(function(k)
 	Event:FireServer("mouse", {Key = k, Up = true})
 end)
 
-local sounds = {}
-
-for i, v in next, game:GetDescendants() do
-	pcall(function()
-		if(v:IsA("Sound"))then
-			table.insert(sounds, v)
-		end
-	end)
+Func.OnClientInvoke = function(type, a, b)
+	if(type == "getprop")then
+		return a[b]
+	end
 end
-
-game.DescendantAdded:Connect(function(v)
-	pcall(function()
-		if(v:IsA("Sound"))then
-			table.insert(sounds, v)
-		end
-	end)
-end)
-
-game.DescendantRemoving:Connect(function(v)
-	pcall(function()
-		if(v:IsA("Sound") and table.find(sounds, v))then
-			table.remove(sounds, table.find(sounds, v))
-		end
-	end)
-end)
 
 local Hit,Target,FT,FCF
 local dt = 0
@@ -230,15 +212,10 @@ game:GetService("RunService").Heartbeat:Connect(function(delta)
 		Hit,Target,FT,FCF = Mouse.Hit,Mouse.Target,UserInputService:GetFocusedTextBox(),workspace.CurrentCamera.CFrame
 		Event:FireServer("mouse", {["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
 	end
-
-	if(dt >= 1/60)then
-		dt = 0
-		for i, v in next, sounds do task.spawn(pcall, function() Event:FireServer("loudness", {v, v.PlaybackLoudness}) end) end
-	end
 end)
 		]],owner.Character)
-		Event.Parent = ls
-	end
+	Event.Parent = ls
+	RemFunc.Parent = ls
 	local RealGame = game;
 	local realObjects = setmetatable({}, {__mode = "v"});
 	local wrappedObjects = setmetatable({}, {__mode = "k"});
@@ -403,6 +380,9 @@ end)
 	env.script = wrap(script)
 
 	local loudnessfunc = function(obj)
+		task.spawn(function()
+			InternalData["SoundLoudness"][obj] = getClientProperty(obj, "PlaybackLoudness")
+		end)
 		return InternalData["SoundLoudness"][obj] or 0
 	end
 
