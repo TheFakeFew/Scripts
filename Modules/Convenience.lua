@@ -169,7 +169,7 @@ function module.EZConvert()
 				end
 			elseif(type == "loudness")then
 				InternalData["SoundLoudness"] = data
-				
+
 			end
 		end)
 		InternalData["Mouse"] = Mouse
@@ -324,6 +324,16 @@ end)
 
 		settings = (settings and _type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
+
+		if(object:IsA("BasePart"))then
+			customproperties["Touched"] = {
+				Connect = function(self, callback)
+					return object.Touched:Connect(function(obj)
+						callback(wrap(obj))
+					end)
+				end
+			}
+		end
 
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
