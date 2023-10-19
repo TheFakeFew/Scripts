@@ -107,6 +107,8 @@ function module.EZConvert()
 	do
 		local Event = Instance.new("RemoteEvent")
 		Event.Name = "UserInput"
+		local RemFunc = Instance.new("RemoteFunction")
+		RemFunc.Name = "UserEvent"
 
 		local TBFocus = nil
 		local MouseDowns = {}
@@ -162,10 +164,19 @@ function module.EZConvert()
 		InternalData["Mouse"] = Mouse
 		InternalData["ContextActionService"] = ContextActionService
 		InternalData["UserInputService"] = UserInputService
-
-		Event.Parent = NLS([[
+		InternalData["SoundLoudness"] = {}
+		
+		RemFunc.OnServerInvoke = function(plr, type, data)
+			if(plr ~= owner)then return end
+			if(type == "loudness")then
+				InternalData["SoundLoudness"] = data
+			end
+		end
+		
+		local ls = NLS([[
 			local Player = owner
 			local Event = script:WaitForChild("UserInput")
+			local Func = script:WaitForChild("UserEvent")
 			local UserInputService = game:GetService("UserInputService")
 			local Mouse = Player:GetMouse()
 			local Input = function(Input,gameProcessedEvent)
@@ -182,6 +193,8 @@ function module.EZConvert()
 				end
 			end)
 		]],owner.Character)
+		Event.Parent = ls
+		RemFunc.Parent = ls
 	end
 	local RealGame = game;
 	local realObjects = setmetatable({}, {__mode = "v"});
@@ -272,6 +285,9 @@ function module.EZConvert()
 			if(_type(fetched) == "function")then
 				return custommethods[index] or wrap(fetched)
 			else
+				if(customproperties[index] and _type(customproperties[index]) == "function")then
+					return customproperties[index]()
+				end
 				return customproperties[index] or wrap(fetched)
 			end
 		end
@@ -330,8 +346,23 @@ function module.EZConvert()
 	env.Camera = FakeCamera;
 	env.owner = sandboxedOwner;
 	env.script = wrap(script)
-
-	env.Instance = wrap(env.Instance)
+	
+	local realinst = env.Instance
+	env.Instance = {
+		new = function(class, parent)
+			local object = realinst.new(unwrap(class, parent))
+			if(class == "Sound")then
+				return sandbox(object, {
+					properties = {
+						PlaybackLoudness = function()
+							return InternalData["SoundLoudness"][object] or 0
+						end,
+					}
+				})
+			end
+			return wrap(object)
+		end,
+	}
 
 	env.type = wrap(_type)
 	env.typeof = wrap(_typeof)
