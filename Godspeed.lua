@@ -1445,8 +1445,11 @@ spawn(function()
 			if rate%2 == 0 then
 				local model = char:FindFirstChild("FakeModel") or Instance.new("Model")
 				model.Name = "FakeModel"
-				Instance.new("Humanoid", model)
 				model.Parent = char
+				if(not model:FindFirstChildOfClass("Humanoid"))then
+					humanoid:Clone().Parent = model
+				end
+
 				for _,v in pairs(char:GetChildren()) do
 					local ok = false
 					if v:IsA("Accessory") then
