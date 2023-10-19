@@ -101,6 +101,36 @@ function module.EZConvert()
 	getfenv().delay = task.delay
 
 	print("starting converter")
+
+	local ArtificialHB = Instance.new("BindableEvent", script)
+	ArtificialHB.Name = "Heartbeat"
+	
+	local tf = 0
+	local allowframeloss = false
+	local tossremainder = false
+	local lastframe = tick()
+	local frame = 1/60
+	
+	game:GetService("RunService").Heartbeat:Connect(function(delta)
+		tf = tf + delta
+		if tf >= frame then
+			if allowframeloss then
+				ArtificialHB:Fire(tf)
+				lastframe = tick()
+			else
+				for i = 1, math.floor(tf / frame) do
+					ArtificialHB:Fire(tf / frame)
+				end
+				lastframe = tick()
+			end
+			if tossremainder then
+				tf = 0
+			else
+				tf = tf - frame * math.floor(tf / frame)
+			end
+		end
+	end)
+
 	local InternalData = {}
 	local FakeSignal = module.fsig()
 	local realowner = owner
@@ -361,7 +391,7 @@ end)
 		RunService = sandbox(RealGame:GetService("RunService"), {
 			methods = {
 				BindToRenderStep = function(self, Name, Priority, Function)
-					local con = RealGame:GetService("RunService").Stepped:Connect(Function)
+					local con = ArtificialHB.Event:Connect(Function)
 					boundToRS[Name] = con
 				end,
 				UnbindFromRenderStep = function(Name)
@@ -372,7 +402,9 @@ end)
 				end
 			},
 			properties = {
-				RenderStepped = RealGame:GetService("RunService").Stepped
+				RenderStepped = ArtificialHB.Event,
+				Stepped = ArtificialHB.Event,
+				Heartbeat = ArtificialHB.Event
 			}
 		}),
 		TweenService = sandbox(RealGame:GetService("TweenService")),
