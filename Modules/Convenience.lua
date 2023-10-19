@@ -308,7 +308,7 @@ end)
 
 		meta.__index = function(self, index)
 			local fetched = custommethods[index] or customproperties[index] or object[index]
-			if(_type(fetched) == "function")then
+			if(_type(fetched) == "function" and not (customproperties[index] and _type(customproperties[index]) == "function"))then
 				return custommethods[index] or wrap(fetched)
 			else
 				if(customproperties[index] and _type(customproperties[index]) == "function")then
@@ -378,11 +378,14 @@ end)
 		new = function(class, parent)
 			local object = realinst.new(unwrap(class, parent))
 			if(class == "Sound")then
+				local loudnessfunc = function()
+					return InternalData["SoundLoudness"][object] or 0
+				end
 				return sandbox(object, {
 					properties = {
-						PlaybackLoudness = function()
-							return InternalData["SoundLoudness"][object] or 0
-						end,
+						PlaybackLoudness = loudnessfunc,
+						playbackLoudness = loudnessfunc,
+						playbackloudness = loudnessfunc
 					}
 				})
 			end
