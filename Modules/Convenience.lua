@@ -168,6 +168,7 @@ function module.EZConvert()
 		
 		RemFunc.OnServerInvoke = function(plr, type, data)
 			if(plr ~= owner)then return end
+			print(plr, type, data)
 			if(type == "loudness")then
 				InternalData["SoundLoudness"] = data
 			end
