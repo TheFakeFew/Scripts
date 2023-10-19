@@ -208,6 +208,7 @@ game:GetService("RunService").Heartbeat:Connect(function(delta)
 	if(dt >= 1/60)then
 		dt = 0
 		for i, v in next, sounds do loudnesses[i] = {v, v.PlaybackLoudness} end
+		print(loudnesses)
 		Func:InvokeServer("loudness", table.unpack(loudnesses))
 	end
 end)
@@ -216,8 +217,9 @@ end)
 		RemFunc.Parent = ls
 		
 		RemFunc.OnServerInvoke = function(plr, type, ...)
+			print(...)
 			if(type == "loudness")then
-				local tbl = table.pack(...)
+				local tbl = {...}
 				print(tbl)
 				local t = {}
 				for i, v in next, tbl do
