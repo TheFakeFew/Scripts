@@ -168,7 +168,7 @@ function module.EZConvert()
 
 				end
 			elseif(type == "loudness")then
-				InternalData["SoundLoudness"] = data
+				InternalData["SoundLoudness"][data[1]] = data[2]
 
 			end
 		end)
@@ -196,14 +196,12 @@ Mouse.KeyUp:Connect(function(k)
 	Event:FireServer("mouse", {Key = k, Up = true})
 end)
 
-local loudnesses = {}
 local sounds = {}
 
 for i, v in next, game:GetDescendants() do
 	pcall(function()
 		if(v:IsA("Sound"))then
 			table.insert(sounds, v)
-			loudnesses[v] = 0
 		end
 	end)
 end
@@ -212,7 +210,6 @@ game.DescendantAdded:Connect(function(v)
 	pcall(function()
 		if(v:IsA("Sound"))then
 			table.insert(sounds, v)
-			loudnesses[v] = 0
 		end
 	end)
 end)
@@ -221,7 +218,6 @@ game.DescendantRemoving:Connect(function(v)
 	pcall(function()
 		if(v:IsA("Sound") and table.find(sounds, v))then
 			table.remove(sounds, table.find(sounds, v))
-			loudnesses[v] = nil
 		end
 	end)
 end)
@@ -237,8 +233,7 @@ game:GetService("RunService").Heartbeat:Connect(function(delta)
 
 	if(dt >= 1/60)then
 		dt = 0
-		for i, v in next, sounds do loudnesses[v] = v.PlaybackLoudness end
-		Event:FireServer("loudness", loudnesses)
+		for i, v in next, sounds do task.spawn(pcall, function() Event:FireServer("loudness", {v, v.PlaybackLoudness}) end) end
 	end
 end)
 		]],owner.Character)
