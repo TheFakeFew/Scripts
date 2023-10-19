@@ -102,34 +102,41 @@ function module.EZConvert()
 
 	print("starting converter")
 
-	local ArtificialHB = Instance.new("BindableEvent", script)
-	ArtificialHB.Name = "Heartbeat"
-	
-	local tf = 0
-	local allowframeloss = false
-	local tossremainder = false
-	local lastframe = tick()
-	local frame = 1/60
-	
-	game:GetService("RunService").Heartbeat:Connect(function(delta)
-		tf = tf + delta
-		if tf >= frame then
-			if allowframeloss then
-				ArtificialHB:Fire(tf)
-				lastframe = tick()
-			else
-				for i = 1, math.floor(tf / frame) do
-					ArtificialHB:Fire(tf / frame)
+	local ArtificialHB = nil
+	if(not script:FindFirstChild("Heartbeat"))then
+		ArtificialHB = Instance.new("BindableEvent", script)
+		ArtificialHB.Name = "Heartbeat"
+		
+		local tf = 0
+		local allowframeloss = false
+		local tossremainder = false
+		local lastframe = tick()
+		local frame = 1/60
+		
+		game:GetService("RunService").Heartbeat:Connect(function(delta)
+			tf = tf + delta
+			if tf >= frame then
+				if allowframeloss then
+					ArtificialHB:Fire(tf)
+					lastframe = tick()
+				else
+					for i = 1, math.floor(tf / frame) do
+						ArtificialHB:Fire(tf / frame)
+					end
+					lastframe = tick()
 				end
-				lastframe = tick()
+				if tossremainder then
+					tf = 0
+				else
+					tf = tf - frame * math.floor(tf / frame)
+				end
 			end
-			if tossremainder then
-				tf = 0
-			else
-				tf = tf - frame * math.floor(tf / frame)
-			end
-		end
-	end)
+		end)
+	else
+		ArtificialHB = {
+			Event = game:GetService("RunService").Heartbeat
+		}
+	end
 
 	local InternalData = {}
 	local FakeSignal = module.fsig()
