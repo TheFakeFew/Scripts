@@ -312,7 +312,7 @@ end)
 				return custommethods[index] or wrap(fetched)
 			else
 				if(customproperties[index] and _type(customproperties[index]) == "function")then
-					return customproperties[index]()
+					return customproperties[index](object)
 				end
 				return customproperties[index] or wrap(fetched)
 			end
@@ -373,14 +373,15 @@ end)
 	env.owner = sandboxedOwner;
 	env.script = wrap(script)
 	
+	local loudnessfunc = function(obj)
+		return InternalData["SoundLoudness"][obj] or 0
+	end
+	
 	local realinst = env.Instance
 	env.Instance = {
 		new = function(class, parent)
 			local object = realinst.new(unwrap(class, parent))
 			if(class == "Sound")then
-				local loudnessfunc = function()
-					return InternalData["SoundLoudness"][object] or 0
-				end
 				return sandbox(object, {
 					properties = {
 						PlaybackLoudness = loudnessfunc,
