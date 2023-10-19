@@ -115,11 +115,11 @@ function module.EZConvert()
 		tf = tf + delta
 		if tf >= frame then
 			if allowframeloss then
-				ArtificialHB:Fire(tf)
+				ArtificialHB:Fire(tick() - lastframe)
 				lastframe = tick()
 			else
 				for i = 1, math.floor(tf / frame) do
-					ArtificialHB:Fire(tf)
+					ArtificialHB:Fire((tick() - lastframe) / math.floor(tf / frame))
 				end
 				lastframe = tick()
 			end
