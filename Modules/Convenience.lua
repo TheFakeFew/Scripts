@@ -352,6 +352,8 @@ end)
 		}
 	})
 
+	local boundToRS = {}
+
 	local FakeServices = {
 		Players = sandbox(RealGame:GetService("Players"),{
 			properties = {LocalPlayer = sandboxedOwner}
@@ -359,7 +361,14 @@ end)
 		RunService = sandbox(RealGame:GetService("RunService"), {
 			methods = {
 				BindToRenderStep = function(self, Name, Priority, Function)
-					return RealGame:GetService("RunService").Stepped:Connect(Function)
+					local con = RealGame:GetService("RunService").Stepped:Connect(Function)
+					boundToRS[Name] = con
+				end,
+				UnbindFromRenderStep = function(Name)
+					if(boundToRS[Name])then
+						boundToRS[Name]:Disconnect()
+						boundToRS[Name] = nil
+					end
 				end
 			},
 			properties = {
