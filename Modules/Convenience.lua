@@ -218,6 +218,7 @@ end)
 		RemFunc.OnServerInvoke = function(plr, type, ...)
 			if(type == "loudness")then
 				local tbl = table.pack(...)
+				print(tbl)
 				local t = {}
 				for i, v in next, tbl do
 					t[v[1]] = v[2]
