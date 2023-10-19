@@ -374,7 +374,9 @@ end)
 	env.script = wrap(script)
 	
 	local loudnessfunc = function(obj)
-		return InternalData["SoundLoudness"][obj] or 0
+		local loud = InternalData["SoundLoudness"][obj] or 0
+		print(loud)
+		return loud
 	end
 	
 	local realinst = env.Instance
