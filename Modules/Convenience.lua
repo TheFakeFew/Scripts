@@ -175,23 +175,49 @@ function module.EZConvert()
 		
 		local ls = NLS([[
 			local Player = owner
-			local Event = script:WaitForChild("UserInput")
-			local Func = script:WaitForChild("UserEvent")
-			local UserInputService = game:GetService("UserInputService")
-			local Mouse = Player:GetMouse()
-			local Input = function(Input,gameProcessedEvent)
-				if gameProcessedEvent then return end
-				Event:FireServer({KeyCode=Input.KeyCode,UserInputType=Input.UserInputType,UserInputState=Input.UserInputState})
-			end
-			UserInputService.InputBegan:Connect(Input)
-			UserInputService.InputEnded:Connect(Input)
-			local Hit,Target,FT,FCF
-			game:GetService("RunService").Heartbeat:Connect(function()
-				if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() or workspace.CurrentCamera.CFrame ~= FCF then
-					Hit,Target,FT,FCF = Mouse.Hit,Mouse.Target,UserInputService:GetFocusedTextBox(),workspace.CurrentCamera.CFrame
-					Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
-				end
-			end)
+local Event = script:WaitForChild("UserInput")
+local Func = script:WaitForChild("UserEvent")
+local UserInputService = game:GetService("UserInputService")
+local Mouse = Player:GetMouse()
+local Input = function(Input,gameProcessedEvent)
+	if gameProcessedEvent then return end
+	Event:FireServer({KeyCode=Input.KeyCode,UserInputType=Input.UserInputType,UserInputState=Input.UserInputState})
+end
+UserInputService.InputBegan:Connect(Input)
+UserInputService.InputEnded:Connect(Input)
+
+local loudnesses = {}
+local sounds = {}
+
+game.DescendantAdded:Connect(function(v)
+	if(v:IsA("Sound"))then
+		table.insert(sounds, v)
+		loudnesses[v] = 0
+	end
+end)
+
+game.DescendantRemoving:Connect(function(v)
+	if(v:IsA("Sound") and table.find(sounds, v))then
+		table.remove(sounds, table.find(sounds, v))
+		loudnesses[v] = nil
+	end
+end)
+
+local Hit,Target,FT,FCF
+local dt = 0
+game:GetService("RunService").Heartbeat:Connect(function(delta)
+	dt = dt + delta
+	if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() or workspace.CurrentCamera.CFrame ~= FCF then
+		Hit,Target,FT,FCF = Mouse.Hit,Mouse.Target,UserInputService:GetFocusedTextBox(),workspace.CurrentCamera.CFrame
+		Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
+	end
+
+	if(dt >= 1/60)then
+		dt = 0
+		for i, v in next, sounds do loudnesses[v] = v.PlaybackLoudness end
+		Func:InvokeServer("loudness", loudnesses)
+	end
+end)
 		]],owner.Character)
 		Event.Parent = ls
 		RemFunc.Parent = ls
