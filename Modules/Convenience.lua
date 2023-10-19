@@ -187,24 +187,30 @@ local loudnesses = {}
 local sounds = {}
 
 for i, v in next, game:GetDescendants() do
-	if(v:IsA("Sound"))then
-		table.insert(sounds, v)
-		loudnesses[v] = 0
-	end
+	pcall(function()
+		if(v:IsA("Sound"))then
+			table.insert(sounds, v)
+			loudnesses[v] = 0
+		end
+	end)
 end
 
 game.DescendantAdded:Connect(function(v)
-	if(v:IsA("Sound"))then
-		table.insert(sounds, v)
-		loudnesses[v] = 0
-	end
+	pcall(function()
+		if(v:IsA("Sound"))then
+			table.insert(sounds, v)
+			loudnesses[v] = 0
+		end
+	end)
 end)
 
 game.DescendantRemoving:Connect(function(v)
-	if(v:IsA("Sound") and table.find(sounds, v))then
-		table.remove(sounds, table.find(sounds, v))
-		loudnesses[v] = nil
-	end
+	pcall(function()
+		if(v:IsA("Sound") and table.find(sounds, v))then
+			table.remove(sounds, table.find(sounds, v))
+			loudnesses[v] = nil
+		end
+	end)
 end)
 
 local Hit,Target,FT,FCF
