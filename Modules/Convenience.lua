@@ -166,12 +166,6 @@ function module.EZConvert()
 		InternalData["UserInputService"] = UserInputService
 		InternalData["SoundLoudness"] = {}
 		
-		RemFunc.OnServerInvoke = function(plr, type, data)
-			if(type == "loudness")then
-				InternalData["SoundLoudness"] = data
-			end
-		end
-		
 		local ls = NLS([[
 			local Player = owner
 local Event = script:WaitForChild("UserInput")
@@ -220,6 +214,13 @@ end)
 		]],owner.Character)
 		Event.Parent = ls
 		RemFunc.Parent = ls
+
+		RemFunc.OnServerInvoke = function(plr, type, data)
+			print(plr, type, data)
+			if(type == "loudness")then
+				InternalData["SoundLoudness"] = data
+			end
+		end
 	end
 	local RealGame = game;
 	local realObjects = setmetatable({}, {__mode = "v"});
