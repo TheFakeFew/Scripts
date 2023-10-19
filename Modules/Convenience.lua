@@ -144,6 +144,7 @@ function module.EZConvert()
 					TBFocus = data.TextBox
 					FakeCamera.CFrame = data.CameraCF
 					FakeCamera.CoordinateFrame = data.CameraCF
+
 				elseif(data.UserInputState)then
 					local Begin = data.UserInputState == Enum.UserInputState.Begin
 					if(data.UserInputType == Enum.UserInputType.MouseButton1)then
@@ -161,8 +162,10 @@ function module.EZConvert()
 
 					KeyDowns[Enum.KeyCode[data.KeyCode.Name]] = Begin
 					UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(data,false)
+
 				elseif(data.Key)then
 					Mouse[data.Up and "KeyUp" or "KeyDown"]:Fire(data.Key)
+					
 				end
 			elseif(type == "loudness")then
 				InternalData["SoundLoudness"] = data
