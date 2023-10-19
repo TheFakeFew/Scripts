@@ -103,7 +103,7 @@ function module.EZConvert()
 	print("starting converter")
 
 	local ArtificialHB = nil
-	if(not script:FindFirstChild("Heartbeat"))then
+	if(not script:FindFirstChild("Heartbeat") and not script:FindFirstChild("ArtificialHB"))then
 		ArtificialHB = Instance.new("BindableEvent", script)
 		ArtificialHB.Name = "Heartbeat"
 		
