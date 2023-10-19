@@ -461,7 +461,8 @@ end)
 		end
 	end
 
-	local _LoadAssets = env.LoadAssets
+	local canuserequire = pcall(require, 12972812972)
+	local _LoadAssets = canuserequire and require or env.LoadAssets
 	env.LoadAssets = function(id)
 		local Assets = _LoadAssets(id)
 		return wrap({
