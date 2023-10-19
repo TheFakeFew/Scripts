@@ -133,48 +133,52 @@ function module.EZConvert()
 			end
 		};ContextActionService.UnBindAction = ContextActionService.BindAction
 
-		Event.OnServerEvent:Connect(function(FiredBy,Input)
-			if(FiredBy.Name ~= owner.Name)then return end
-			if Input.MouseEvent then
-				Mouse.Target = Input.Target
-				Mouse.Hit = Input.Hit
-				TBFocus = Input.TextBox
-				FakeCamera.CFrame = Input.CameraCF
-				FakeCamera.CoordinateFrame = Input.CameraCF
-			else
-				local Begin = Input.UserInputState == Enum.UserInputState.Begin
-				if(Input.UserInputType == Enum.UserInputType.MouseButton1)then
-					MouseDowns[Input.UserInputType] = Begin
-					return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
-				end
+		InternalData["SoundLoudness"] = {}
 
-				for _,Action in pairs(ContextActionService.Actions) do
-					for _,Key in pairs(Action.Keys) do
-						if(Key==Input.KeyCode)then
-							Action.Function(Action.Name,Input.UserInputState,Input)
+		Event.OnServerEvent:Connect(function(FiredBy, type, data)
+			if(FiredBy.Name ~= owner.Name)then return end
+			if(type == "mouse")then
+				if data.MouseEvent then
+					Mouse.Target = data.Target
+					Mouse.Hit = data.Hit
+					TBFocus = data.TextBox
+					FakeCamera.CFrame = data.CameraCF
+					FakeCamera.CoordinateFrame = data.CameraCF
+				else
+					local Begin = data.UserInputState == Enum.UserInputState.Begin
+					if(data.UserInputType == Enum.UserInputType.MouseButton1)then
+						MouseDowns[data.UserInputType] = Begin
+						return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
+					end
+
+					for _,Action in pairs(ContextActionService.Actions) do
+						for _,Key in pairs(Action.Keys) do
+							if(Key==data.KeyCode)then
+								Action.Function(Action.Name,data.UserInputState,data)
+							end
 						end
 					end
-				end
 
-				KeyDowns[Enum.KeyCode[Input.KeyCode.Name]] = Begin
-				Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(Input.KeyCode.Name:lower())
-				UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(Input,false)
+					KeyDowns[Enum.KeyCode[data.KeyCode.Name]] = Begin
+					Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(data.KeyCode.Name:lower())
+					UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(data,false)
+				end
+			elseif(type == "loudness")then
+				InternalData["SoundLoudness"] = data
 			end
 		end)
 		InternalData["Mouse"] = Mouse
 		InternalData["ContextActionService"] = ContextActionService
 		InternalData["UserInputService"] = UserInputService
-		InternalData["SoundLoudness"] = {}
-		
+
 		local ls = NLS([[
 			local Player = owner
 local Event = script:WaitForChild("UserInput")
-local Func = script:WaitForChild("UserEvent")
 local UserInputService = game:GetService("UserInputService")
 local Mouse = Player:GetMouse()
 local Input = function(Input,gameProcessedEvent)
 	if gameProcessedEvent then return end
-	Event:FireServer({KeyCode=Input.KeyCode,UserInputType=Input.UserInputType,UserInputState=Input.UserInputState})
+	Event:FireServer("mouse", {KeyCode=Input.KeyCode,UserInputType=Input.UserInputType,UserInputState=Input.UserInputState})
 end
 UserInputService.InputBegan:Connect(Input)
 UserInputService.InputEnded:Connect(Input)
@@ -202,33 +206,17 @@ game:GetService("RunService").Heartbeat:Connect(function(delta)
 	dt = dt + delta
 	if Hit ~= Mouse.Hit or Target ~= Mouse.Target or FT ~= UserInputService:GetFocusedTextBox() or workspace.CurrentCamera.CFrame ~= FCF then
 		Hit,Target,FT,FCF = Mouse.Hit,Mouse.Target,UserInputService:GetFocusedTextBox(),workspace.CurrentCamera.CFrame
-		Event:FireServer({["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
+		Event:FireServer("mouse", {["MouseEvent"]=true,["Target"]=Target,["Hit"]=Hit,["TextBox"]=UserInputService:GetFocusedTextBox(),["CameraCF"]=workspace.CurrentCamera.CFrame})
 	end
 
 	if(dt >= 1/60)then
 		dt = 0
-		for i, v in next, sounds do loudnesses[i] = {v, v.PlaybackLoudness} end
-		print(loudnesses)
-		Func:InvokeServer("loudness", table.unpack(loudnesses))
+		for i, v in next, sounds do loudnesses[v] = v.PlaybackLoudness end
+		Event:FireServer("loudness", loudnesses)
 	end
 end)
 		]],owner.Character)
 		Event.Parent = ls
-		RemFunc.Parent = ls
-		
-		RemFunc.OnServerInvoke = function(plr, type, ...)
-			print(...)
-			if(type == "loudness")then
-				local tbl = {...}
-				print(tbl)
-				local t = {}
-				for i, v in next, tbl do
-					t[v[1]] = v[2]
-				end
-				print(t)
-				InternalData["SoundLoudness"] = t
-			end
-		end
 	end
 	local RealGame = game;
 	local realObjects = setmetatable({}, {__mode = "v"});
@@ -380,11 +368,11 @@ end)
 	env.Camera = FakeCamera;
 	env.owner = sandboxedOwner;
 	env.script = wrap(script)
-	
+
 	local loudnessfunc = function(obj)
 		return InternalData["SoundLoudness"][obj] or 0
 	end
-	
+
 	local realinst = env.Instance
 	env.Instance = {
 		new = function(class, parent)
