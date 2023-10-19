@@ -144,7 +144,7 @@ function module.EZConvert()
 					TBFocus = data.TextBox
 					FakeCamera.CFrame = data.CameraCF
 					FakeCamera.CoordinateFrame = data.CameraCF
-				else
+				elseif(data.UserInputState)then
 					local Begin = data.UserInputState == Enum.UserInputState.Begin
 					if(data.UserInputType == Enum.UserInputType.MouseButton1)then
 						MouseDowns[data.UserInputType] = Begin
@@ -160,8 +160,9 @@ function module.EZConvert()
 					end
 
 					KeyDowns[Enum.KeyCode[data.KeyCode.Name]] = Begin
-					Mouse[Begin and "KeyDown" or "KeyUp"]:Fire(data.KeyCode.Name:lower())
 					UserInputService.properties[Begin and "InputBegan" or "InputEnded"]:Fire(data,false)
+				elseif(data.Key)then
+					Mouse[data.Up and "KeyUp" or "KeyDown"]:Fire(data.Key)
 				end
 			elseif(type == "loudness")then
 				InternalData["SoundLoudness"] = data
@@ -182,6 +183,14 @@ local Input = function(Input,gameProcessedEvent)
 end
 UserInputService.InputBegan:Connect(Input)
 UserInputService.InputEnded:Connect(Input)
+
+Mouse.KeyDown:Connect(function(k)
+	Event:FireServer("mouse", {Key = k, Up = false})
+end)
+
+Mouse.KeyUp:Connect(function(k)
+	Event:FireServer("mouse", {Key = k, Up = true})
+end)
 
 local loudnesses = {}
 local sounds = {}
