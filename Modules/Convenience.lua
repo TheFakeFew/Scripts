@@ -214,6 +214,7 @@ game:GetService("RunService").Heartbeat:Connect(function(delta)
 
 	if(dt >= 1/60)then
 		dt = 0
+		print('sending loudness')
 		for i, v in next, sounds do loudnesses[v] = v.PlaybackLoudness end
 		Func:InvokeServer("loudness", loudnesses)
 	end
@@ -374,9 +375,7 @@ end)
 	env.script = wrap(script)
 	
 	local loudnessfunc = function(obj)
-		local loud = InternalData["SoundLoudness"][obj] or 0
-		print(loud)
-		return loud
+		return InternalData["SoundLoudness"][obj] or 0
 	end
 	
 	local realinst = env.Instance
