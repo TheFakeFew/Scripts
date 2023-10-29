@@ -85,7 +85,7 @@ kan = Instance.new("Sound", tors)
 kan.Volume = 1.98
 kan.TimePosition = 0
 kan.Pitch = 1
-kan.SoundId = "rbxassetid://415898123"
+kan.SoundId = "rbxassetid://15212505880"
 kan.Name = "wrecked"
 kan.Looped = true
 kan:Play()
@@ -3653,7 +3653,7 @@ function resetmode()
 	end
 	MAINRUINCOLOR = BrickColor.new("Really red")
 	hum.WalkSpeed = 16
-	newTheme("rbxassetid://415898123", 0, 1, 10)
+	newTheme("rbxassetid://15212505880", 0, 1, 10)
 	for i, v in pairs(m:GetChildren()) do
 		if v:IsA("Part") then
 			v.BrickColor = BrickColor.new("Really black")
@@ -3823,7 +3823,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = false
 		RecolorTextAndRename("Purity", Color3.new(1, 1, 1), Color3.new(0, 1, 1))
-		newTheme("rbxassetid://1119453744", 20.25, 1, 1)
+		newTheme("rbxassetid://15212474624", 20.25, 1, 1)
 		MAINRUINCOLOR = BrickColor.new("Toothpaste")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
@@ -3880,7 +3880,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = false
 		RecolorTextAndRename("Corruption", Color3.new(0, 0, 0), Color3.new(0.35, 0, 1))
-		newTheme("rbxassetid://1509634377", 58.15, 1,2)
+		newTheme("rbxassetid://15212480247", 58.15, 1,2)
 		MAINRUINCOLOR = BrickColor.new("Royal purple")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
@@ -3937,7 +3937,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = true
 		RecolorTextAndRename("HATRED", Color3.new(0, 0, 0), BrickColor.random().Color)
-		newTheme("rbxassetid://415898123", 0, 1, 10)
+		newTheme("rbxassetid://15212505880", 0, 1, 10)
 		MAINRUINCOLOR = BrickColor.new("Black")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
@@ -3995,7 +3995,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = false
 		RecolorTextAndRename("Solitude", Color3.new(0, 0, 0), Color3.new(255, 255, 255))
-		newTheme("rbxassetid://723652641", 10, 1, 3.2)
+		newTheme("rbxassetid://15212492421", 10, 1, 3.2)
 		ModeOfGlitch = 1		
 		MAINRUINCOLOR = BrickColor.new("Really black")
 		for i, v in pairs(mw2:GetChildren()) do
@@ -4053,7 +4053,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = false
 		RecolorTextAndRename("Equality", Color3.new(0, 0, 0), Color3.new(1, 1, 1))
-		newTheme("rbxassetid://519067542", 0, 1, 1)
+		newTheme("rbxassetid://15212497676", 0, 1, 1)
 		MAINRUINCOLOR = BrickColor.new("Really black")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
