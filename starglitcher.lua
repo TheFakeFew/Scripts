@@ -84,7 +84,7 @@ local chaosmode = false
 kan = Instance.new("Sound", tors)
 kan.Volume = 1.98
 kan.TimePosition = 0
-kan.Pitch = 1
+kan.Pitch = .8
 kan.SoundId = "rbxassetid://15212505880"
 kan.Name = "wrecked"
 kan.Looped = true
@@ -3653,7 +3653,7 @@ function resetmode()
 	end
 	MAINRUINCOLOR = BrickColor.new("Really red")
 	hum.WalkSpeed = 16
-	newTheme("rbxassetid://15212505880", 0, 1, 10)
+	newTheme("rbxassetid://15212505880", 0, .8, 10)
 	for i, v in pairs(m:GetChildren()) do
 		if v:IsA("Part") then
 			v.BrickColor = BrickColor.new("Really black")
@@ -3937,7 +3937,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = true
 		RecolorTextAndRename("HATRED", Color3.new(0, 0, 0), BrickColor.random().Color)
-		newTheme("rbxassetid://15212505880", 0, 1, 10)
+		newTheme("rbxassetid://15212505880", 0, .8, 10)
 		MAINRUINCOLOR = BrickColor.new("Black")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
