@@ -1089,7 +1089,6 @@ txt.Adornee = nil
 txt.Name = "NameDetect"
 txt.Size = UDim2.new(4, 0, 1.2, 0)
 txt.StudsOffset = Vector3.new(-8, 5.333333333333333, 0)
-txt.Brightness = 3
 local text = Instance.new("TextLabel", txt)
 text.Size = UDim2.new(5, 0, 3.5, 0)
 text.FontSize = "Size8"
@@ -1102,15 +1101,10 @@ text.Font = "Fantasy"
 text.TextStrokeColor3 = Color3.new(1, 0, 0)
 text.TextColor3 = Color3.new(0, 0, 0)
 text.Text = "Sweet Dreams"
-local highlight = Instance.new("Highlight", Character)
-highlight.DepthMode = "Occluded"
-highlight.FillTransparency = 1
-highlight.Adornee = Character
 function RecolorTextAndRename(name, col1, col2)
-	text.TextStrokeColor3 = col1
-	text.TextColor3 = col2
+	text.TextStrokeColor3 = col2
+	text.TextColor3 = col1
 	text.Text = name
-	highlight.OutlineColor = col2
 end
 mouse = Player:GetMouse()
 RSH, LSH = nil, nil
