@@ -153,7 +153,8 @@ function module.EZConvert(useahb)
 	local Mouse = {
 		Target=nil,Hit=CFrame.index,
 		KeyUp=FakeSignal.new(),KeyDown=FakeSignal.new(),
-		Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new()
+		Button1Up=FakeSignal.new(),Button1Down=FakeSignal.new(),
+		Button2Up=FakeSignal.new(),Button2Down=FakeSignal.new()
 	}
 	local UserInputService = {
 		properties = {InputBegan=FakeSignal.new(),InputEnded=FakeSignal.new()},
@@ -186,6 +187,9 @@ function module.EZConvert(useahb)
 				if(data.UserInputType == Enum.UserInputType.MouseButton1)then
 					MouseDowns[data.UserInputType] = Begin
 					return Mouse[Begin and "Button1Down" or "Button1Up"]:Fire()
+				elseif(data.UserInputType == Enum.UserInputType.MouseButton2)then
+					MouseDowns[data.UserInputType] = Begin
+					return Mouse[Begin and "Button2Down" or "Button2Up"]:Fire()
 				end
 
 				for _,Action in pairs(ContextActionService.Actions) do
