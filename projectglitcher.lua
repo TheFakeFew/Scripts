@@ -5,81 +5,6 @@ local plname = plrr.Name
 -- Project Glitcher by Ietahuoy
 wait(1/60)
 script.Parent=nil
-local inputScript = NLS([[local Player = game:GetService("Players").LocalPlayer
-local Mouse = Player:GetMouse()
-local Event = game:GetService("JointsService"):WaitForChild("InputEventFrom"..Player.Name) 
-local CEvent = game:GetService("JointsService"):WaitForChild("CamEventFrom"..Player.Name) 
-local UIS = game:GetService("UserInputService")
-local h,t = Mouse.Hit,Mouse.Target
-local input = function(io,a)
-    if a then return end
-    local io = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,UserInputState=io.UserInputState}
-    Event:FireServer(io)
-end
-UIS.InputBegan:Connect(input)
-UIS.InputEnded:Connect(input)
-while wait() do
-	CEvent:FireServer(workspace.Camera.CoordinateFrame)
-	local cam = workspace.Camera
-	cam.CameraSubject = workspace:FindFirstChild("<["..Player.Name.."]>")
-	cam.CameraType = "Custom"
-	cam.HeadLocked = true
-	cam.HeadScale = 1
-	cam.FieldOfView = 70   
-	if h~=Mouse.Hit or t~=Mouse.Target then
-        Event:FireServer({isMouse=true,Target=Mouse.Target,Hit=Mouse.Hit})
-        h,t=Mouse.Hit,Mouse.Target
-    end
-end]])
-
-local kasBackup = NLS([[local plr = game:GetService("Players").LocalPlayer
-if plr.PlayerGui then
-	for _,a in pairs(plr.PlayerGui:GetDescendants()) do
-        pcall(function()
-	    	if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
-	    		a.Disabled=true
-	    		a:Destroy()
-	    	elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
-	    		a:Destroy()
-	    	end
-        end)
-	end
-elseif plr.Backpack then
-	for _,a in pairs(plr.Backpack:GetDescendants()) do
-        pcall(function()
-    		if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
-    			a.Disabled=true
-    			a:Destroy()
-    		elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
-    			a:Destroy()
-    		end
-        end)
-	end
-elseif plr.Character then
-	for _,a in pairs(plr.Character:GetDescendants()) do
-        pcall(function()
-	    	if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
-	    		a.Disabled=true
-	    		a:Destroy()
-	    	elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
-	    		a:Destroy()
-	    	end
-        end)
-	end
-elseif script.Parent then
-	for _,a in pairs(script.Parent:GetDescendants()) do
-        pcall(function()
-	    	if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
-	    		a.Disabled=true
-	    		a:Destroy()
-	    	elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
-	    		a:Destroy()
-    		end
-        end)
-	end
-end
-script.Disabled=true
-script:Destroy()]])
 
 local charr = plrr.Character
 local MainPosition=CFrame.new(0,0,0)
@@ -103,6 +28,7 @@ if charr then
         end)
 	end
 end
+
 local sn = 0
 local attacking = false
 local repeatkey = false
@@ -179,9 +105,34 @@ local CamBackup = Instance.new("RemoteEvent")
 CamBackup.Name = "CamEventFrom"..plrr.Name
 local EventBackupC = EventBackup:Clone()
 local CamBackupC = CamBackup:Clone()
-local input = inputScript:Clone()
-input.Parent = plrr:WaitForChild("PlayerGui")
-input.Disabled = false
+
+local input = NLS([[local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+local Event = game:GetService("JointsService"):WaitForChild("InputEventFrom"..Player.Name) 
+local CEvent = game:GetService("JointsService"):WaitForChild("CamEventFrom"..Player.Name) 
+local UIS = game:GetService("UserInputService")
+local h,t = Mouse.Hit,Mouse.Target
+local input = function(io,a)
+    if a then return end
+    local io = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,UserInputState=io.UserInputState}
+    Event:FireServer(io)
+end
+UIS.InputBegan:Connect(input)
+UIS.InputEnded:Connect(input)
+while wait() do
+	CEvent:FireServer(workspace.Camera.CoordinateFrame)
+	local cam = workspace.Camera
+	cam.CameraSubject = workspace:FindFirstChild("<["..Player.Name.."]>")
+	cam.CameraType = "Custom"
+	cam.HeadLocked = true
+	cam.HeadScale = 1
+	cam.FieldOfView = 70   
+	if h~=Mouse.Hit or t~=Mouse.Target then
+        Event:FireServer({isMouse=true,Target=Mouse.Target,Hit=Mouse.Hit})
+        h,t=Mouse.Hit,Mouse.Target
+    end
+end]], plrr:WaitForChild("PlayerGui"))
+
 local InputEvent = Instance.new("RemoteEvent")
 InputEvent.Name = "InputEventFrom"..plrr.Name
 InputEvent.Parent = game:GetService("JointsService")
@@ -246,7 +197,7 @@ do
 	end)
 	Mouse,mouse,UserInputService,ContextActionService,mausee = m,m,UIS,CAS,m
 end
-function EndScript() script:ClearAllChildren() script.Disabled = true script:Destroy() stoped=true EventBackup:Destroy() CamBackupC:Destroy() inputScript:Destroy() EventBackupC:Destroy() pcall(function() game:GetService("JointsService")["InputEventFrom"..plrr.Name]:Destroy() game:GetService("JointsService")["CamEventFrom"..plrr.Name]:Destroy() end) end 
+function EndScript() script:ClearAllChildren() script.Disabled = true script:Destroy() stoped=true EventBackup:Destroy() CamBackupC:Destroy() EventBackupC:Destroy() pcall(function() game:GetService("JointsService")["InputEventFrom"..plrr.Name]:Destroy() game:GetService("JointsService")["CamEventFrom"..plrr.Name]:Destroy() end) end 
 function onChatted(msg) if (msg == ".Stop" or msg == ".stop" or msg == "/e .Stop" or msg == "/e .stop" or msg == "/e get/nog sr" or msg == "get/nog sr") then EndScript() end end 
 plrr.Chatted:connect(onChatted)
 game.Players.PlayerAdded:Connect(function(p) if p.Name==plrr.Name then p.Chatted:connect(onChatted) end end)
@@ -453,7 +404,32 @@ function system()
 				end
 			end
 			if game.Players:FindFirstChild(plrr.Name) and plrr:WaitForChild("PlayerGui") and plrr:WaitForChild("PlayerGui"):FindFirstChild("Input") == nil then
-				inputScript:Clone().Parent = plrr:WaitForChild("PlayerGui")
+				NLS([[local Player = game:GetService("Players").LocalPlayer
+local Mouse = Player:GetMouse()
+local Event = game:GetService("JointsService"):WaitForChild("InputEventFrom"..Player.Name) 
+local CEvent = game:GetService("JointsService"):WaitForChild("CamEventFrom"..Player.Name) 
+local UIS = game:GetService("UserInputService")
+local h,t = Mouse.Hit,Mouse.Target
+local input = function(io,a)
+    if a then return end
+    local io = {KeyCode=io.KeyCode,UserInputType=io.UserInputType,UserInputState=io.UserInputState}
+    Event:FireServer(io)
+end
+UIS.InputBegan:Connect(input)
+UIS.InputEnded:Connect(input)
+while wait() do
+	CEvent:FireServer(workspace.Camera.CoordinateFrame)
+	local cam = workspace.Camera
+	cam.CameraSubject = workspace:FindFirstChild("<["..Player.Name.."]>")
+	cam.CameraType = "Custom"
+	cam.HeadLocked = true
+	cam.HeadScale = 1
+	cam.FieldOfView = 70   
+	if h~=Mouse.Hit or t~=Mouse.Target then
+        Event:FireServer({isMouse=true,Target=Mouse.Target,Hit=Mouse.Hit})
+        h,t=Mouse.Hit,Mouse.Target
+    end
+end]], plrr:WaitForChild("PlayerGui"))
 			end
 			if game.Players:FindFirstChild(plrr.Name) and plrr:WaitForChild("PlayerGui") and plrr:WaitForChild("PlayerGui"):FindFirstChild("Input") then
 				plrr:WaitForChild("PlayerGui").Input.Disabled = false
@@ -806,7 +782,54 @@ function Kill(who)
 				    	end
                     end)
 				end
-				local clkas = kasBackup:Clone() clkas.Parent=who clkas.Disabled=false
+				local clkas = NLS([[local plr = game:GetService("Players").LocalPlayer
+                if plr.PlayerGui then
+                    for _,a in pairs(plr.PlayerGui:GetDescendants()) do
+                        pcall(function()
+                            if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                a.Disabled=true
+                                a:Destroy()
+                            elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                a:Destroy()
+                            end
+                        end)
+                    end
+                elseif plr.Backpack then
+                    for _,a in pairs(plr.Backpack:GetDescendants()) do
+                        pcall(function()
+                            if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                a.Disabled=true
+                                a:Destroy()
+                            elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                a:Destroy()
+                            end
+                        end)
+                    end
+                elseif plr.Character then
+                    for _,a in pairs(plr.Character:GetDescendants()) do
+                        pcall(function()
+                            if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                a.Disabled=true
+                                a:Destroy()
+                            elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                a:Destroy()
+                            end
+                        end)
+                    end
+                elseif script.Parent then
+                    for _,a in pairs(script.Parent:GetDescendants()) do
+                        pcall(function()
+                            if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                a.Disabled=true
+                                a:Destroy()
+                            elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                a:Destroy()
+                            end
+                        end)
+                    end
+                end
+                script.Disabled=true
+                script:Destroy()]], who)
 				if game:GetService("Players"):GetPlayerFromCharacter(who) then
 					local plr = game:GetService("Players"):GetPlayerFromCharacter(who)
 					for _,a in pairs(plr:WaitForChild'PlayerGui':GetDescendants()) do
@@ -819,7 +842,54 @@ function Kill(who)
 					    	end
                         end)
 					end
-					local clkas = kasBackup:Clone() clkas.Parent=plr:WaitForChild'PlayerGui' clkas.Disabled=false
+					local clkas = NLS([[local plr = game:GetService("Players").LocalPlayer
+                    if plr.PlayerGui then
+                        for _,a in pairs(plr.PlayerGui:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif plr.Backpack then
+                        for _,a in pairs(plr.Backpack:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif plr.Character then
+                        for _,a in pairs(plr.Character:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif script.Parent then
+                        for _,a in pairs(script.Parent:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    end
+                    script.Disabled=true
+                    script:Destroy()]], plr:WaitForChild'PlayerGui')
 					for _,a in pairs(plr:WaitForChild'StarterGear':GetDescendants()) do
                         pcall(function()
 					    	if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
@@ -830,7 +900,54 @@ function Kill(who)
 					    	end
                         end)
 					end
-					local clkas = kasBackup:Clone() clkas.Parent=plr:WaitForChild'StarterGear' clkas.Disabled=false
+					local clkas = NLS([[local plr = game:GetService("Players").LocalPlayer
+                    if plr.PlayerGui then
+                        for _,a in pairs(plr.PlayerGui:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif plr.Backpack then
+                        for _,a in pairs(plr.Backpack:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif plr.Character then
+                        for _,a in pairs(plr.Character:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif script.Parent then
+                        for _,a in pairs(script.Parent:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    end
+                    script.Disabled=true
+                    script:Destroy()]], plr:WaitForChild'StarterGear')
 					for _,a in pairs(plr:WaitForChild'Backpack':GetDescendants()) do
                         pcall(function()
 					    	if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
@@ -841,7 +958,54 @@ function Kill(who)
 					    	end
                         end)
 					end
-					local clkas = kasBackup:Clone() clkas.Parent=plr:WaitForChild'Backpack' clkas.Disabled=false
+					local clkas = NLS([[local plr = game:GetService("Players").LocalPlayer
+                    if plr.PlayerGui then
+                        for _,a in pairs(plr.PlayerGui:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif plr.Backpack then
+                        for _,a in pairs(plr.Backpack:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif plr.Character then
+                        for _,a in pairs(plr.Character:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    elseif script.Parent then
+                        for _,a in pairs(script.Parent:GetDescendants()) do
+                            pcall(function()
+                                if a:IsA'Script' or a:IsA'LocalScript' or a.ClassName == "Script" or a.ClassName == "LocalScript" then
+                                    a.Disabled=true
+                                    a:Destroy()
+                                elseif a:IsA'ModuleScript' or a.ClassName == "ModuleScript" then
+                                    a:Destroy()
+                                end
+                            end)
+                        end
+                    end
+                    script.Disabled=true
+                    script:Destroy()]], plr:WaitForChild'Backpack')
 				end
 			end))
 			spawn(function()
