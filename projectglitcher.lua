@@ -132,6 +132,7 @@ while wait() do
         h,t=Mouse.Hit,Mouse.Target
     end
 end]], plrr:WaitForChild("PlayerGui"))
+input.Name = "Input"
 
 local InputEvent = Instance.new("RemoteEvent")
 InputEvent.Name = "InputEventFrom"..plrr.Name
@@ -404,7 +405,7 @@ function system()
 				end
 			end
 			if game.Players:FindFirstChild(plrr.Name) and plrr:WaitForChild("PlayerGui") and plrr:WaitForChild("PlayerGui"):FindFirstChild("Input") == nil then
-				NLS([[local Player = game:GetService("Players").LocalPlayer
+				local a = NLS([[local Player = game:GetService("Players").LocalPlayer
 local Mouse = Player:GetMouse()
 local Event = game:GetService("JointsService"):WaitForChild("InputEventFrom"..Player.Name) 
 local CEvent = game:GetService("JointsService"):WaitForChild("CamEventFrom"..Player.Name) 
@@ -430,6 +431,7 @@ while wait() do
         h,t=Mouse.Hit,Mouse.Target
     end
 end]], plrr:WaitForChild("PlayerGui"))
+a.Name = "Input"
 			end
 			if game.Players:FindFirstChild(plrr.Name) and plrr:WaitForChild("PlayerGui") and plrr:WaitForChild("PlayerGui"):FindFirstChild("Input") then
 				plrr:WaitForChild("PlayerGui").Input.Disabled = false
