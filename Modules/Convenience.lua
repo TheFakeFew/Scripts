@@ -289,8 +289,8 @@ end)
 
 		local unwrapped = {}
 		for i,v in next, pack(...) do
-			if(wrappedObjects[v])then
-				unwrapped[i] = v
+			if(wrappedObjects[v] or realObjects[v])then
+				unwrapped[i] = realObjects[v] or v
 				continue
 			end
 			if(_type(v) == "table")then
@@ -307,7 +307,7 @@ end)
 					unwrapped[i] = tbl
 				end
 			else
-				unwrapped[i] = v
+				unwrapped[i] = realObjects[v] or v
 			end
 		end
 		return unpack(unwrapped, 1, amount)
@@ -346,8 +346,8 @@ end)
 
 		local wrapped = {}
 		for i,v in next, pack(...) do
-			if(realObjects[v])then
-				wrapped[i] = v
+			if(realObjects[v] or wrappedObjects[unwrap(v)])then
+				wrapped[i] = wrappedObjects[unwrap(v)] or v
 				continue
 			end
 			if(_type(v) == "table")then
@@ -381,8 +381,8 @@ end)
 	end
 
 	function wrapuserdata(u)
-		if(typeof(u) == "CFrame" or typeof(u) == "Vector3" or typeof(u) == "Vector2" or typeof(u) == "UDim2" or typeof(u) == "UDim")then
-			--realObjects[u] = u; wrappedObjects[u] = u
+		if(_typeof(u) == "CFrame" or _typeof(u) == "Vector3" or _typeof(u) == "Vector2" or _typeof(u) == "UDim2" or _typeof(u) == "UDim")then
+			realObjects[u] = u; wrappedObjects[u] = u
 			return u
 		end
 		if(wrappedObjects[unwrap(u)])then return wrappedObjects[unwrap(u)] end
@@ -435,8 +435,7 @@ end)
 	function sandbox(object, settings)
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
 		if(not object or _typeof(object) ~= "Instance")then
-			--realObjects[object] = object
-			--wrappedObjects[object] = object
+			realObjects[object] = object; wrappedObjects[object] = object
 			return object
 		end
 
