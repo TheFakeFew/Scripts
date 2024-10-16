@@ -333,7 +333,7 @@ end)
 				end
 			elseif(_type(thing) == "function")then
 				return wrapfunction(thing)
-			elseif(_typeof(thing) == "RBXScriptSignal")then
+			elseif(_type(thing) == "userdata")then
 				return wrapuserdata(thing)
 			else
 				return wrappedObjects[unwrap(thing)] or sandbox(thing)
@@ -357,7 +357,7 @@ end)
 				end
 			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
-			elseif(_typeof(v) == "RBXScriptSignal")then
+			elseif(_type(v) == "userdata")then
 				wrapped[i] = wrapuserdata(v)
 			else
 				wrapped[i] = wrappedObjects[unwrap(v)] or sandbox(v)
@@ -385,7 +385,7 @@ end)
 		meta.__tostring = function()
 			return tostring(u)
 		end
-		realObjects[meta] = u; wrappedObjects[u] = meta;
+		realObjects[proxy] = u; wrappedObjects[u] = proxy;
 		return proxy
 	end
 
