@@ -289,10 +289,6 @@ end)
 
 		local unwrapped = {}
 		for i,v in next, pack(...) do
-			if(wrappedObjects[v])then
-				unwrapped[i] = v
-				continue
-			end
 			if(_type(v) == "table")then
 				local success = pcall(function()
 					for a, b in next, thing do
@@ -307,7 +303,7 @@ end)
 					unwrapped[i] = tbl
 				end
 			else
-				unwrapped[i] = v
+				unwrapped[i] = realObjects[v] or v
 			end
 		end
 		return unpack(unwrapped, 1, amount)
@@ -346,10 +342,6 @@ end)
 
 		local wrapped = {}
 		for i,v in next, pack(...) do
-			if(realObjects[v])then
-				wrapped[i] = wrappedObjects[unwrap(v)]
-				continue
-			end
 			if(_type(v) == "table")then
 				local success = pcall(function()
 					for a, b in next, v do
@@ -368,7 +360,7 @@ end)
 			elseif(_type(v) == "userdata")then
 				wrapped[i] = wrapuserdata(v)
 			else
-				wrapped[i] = sandbox(v)
+				wrapped[i] = wrappedObjects[unwrap(v)] or sandbox(v)
 			end
 		end
 		return unpack(wrapped, 1, amount)
