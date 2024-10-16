@@ -290,7 +290,7 @@ end)
 		local unwrapped = {}
 		for i,v in next, pack(...) do
 			if(wrappedObjects[v])then
-				unwrapped[i] = wrappedObjects[v]
+				unwrapped[i] = v
 				continue
 			end
 			if(_type(v) == "table")then
@@ -346,8 +346,8 @@ end)
 
 		local wrapped = {}
 		for i,v in next, pack(...) do
-			if(realObjects[unwrap(v)])then
-				wrapped[i] = realObjects[unwrap(v)]
+			if(realObjects[v])then
+				wrapped[i] = v
 				continue
 			end
 			if(_type(v) == "table")then
@@ -382,8 +382,7 @@ end)
 
 	function wrapuserdata(u)
 		if(typeof(u) == "CFrame" or typeof(u) == "Vector3" or typeof(u) == "Vector2" or typeof(u) == "UDim2" or typeof(u) == "UDim")then
-			realObjects[u] = u
-			wrappedObjects[u] = u
+			realObjects[u] = u; wrappedObjects[u] = u
 			return u
 		end
 		if(wrappedObjects[unwrap(u)])then return wrappedObjects[unwrap(u)] end
