@@ -267,24 +267,40 @@ end)
 				return thing
 			end
 			if(_type(thing) == "table")then
-				local tbl = {}
-				for a, b in next, thing do
-					tbl[a] = unwrap(b)
+				local success = pcall(function()
+					for a, b in next, thing do
+						thing[a] = unwrap(b)
+					end
+				end)
+				if(success)then
+					return thing
+				else
+					local tbl = {}
+					for a, b in next, thing do
+						tbl[a] = unwrap(b)
+					end
+					return tbl
 				end
-				return tbl
 			else
 				return realObjects[thing] or thing
 			end
 		end
 
-		local unwrapped = pack(...)
-		for i,v in next, unwrapped do
+		local unwrapped = {}
+		for i,v in next, pack(...) do
 			if(_type(v) == "table")then
-				local tbl = {}
-				for a, b in next, v do
-					tbl[a] = unwrap(b)
+				local success = pcall(function()
+					for a, b in next, thing do
+						thing[a] = unwrap(b)
+					end
+				end)
+				if(not success)then
+					local tbl = {}
+					for a, b in next, v do
+						tbl[a] = unwrap(b)
+					end
+					unwrapped[i] = tbl
 				end
-				unwrapped[i] = tbl
 			else
 				unwrapped[i] = realObjects[v] or v
 			end
@@ -299,11 +315,20 @@ end)
 				return thing
 			end
 			if(_type(thing) == "table")then
-				local tbl = {}
-				for a, b in next, thing do
-					tbl[a] = wrap(b)
+				local success = pcall(function()
+					for a, b in next, thing do
+						thing[a] = wrap(b)
+					end
+				end)
+				if(success)then
+					return thing
+				else
+					local tbl = {}
+					for a, b in next, thing do
+						tbl[a] = wrap(b)
+					end
+					return tbl
 				end
-				return tbl
 			elseif(_type(thing) == "function")then
 				return wrapfunction(thing)
 			else
@@ -311,14 +336,21 @@ end)
 			end
 		end
 
-		local wrapped = pack(...)
-		for i,v in next, wrapped do
+		local wrapped = {}
+		for i,v in next, pack(...) do
 			if(_type(v) == "table")then
-				local tbl = {}
-				for a, b in next, v do
-					tbl[a] = wrap(b)
+				local success = pcall(function()
+					for a, b in next, v do
+						v[a] = wrap(b)
+					end
+				end)
+				if(not success)then
+					local tbl = {}
+					for a, b in next, v do
+						tbl[a] = wrap(b)
+					end
+					wrapped[i] = tbl
 				end
-				wrapped[i] = tbl
 			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
 			else
