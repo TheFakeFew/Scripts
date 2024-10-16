@@ -261,7 +261,8 @@ end)
 	local wrappedObjects = setmetatable({}, {__mode = "k"});
 
 	local function unwrap(...)
-		if(select("#", ...)==1)then
+		local amount = select("#", ...)
+		if(amount==1)then
 			local thing = (...)
 			if wrappedObjects[thing] then
 				return thing
@@ -305,11 +306,12 @@ end)
 				unwrapped[i] = realObjects[v] or v
 			end
 		end
-		return unpack(unwrapped, 1, maxn(unwrapped))
+		return unpack(unwrapped, 1, amount)
 	end
 
 	local function wrap(...)
-		if(select("#", ...)==1)then
+		local amount = select("#", ...)
+		if(amount==1)then
 			local thing = (...)
 			if realObjects[thing] then
 				return thing
@@ -357,7 +359,7 @@ end)
 				wrapped[i] = wrappedObjects[unwrap(v)] or sandbox(v)
 			end
 		end
-		return unpack(wrapped, 1, maxn(wrapped))
+		return unpack(wrapped, 1, amount)
 	end
 
 	function wrapfunction(f)
