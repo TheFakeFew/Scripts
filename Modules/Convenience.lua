@@ -385,7 +385,7 @@ end)
 		meta.__tostring = function()
 			return tostring(u)
 		end
-		realObjects[proxy] = u
+		realObjects[proxy] = u;wrappedObjects[u] = proxy;
 		return proxy
 	end
 
