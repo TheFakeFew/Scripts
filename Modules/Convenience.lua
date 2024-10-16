@@ -347,7 +347,7 @@ end)
 		local wrapped = {}
 		for i,v in next, pack(...) do
 			if(realObjects[v])then
-				wrapped[i] = v
+				wrapped[i] = wrappedObjects[unwrap(v)]
 				continue
 			end
 			if(_type(v) == "table")then
