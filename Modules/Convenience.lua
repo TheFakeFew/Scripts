@@ -390,6 +390,7 @@ end)
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
 		meta.__index = function(self, index)
+			print(index)
 			return wrap(u[index])
 		end
 		meta.__newindex = function(self, index, value)
