@@ -433,11 +433,10 @@ end)
 	end
 
 	function sandbox(object, settings)
+		if(not object)then return object end
 		if(wrappedObjects[unwrap(object)])then return wrappedObjects[unwrap(object)] end
-		if(not object or _typeof(object) ~= "Instance")then
-			if(object)then
-				realObjects[object] = object; wrappedObjects[object] = object
-			end
+		if(_typeof(object) ~= "Instance")then
+			realObjects[object] = object; wrappedObjects[object] = object
 			return object
 		end
 
