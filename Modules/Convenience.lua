@@ -283,14 +283,14 @@ end)
 					return tbl
 				end
 			else
-				return thing
+				return realObjects[thing] or thing
 			end
 		end
 
 		local unwrapped = {}
 		for i,v in next, pack(...) do
-			if(realObjects[v])then
-				unwrapped[i] = realObjects[v]
+			if(wrappedObjects[v])then
+				unwrapped[i] = wrappedObjects[v]
 				continue
 			end
 			if(_type(v) == "table")then
@@ -346,8 +346,8 @@ end)
 
 		local wrapped = {}
 		for i,v in next, pack(...) do
-			if(wrappedObjects[unwrap(v)])then
-				wrapped[i] = wrappedObjects[unwrap(v)]
+			if(realObjects[unwrap(v)])then
+				wrapped[i] = realObjects[unwrap(v)]
 				continue
 			end
 			if(_type(v) == "table")then
