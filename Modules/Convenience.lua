@@ -337,7 +337,7 @@ end)
 				end
 			elseif(_type(thing) == "function")then
 				return wrapfunction(thing)
-			elseif(_type(thing) == "userdata" and not _type(v) == "Instance")then
+			elseif(_type(thing) == "userdata" and _typeof(v) ~= "Instance")then
 				return wrapuserdata(thing)
 			else
 				return sandbox(thing)
@@ -365,7 +365,7 @@ end)
 				end
 			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
-			elseif(_type(v) == "userdata" and not _type(v) == "Instance")then
+			elseif(_type(v) == "userdata" and _typeof(v) ~= "Instance")then
 				wrapped[i] = wrapuserdata(v)
 			else
 				wrapped[i] = sandbox(v)
