@@ -266,23 +266,21 @@ end)
 				return (...)
 			end
 			if(_type(...) == "table")then
-				local unwrappedtable = {}
-				for i, v in next, (...) do
-					unwrappedtable[i] = unwrap(v)
+				local tbl = (...)
+				for i, v in next, tbl do
+					tbl[i] = unwrap(v)
 				end
-				return unwrappedtable
+				return tbl
 			else
 				return realObjects[...] or (...)
 			end
 		end
-		local unwrapped = {}
-		for i,v in next, pack(...) do
+		local unwrapped = pack(...)
+		for i,v in next, unwrapped do
 			if(_type(v) == "table")then
-				local unwrappedtable = {}
-				for i, v in next, v do
-					unwrappedtable[i] = unwrap(v)
+				for a, b in next, v do
+					v[a] = unwrap(b)
 				end
-				unwrapped[i] = unwrappedtable
 			else
 				unwrapped[i] = realObjects[v] or v
 			end
@@ -296,25 +294,23 @@ end)
 				return (...)
 			end
 			if(_type(...) == "table")then
-				local wrappedtable = {}
-				for i, v in next, (...) do
-					wrappedtable[i] = wrap(v)
+				local tbl = (...)
+				for i, v in next, tbl do
+					tbl[i] = wrap(v)
 				end
-				return wrappedtable
+				return tbl
 			elseif(_type(...) == "function")then
 				return wrapfunction(...)
 			else
 				return wrappedObjects[unwrap(...)] or sandbox(...)
 			end
 		end
-		local wrapped = {}
-		for i,v in next, pack(...) do
+		local wrapped = pack(...)
+		for i,v in next, wrapped do
 			if(_type(v) == "table")then
-				local wrappedtable = {}
-				for i, v in next, v do
-					wrappedtable[i] = wrap(v)
+				for a, b in next, v do
+					v[a] = wrap(b)
 				end
-				wrapped[i] = wrappedtable
 			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
 			else
