@@ -389,22 +389,22 @@ end)
 			return wrapfunction(u)(...)
 		end
 		meta.__concat = function(self, value)
-			return u .. unwrap(value)
+			return wrap(u .. unwrap(value))
 		end
 		meta.__sub = function(self, value)
-			return u - unwrap(value)
+			return wrap(u - unwrap(value))
 		end
 		meta.__mul = function(self, value)
-			return u * unwrap(value)
+			return wrap(u * unwrap(value))
 		end
 		meta.__add = function(self, value)
-			return u + unwrap(value)
+			return wrap(u + unwrap(value))
 		end
 		meta.__div = function(self, value)
-			return u/unwrap(value)
+			return wrap(u/unwrap(value))
 		end
 		meta.__eq = function(self, value)
-			return u == unwrap(value)
+			return wrap(u == unwrap(value))
 		end
 		meta.__metatable = "The metatable is locked"
 
@@ -539,26 +539,7 @@ end)
 
 	local canuserequire = pcall(require, 12972812972)
 	local _LoadAssets = canuserequire and require or env.LoadAssets
-	env.LoadAssets = function(id)
-		local Assets = _LoadAssets(id)
-		return wrap({
-			Get = function(self, ...)
-				return Assets:Get(unwrap(...))
-			end,
-			Exists = function(self, ...)
-				return Assets:Exists(unwrap(...))
-			end,
-			GetNames = function(self, ...)
-				return Assets:GetNames(unwrap(...))
-			end,
-			GetArray = function(self, ...)
-				return Assets:GetArray(unwrap(...))
-			end,
-			GetDictionary = function(self, ...)
-				return Assets:GetDictionary(unwrap(...))
-			end
-		})
-	end
+	env.LoadAssets = wrap(_LoadAssets)
 	local _NLS, _NS = wrap(env.NLS), wrap(env.NS);
 	env.NewLocalScript = _NLS;env.NLS = _NLS;
 	env.NewScript = _NS;env.NS = _NS;
