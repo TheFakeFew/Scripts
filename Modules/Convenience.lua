@@ -262,27 +262,46 @@ end)
 
 	local function unwrap(...)
 		if(select("#", ...)==1)then
-			if wrappedObjects[...] then
-				return (...)
+			local thing = (...)
+			if wrappedObjects[thing] then
+				return thing
 			end
-			if(_type(...) == "table")then
-				local unwrappedtable = {}
-				for i, v in next, (...) do
-					unwrappedtable[i] = unwrap(v)
+			if(_type(thing) == "table")then
+				local success, ret = pcall(function()
+					for a, b in next, thing do
+						thing[a] = unwrap(b)
+					end
+					return thing
+				end)
+				if(success)then
+					return ret
+				else
+					local tbl = {}
+					for a, b in next, thing do
+						tbl[a] = unwrap(b)
+					end
+					return tbl
 				end
-				return unwrappedtable
 			else
-				return realObjects[...] or (...)
+				return realObjects[thing] or thing
 			end
 		end
+
 		local unwrapped = pack(...)
 		for i,v in next, unwrapped do
 			if(_type(v) == "table")then
-				local unwrappedtable = {}
-				for i, v in next, v do
-					unwrappedtable[i] = unwrap(v)
+				local success = pcall(function()
+					for a, b in next, thing do
+						thing[a] = unwrap(b)
+					end
+				end)
+				if(not success)then
+					local tbl = {}
+					for a, b in next, thing do
+						tbl[a] = unwrap(b)
+					end
+					unwrapped[i] = tbl
 				end
-				unwrapped[i] = unwrappedtable
 			else
 				unwrapped[i] = realObjects[v] or v
 			end
@@ -292,29 +311,48 @@ end)
 
 	local function wrap(...)
 		if(select("#", ...)==1)then
-			if realObjects[...] then
-				return (...)
+			local thing = (...)
+			if realObjects[thing] then
+				return thing
 			end
-			if(_type(...) == "table")then
-				local wrappedtable = {}
-				for i, v in next, (...) do
-					wrappedtable[i] = wrap(v)
+			if(_type(thing) == "table")then
+				local success, ret = pcall(function()
+					for a, b in next, thing do
+						thing[a] = wrap(b)
+					end
+					return thing
+				end)
+				if(success)then
+					return ret
+				else
+					local tbl = {}
+					for a, b in next, thing do
+						tbl[a] = wrap(b)
+					end
+					return tbl
 				end
-				return wrappedtable
-			elseif(_type(...) == "function")then
-				return wrapfunction(...)
+			elseif(_type(thing) == "function")then
+				return wrapfunction(thing)
 			else
-				return wrappedObjects[unwrap(...)] or sandbox(...)
+				return wrappedObjects[unwrap(thing)] or sandbox(thing)
 			end
 		end
+
 		local wrapped = pack(...)
 		for i,v in next, wrapped do
 			if(_type(v) == "table")then
-				local wrappedtable = {}
-				for i, v in next, v do
-					wrappedtable[i] = wrap(v)
+				local success = pcall(function()
+					for a, b in next, v do
+						v[a] = wrap(b)
+					end
+				end)
+				if(not success)then
+					local tbl = {}
+					for a, b in next, thing do
+						tbl[a] = wrap(b)
+					end
+					wrapped[i] = tbl
 				end
-				wrapped[i] = wrappedtable
 			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
 			else
