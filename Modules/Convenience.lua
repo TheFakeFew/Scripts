@@ -333,6 +333,8 @@ end)
 				end
 			elseif(_type(thing) == "function")then
 				return wrapfunction(thing)
+			elseif(_type(thing) == "userdata")then
+				return wrapuserdata(thing)
 			else
 				return wrappedObjects[unwrap(thing)] or sandbox(thing)
 			end
@@ -355,6 +357,8 @@ end)
 				end
 			elseif(_type(v) == "function")then
 				wrapped[i] = wrapfunction(v)
+			elseif(_type(v) == "userdata")then
+				wrapped[i] = wrapuserdata(v)
 			else
 				wrapped[i] = wrappedObjects[unwrap(v)] or sandbox(v)
 			end
@@ -366,6 +370,21 @@ end)
 		return function(...)
 			return wrap(f(unwrap(...)))
 		end
+	end
+
+	function wrapuserdata(u)
+		local proxy = newproxy(true)
+		local meta = getmetatable(proxy)
+		meta.__index = function(self, index)
+			return wrap(u[index])
+		end
+		meta.__newindex = function(self, index, value)
+			u[unwrap(index)] = unwrap(value)
+		end
+		meta.__tostring = function()
+			return tostring(u)
+		end
+		return proxy
 	end
 
 	local loudnessfunc = function(obj)
@@ -382,17 +401,7 @@ end)
 		settings = (settings and _type(settings) == "table") and settings or {};
 		local custommethods, customproperties = settings.methods or {}, settings.properties or {};
 
-		if(object:IsA("BasePart"))then
-			local function connecttouch(self, callback)
-				return object.Touched:Connect(function(obj)
-					callback(wrap(obj))
-				end)
-			end
-			customproperties["Touched"] = {
-				Connect = connecttouch,
-				connect = connecttouch
-			}
-		elseif(object:IsA("Sound"))then
+		if(object:IsA("Sound"))then
 			customproperties["PlaybackLoudness"] = loudnessfunc
 			customproperties["playbackLoudness"] = loudnessfunc
 		end
