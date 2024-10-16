@@ -267,14 +267,13 @@ end)
 				return thing
 			end
 			if(_type(thing) == "table")then
-				local success, ret = pcall(function()
+				local success = pcall(function()
 					for a, b in next, thing do
 						thing[a] = unwrap(b)
 					end
-					return thing
 				end)
 				if(success)then
-					return ret
+					return thing
 				else
 					local tbl = {}
 					for a, b in next, thing do
@@ -297,7 +296,7 @@ end)
 				end)
 				if(not success)then
 					local tbl = {}
-					for a, b in next, thing do
+					for a, b in next, v do
 						tbl[a] = unwrap(b)
 					end
 					unwrapped[i] = tbl
@@ -316,14 +315,13 @@ end)
 				return thing
 			end
 			if(_type(thing) == "table")then
-				local success, ret = pcall(function()
+				local success = pcall(function()
 					for a, b in next, thing do
 						thing[a] = wrap(b)
 					end
-					return thing
 				end)
 				if(success)then
-					return ret
+					return thing
 				else
 					local tbl = {}
 					for a, b in next, thing do
@@ -348,7 +346,7 @@ end)
 				end)
 				if(not success)then
 					local tbl = {}
-					for a, b in next, thing do
+					for a, b in next, v do
 						tbl[a] = wrap(b)
 					end
 					wrapped[i] = tbl
