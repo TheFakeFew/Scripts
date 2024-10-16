@@ -373,6 +373,7 @@ end)
 	end
 
 	function wrapuserdata(u)
+		if(wrappedObjects[unwrap(u)])then return wrappedObjects[unwrap(u)] end
 		local proxy = newproxy(true)
 		local meta = getmetatable(proxy)
 		meta.__index = function(self, index)
@@ -384,6 +385,7 @@ end)
 		meta.__tostring = function()
 			return tostring(u)
 		end
+		realObjects[proxy] = u
 		return proxy
 	end
 
