@@ -353,6 +353,28 @@ end)
 		meta.__tostring = function()
 			return tostring(u)
 		end
+		meta.__call = function(self, ...)
+			return wrapfunction(u)(...)
+		end
+		meta.__concat = function(self, value)
+			return u .. unwrap(value)
+		end
+		meta.__sub = function(self, value)
+			return u - unwrap(value)
+		end
+		meta.__mul = function(self, value)
+			return u * unwrap(value)
+		end
+		meta.__add = function(self, value)
+			return u + unwrap(value)
+		end
+		meta.__div = function(self, value)
+			return u/unwrap(value)
+		end
+		meta.__eq = function(self, value)
+			return u == unwrap(value)
+		end
+
 		realObjects[proxy] = u; wrappedObjects[u] = proxy;
 		return proxy
 	end
@@ -393,7 +415,7 @@ end)
 		meta.__newindex = function(self, index, value)
 			object[index] = unwrap(value)
 		end
-		meta.__tostring = function(self) return tostring(unwrap(self)) end
+		meta.__tostring = function() return tostring(object) end
 		meta.__metatable = "The metatable is locked"
 
 		realObjects[proxy] = object;wrappedObjects[object] = proxy;
