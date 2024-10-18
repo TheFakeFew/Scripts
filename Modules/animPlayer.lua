@@ -223,9 +223,10 @@ local function TransformMotor6D(MotorListm,MotorName:string,Cframe:CFrame,MotorS
 	local a = MotorListm[MotorName] and MotorListm[MotorName][1] or nil
 	if a == nil then return end
 	if typeof(a)=="Instance" and a:IsA("Motor6D") or a:IsA("Bone") then
-		game:GetService("TweenService"):Create(a, TweenInfo.new(.15), {
+		a.C0 = MotorListm[MotorName][2]*Cframe
+		--[[game:GetService("TweenService"):Create(a, TweenInfo.new(.15), {
 			C0 = MotorListm[MotorName][2]*Cframe
-		}):Play()
+		}):Play()]]
 	end
 end
 local function ilerp(value:number, minimum:number, maximum:number):number
