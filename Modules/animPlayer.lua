@@ -661,17 +661,17 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 	self["Task"] = coroutine.create(function()
 		self["IsPlaying"] = true
 		local connection:RBXScriptConnection
-		connection = UpdateEachFrame:Connect(function(delta1:number,delta2:number)
+		local lastframe = os.clock()
+		local deltatime = 1/60
+		connection = UpdateEachFrame:Connect(function()
+			deltatime = os.clock() - lastframe
+			lastframe = os.clock()
+
+			local delta = deltatime
 			if self["IsPlaying"] == false then return end
 			if self["FadeTime"]~= nil and self["FadeTime"] <= 0 then
 				self["FadeTime"] = 0
 			end
-			--Deltatime
-			local delta,trueDelta = delta1,delta1
-			--if IsClient then
-			--delta = delta1
-			--trueDelta = delta1
-			--end
 
 			if MadeOneLoop == false and TimeStamp~=nil then
 				local Lengh = self["Length"]-self.Settings.StartsAt
@@ -707,10 +707,10 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 
 
 			if self["Speed"] ~= 1 then
-				delta *=self["Speed"]
+				delta *= self["Speed"]
 			end
 			if self["_debugSpeed"]~=nil then
-				delta *=self["_debugSpeed"]
+				delta *= self["_debugSpeed"]
 			end
 
 
@@ -805,7 +805,6 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 					for i,v in CurrentPositionOfJoints do
 						TransformMotor6D(self.Motor6D,i,v)
 					end
-
 				else
 					--Playing others
 					local GiveItselfCanTransform = self.Settings.CanTransformMotor6D
@@ -827,7 +826,6 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 						end
 
 						local OnlyPlayAnimations = {}
-						--local HaveFadingAnim = false
 						for i,v in PriorityTable do
 							local a = ReturnValuesThatFound(Priorities,v)
 							if TableLen(a)>0 then
@@ -836,27 +834,6 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 							end
 						end
 
-						--local FadingAnims = ReturnFadingAnimations(self["Group"])
-						--for i,v in FadingAnims do
-						--	if self["Group"]["i"][v].FadingAnimation ~= true then continue end
-						--	HaveFadingAnim = true
-						--	if table.find(OnlyPlayAnimations,v) == nil then
-						--	table.insert(OnlyPlayAnimations,v) 
-
-
-						--	end
-						--end
-
-						--if HaveFadingAnim == true and TableLen(OnlyPlayAnimations)==1 then
-						--	OnlyPlayAnimations = {}
-						--	for i,v in PlayingAnimations do
-						--		table.insert(OnlyPlayAnimations,v)
-						--	end
-						--end
-
-
-
-						--Highest Animation priority
 						local CurrentPositionOfJoints = {["main"]={}}
 						local CurrentWeightOfJoints = {["main"]=0}
 						for i,v in OnlyPlayAnimations do
@@ -874,23 +851,7 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 										CurrentPositionOfJoints[__v] = {}
 									end
 									CurrentPositionOfJoints[__v][_i] = cframe
-
 								end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 							end
 							--Lepr Other
 							local Indexer = 0
@@ -913,40 +874,16 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 											CurrentWeightOfJoints["main"] = CurrentWeightOfJoints[i]
 											CurrentPositionOfJoints["main"][_i] = _v:Lerp(CurrentPositionOfJoints["main"][_i],0.5)
 										elseif CurrentWeightOfJoints["main"] == CurrentWeightOfJoints[i] then
-
-											--print(alpha)
-											--if self["Group"]["i"][i]["FadingAnimation"]~= nil then 
-											--	local fadingProgress = ilerp(self["Group"]["i"][i]["FadeTime"],0,self["Group"]["i"][i]["FadeMax"])
-											--	alpha = fadingProgress
-											--end
-
-											--CurrentWeightOfJoints["main"]+=1
-											-- Order???
 											CurrentPositionOfJoints["main"][_i] = CurrentPositionOfJoints["main"][_i]:Lerp(_v,0.5)
-
-
-											--something in between
-
-
 										end
-
-										--CurrentPositionOfJoints["main"][_i] = CurrentPositionOfJoints["main"][_i]:Lerp(_v,alpha)
 									end
-
-
 								end
-
-
 							end
 							--Play Result
 							for i,v in CurrentPositionOfJoints["main"] do
 								TransformMotor6D(Anim.Motor6D,i,v)
 							end
-
 						end
-
-
-
 					end
 				end
 
@@ -1006,8 +943,7 @@ function module:Play(FadeTime:number,Weight:number,TimeStamp:number,Speed:number
 			FirstFramePlayed = false
 			--Fading
 			if self["FadingAnimation"] == true then
-				if trueDelta <0 then trueDelta = 0 end
-				local FadeTime = self.FadeTime-trueDelta
+				local FadeTime = self.FadeTime
 				if FadeTime < 0 then FadeTime = 0 end
 				self["FadeTime"]=FadeTime
 				local Pregress = ilerp(self["FadeTime"],0,self["FadeMax"])
