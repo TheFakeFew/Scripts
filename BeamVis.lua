@@ -203,7 +203,6 @@ end
 	local average = (avg(lastloudnesses)+loud)/1.3
 	loud = loud/average
 
-		print(loud)
 		rem:FireServer(loud)
 	end)]], owner.PlayerGui)
 else
