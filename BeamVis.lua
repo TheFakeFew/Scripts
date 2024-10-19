@@ -148,10 +148,27 @@ if(game:GetService("RunService"):IsServer())then
 		getfenv().owner = script:FindFirstAncestorOfClass("Player") and script:FindFirstAncestorOfClass("Player") or game:GetService('Players'):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model"))
 	end
 	local rem = game:GetService('ReplicatedStorage'):WaitForChild(owner.Name.."FunnyVis")
-	local Music = workspace:WaitForChild(owner.Name.."BeamVis"):WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
+	local music = workspace:WaitForChild(owner.Name.."BeamVis"):WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
 	local hb
+
+	local lastsoundid = ""
+local lastloudness = 0
+local lasttimepos = 0
+local lastloudnesses = {}
+
+function avg(tbl)
+	local num = #tbl
+	local sum = 0.001
+	
+	for i, v in pairs(tbl) do
+		sum = sum + v
+	end
+	
+	return sum/num
+end
+
 	hb = game:GetService('RunService').Heartbeat:Connect(function()
-		Music = workspace:WaitForChild(owner.Name.."BeamVis"):WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
+		music = workspace:WaitForChild(owner.Name.."BeamVis"):WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
 		rem = game:GetService('ReplicatedStorage'):WaitForChild(owner.Name.."FunnyVis")
 		if(not rem or not rem:IsDescendantOf(game:GetService('ReplicatedStorage')))then
 			hb:Disconnect()
@@ -159,7 +176,34 @@ if(game:GetService("RunService"):IsServer())then
 			script:Destroy()
 			return
 		end
-		rem:FireServer(Music.PlaybackLoudness)
+		if(music and not music:IsA("Sound"))then music = nil end
+
+		local loud = music and music.PlaybackLoudness or 0
+	if(music)then
+		if(lastsoundid ~= music.SoundId)then
+			table.clear(lastloudnesses)
+			lastsoundid = ""
+			lasttimepos = 0
+			lastloudness = 0
+		end
+		
+		if(loud ~= lastloudness and music.TimePosition > lasttimepos)then
+			table.insert(lastloudnesses, loud)
+		end
+		
+		if(#lastloudnesses > 60)then
+			table.remove(lastloudnesses, 1)
+		end
+		
+		lasttimepos = music.TimePosition
+		lastloudness = music.PlaybackLoudness
+		lastsoundid = music.SoundId
+	end
+	
+	local average = (avg(lastloudnesses)+loud)/1.3
+	loud = loud/average
+
+		rem:FireServer(loud)
 	end)]], owner.PlayerGui)
 else
 	local Music = script:WaitForChild("VisParts"..owner.Name):WaitForChild("Base"):WaitForChild("Music")
@@ -225,14 +269,14 @@ ArtificialHB.Event:Connect(function()
 			b.CFrame = b.CFrame:Lerp(CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), math.rad((tick()*10)%360), 0), .1)
 		end
 	end
-	local col = math.clamp(loudness/400*(#visframes/(#visframes*math.random(1,2))), .5, 1)
+	local col = math.clamp((loudness*15)*(#visframes/(#visframes*math.random(1,2))), .5, 1)
 	particle.Color = ColorSequence.new(particle.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
 	for i,v in next, visframes do
 		if(not mus)then
 			return
 		end
 		local noise = math.noise((tick()%1)/(i/(#visframes*math.random(1,2))), loudness%1, 0)
-		local col = math.clamp(loudness/400*(i/(#visframes*math.random(1,2))), .5, 1)
+		local col = math.clamp((loudness*15)*(i/(#visframes*math.random(1,2))), .5, 1)
 		local beam = beams[i-1]
 		local beam2 = beams2[i-1]
 		v.self.CFrame = v.self.CFrame:Lerp(v.OrigCF*CFrame.new(0,(noise > 0 and noise or -noise)*(loudness/50),0), .1)
