@@ -280,7 +280,7 @@ ArtificialHB.Event:Connect(function()
 		local col = math.clamp((loudness*50)*(i/(#visframes*math.random(1,2))), .5, 1)
 		local beam = beams[i-1]
 		local beam2 = beams2[i-1]
-		v.self.CFrame = v.self.CFrame:Lerp(v.OrigCF*CFrame.new(0,(noise > 0 and noise or -noise)*(loudness*10),0), .1)
+		v.self.CFrame = v.self.CFrame:Lerp(v.OrigCF*CFrame.new(0,(noise > 0 and noise or -noise)*(loudness*3),0), .1)
 		if(beam)then
 			beam.Color = ColorSequence.new(beam.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
 			beam2.Color = ColorSequence.new(beam2.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
