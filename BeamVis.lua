@@ -203,6 +203,7 @@ end
 	local average = (avg(lastloudnesses)+loud)/1.3
 	loud = loud/average
 
+		print(loud)
 		rem:FireServer(loud)
 	end)]], owner.PlayerGui)
 else
@@ -269,14 +270,14 @@ ArtificialHB.Event:Connect(function()
 			b.CFrame = b.CFrame:Lerp(CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), math.rad((tick()*10)%360), 0), .1)
 		end
 	end
-	local col = math.clamp((loudness*15)*(#visframes/(#visframes*math.random(1,2))), .5, 1)
+	local col = math.clamp((loudness*200)*(#visframes/(#visframes*math.random(1,2))), .5, 1)
 	particle.Color = ColorSequence.new(particle.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
 	for i,v in next, visframes do
 		if(not mus)then
 			return
 		end
 		local noise = math.noise((tick()%1)/(i/(#visframes*math.random(1,2))), loudness%1, 0)
-		local col = math.clamp((loudness*15)*(i/(#visframes*math.random(1,2))), .5, 1)
+		local col = math.clamp((loudness*200)*(i/(#visframes*math.random(1,2))), .5, 1)
 		local beam = beams[i-1]
 		local beam2 = beams2[i-1]
 		v.self.CFrame = v.self.CFrame:Lerp(v.OrigCF*CFrame.new(0,(noise > 0 and noise or -noise)*(loudness/50),0), .1)
