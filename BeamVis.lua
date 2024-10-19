@@ -270,17 +270,17 @@ ArtificialHB.Event:Connect(function()
 			b.CFrame = b.CFrame:Lerp(CFrame.new(ray.Position, ray.Position + ray.Normal) * CFrame.Angles(math.rad(-90), math.rad((tick()*10)%360), 0), .1)
 		end
 	end
-	local col = math.clamp((loudness*50)*(#visframes/(#visframes*math.random(1,2))), .5, 1)
+	local col = math.clamp((loudness*20)*(#visframes/(#visframes*math.random(1,2))), .5, 1)
 	particle.Color = ColorSequence.new(particle.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
 	for i,v in next, visframes do
 		if(not mus)then
 			return
 		end
 		local noise = math.noise((tick()%1)/(i/(#visframes*math.random(1,2))), loudness%1, 0)
-		local col = math.clamp((loudness*50)*(i/(#visframes*math.random(1,2))), .5, 1)
+		local col = math.clamp((loudness*20)*(i/(#visframes*math.random(1,2))), .5, 1)
 		local beam = beams[i-1]
 		local beam2 = beams2[i-1]
-		v.self.CFrame = v.self.CFrame:Lerp(v.OrigCF*CFrame.new(0,(noise > 0 and noise or -noise)*(loudness*50),0), .1)
+		v.self.CFrame = v.self.CFrame:Lerp(v.OrigCF*CFrame.new(0,(noise > 0 and noise or -noise)*(loudness*20),0), .1)
 		if(beam)then
 			beam.Color = ColorSequence.new(beam.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
 			beam2.Color = ColorSequence.new(beam2.Color.Keypoints[1].Value:Lerp(Color3.fromHSV(tick()%1, col, col), .1))
