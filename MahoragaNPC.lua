@@ -1940,6 +1940,7 @@ while task.wait(.5) do
 
 	local closestRoot, distance = getClosestRoot()
 	if(closestRoot)then
+		mhit = closestRoot.Position
 		tryAttack(distance)
 		raga:FindFirstChildOfClass("Humanoid"):MoveTo(closestRoot.Position)
 	end
