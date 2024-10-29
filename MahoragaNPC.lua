@@ -986,7 +986,7 @@ end
 -- // https://devforum.roblox.com/t/the-ultimate-guide-to-custom-loadinghealth-bars/1323459 - op post
 
 local function hp_change(h)
-	
+
 end
 
 -- // moves
@@ -1839,6 +1839,8 @@ raga.Humanoid.Running:Connect(function(spd)
 	end
 end)
 
+local halted = false
+
 re.Event:Connect(function(args)
 	if args.Action == "RushAttack" then
 		rush_attack()
@@ -1850,6 +1852,10 @@ re.Event:Connect(function(args)
 		divine_hook()
 	elseif args.Action == "WorldSlash" then
 		world_slash()
+	elseif(args.Action == "Halt")then
+		halted = true
+	elseif(args.Action == "Resume")then
+		halted = false
 	end
 end)
 
@@ -1930,6 +1936,8 @@ local function tryAttack(distance)
 end
 
 while task.wait(.5) do
+	if(halted)then continue end	
+
 	local closestRoot, distance = getClosestRoot()
 	if(closestRoot)then
 		tryAttack(distance)
