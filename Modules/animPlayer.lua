@@ -416,8 +416,6 @@ local MethodLockEditingTable = {
 module.AutoGetMotor6D = AutoGetMotor6D
 module.KeyFrameSequanceToTable = ConvertToTable
 
-local convertcache = {}
-
 function module.new(Motor6DTable:Model|{},KeyFrameSequance:KeyframeSequence|{},AnimationGroup:ModuleScript?,Settings:SettingsType,Motor6DorBone:Motor6DorBones):AnimType
 	local self = setmetatable({} :: AnimType,module)
 	self["Looped"] = false;
@@ -435,11 +433,10 @@ function module.new(Motor6DTable:Model|{},KeyFrameSequance:KeyframeSequence|{},A
 	end
 
 	if typeof(KeyFrameSequance)=="Instance" and KeyFrameSequance:IsA("KeyframeSequence") then
-		local Animation,Looped,Priority = convertcache[KeyframeSequence] and table.unpack(convertcache[KeyFrameSequance]) or ConvertToTable(KeyFrameSequance)
+		local Animation,Looped,Priority = ConvertToTable(KeyFrameSequance)
 		self.Animation = Animation
 		self["Priority"] = Priority
 		self["Looped"] = Looped
-		convertcache[KeyFrameSequance] = {Animation, Looped, Priority}
 
 	elseif typeof(KeyFrameSequance)=="table" then
 		self.Animation = KeyFrameSequance
