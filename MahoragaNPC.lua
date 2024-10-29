@@ -1924,10 +1924,10 @@ raga:SetAttribute("OWS", (dbs.Run and 48 or 18))
 change()
 
 local function tryAttack(distance)
-	local name = attacknames[math.random(#attacknames)]
+	local name = attacknames[Random.new():NextInteger(1, #attacknames)]
 	local attack = attacks[name]
 	if(attack.Range > distance)then
-		if(math.random(1, attack.Chance) == 1)then
+		if(Random.new():NextInteger(1, attack.Chance) == 1)then
 			re:Fire({Action = name})
 		else
 			tryAttack(distance)
