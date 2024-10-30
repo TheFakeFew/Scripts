@@ -1879,9 +1879,58 @@ end
 
 -- // https://devforum.roblox.com/t/the-ultimate-guide-to-custom-loadinghealth-bars/1323459 - op post
 
-local function hp_change(h)
-
+local function sound(par, id, vol, pit)
+    local s = Instance.new("Sound", par)
+    s.SoundId = "rbxassetid://"..id
+    s.Volume = vol
+    s.Pitch = pit
+    s.PlayOnRemove = true
+    s:Destroy()
 end
+
+local timesincelastattack = tick()
+local lastadapttick = tick()
+
+local oldhp = raga.Humanoid.Health
+local debounce = false
+local function hp_change(newhp)
+	task.defer(function()
+		local hplossraw = (oldhp - newhp)
+		local hploss = hplossraw/adapt
+		if(hploss <= 0)then oldhp = humanoid.Health return end
+
+		timesincelastattack = tick()
+
+		if(hploss < 1 or adapt > (hplossraw/5))then
+			hploss = 0
+		end
+
+		if(not debounce and hploss ~= 0)then
+			sound(raga.Humanoid.RootPart, game.PlaceId == 11510416200 and 74152281603818 or 112517706425993, 1, 1)
+
+			debounce = true
+			task.delay(.6, function()
+				debounce = false
+			end)
+			
+			adapt += 1
+		end
+
+		humanoid.Health = oldhp - hploss
+		oldhp = humanoid.Health
+	end)
+end
+
+task.spawn(function()
+	while task.wait(1) do
+		if(tick() - timesincelastattack >= 30)then
+            if(tick() - lastadapttick >= 1 and adapt > 1)then
+                adapt -= 1
+                lastadapttick = tick()
+            end
+        end
+	end
+end)
 
 -- // moves
 
