@@ -1893,6 +1893,8 @@ local lastadapttick = tick()
 
 local oldhp = raga.Humanoid.Health
 local debounce = false
+
+local adapt = 1
 local function hp_change(newhp)
 	task.defer(function()
 		local hplossraw = (oldhp - newhp)
