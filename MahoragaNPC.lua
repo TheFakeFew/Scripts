@@ -2777,11 +2777,11 @@ local attacks = {
 	},
 	DivineHook = {
 		Range = 12,
-		Chance = 7
+		Chance = 4
 	},
 	WorldSlash = {
 		Range = 500,
-		Chance = 25
+		Chance = 50
 	}
 }
 
