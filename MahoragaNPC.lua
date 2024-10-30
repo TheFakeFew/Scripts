@@ -1892,14 +1892,14 @@ local timesincelastattack = tick()
 local lastadapttick = tick()
 
 local oldhp = raga.Humanoid.Health
-local debounce = false
+local adaptdebounce = false
 
 local adapt = 1
 local function hp_change(newhp)
 	task.defer(function()
 		local hplossraw = (oldhp - newhp)
 		local hploss = hplossraw/adapt
-		if(hploss <= 0)then oldhp = humanoid.Health return end
+		if(hploss <= 0)then oldhp = raga:FindFirstChildOfClass("Humanoid").Health return end
 
 		timesincelastattack = tick()
 
@@ -1908,18 +1908,18 @@ local function hp_change(newhp)
 		end
 
 		if(not debounce and hploss ~= 0)then
-			sound(raga.Humanoid.RootPart, game.PlaceId == 11510416200 and 74152281603818 or 112517706425993, 1, 1)
+			sound(raga:FindFirstChildOfClass("Humanoid").RootPart, game.PlaceId == 11510416200 and 74152281603818 or 112517706425993, 1, 1)
 
-			debounce = true
+			adaptdebounce = true
 			task.delay(.6, function()
-				debounce = false
+				adaptdebounce = false
 			end)
 			
 			adapt += 1
 		end
 
-		humanoid.Health = oldhp - hploss
-		oldhp = humanoid.Health
+		raga:FindFirstChildOfClass("Humanoid").Health = oldhp - hploss
+		oldhp = raga:FindFirstChildOfClass("Humanoid").Health
 	end)
 end
 
