@@ -1021,11 +1021,9 @@ local function ragdoll(c, t)
 end
 
 raga.Parent = script
-raga.Humanoid.HipHeight = 8.4
-raga.Humanoid.JumpHeight = 75
-raga.Humanoid.AutoRotate = false
+raga.Humanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+raga.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
 raga.HumanoidRootPart.Anchored = true
-raga.HumanoidRootPart.Massless = false
 raga.HumanoidRootPart.CFrame = CFrame.new(10e4, 10e4, 10e4)
 
 -- // animation stuff
@@ -2810,14 +2808,14 @@ local function getClosestRoot()
 	return root, closest
 end
 
-task.wait(.5)
-
 dbs.Run = true
 anims[dbs.Run and "Walk" or "Run"]:Stop()
 anims[dbs.Run and "Run" or "Walk"]:Play((dbs.Run and .6 or 1))
 
 raga:SetAttribute("OWS", (dbs.Run and 48 or 18))
 change()
+
+task.wait(.5)
 
 local function tryAttack(distance)
 	local name = attacknames[Random.new():NextInteger(1, #attacknames)]
