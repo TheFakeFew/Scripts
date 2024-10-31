@@ -1505,7 +1505,7 @@ local function hb(pt, cf, size, type, bl)
 		local hum = findhum(hit)
 
 		if hum and hum.RootPart and hum.Health > 0 then
-			if not table.find(victims, hit:FindFirstAncestorOfClass("Model")) then
+			if not table.find(victims, hit:FindFirstAncestorOfClass("Model")) and hit:FindFirstAncestorOfClass("Model") ~= char then
 				table.insert(victims, hit:FindFirstAncestorOfClass("Model"))
 			end
 		end
@@ -1781,6 +1781,7 @@ local function attack(tbl, stats, ep)
 
 	for _, victim in pairs(victims) do
 		coroutine.wrap(function()
+			if(victim == char)then return end
 			local thum, hrp = victim:FindFirstChildWhichIsA("Humanoid"), victim:FindFirstChild("HumanoidRootPart")
 
 			if thum.Health - dmg <= 0 and stats.DoNotKill then
@@ -2519,7 +2520,10 @@ local function world_slash()
 			task.spawn(function()
 				for i = 1, 90, 10 do
 					for j = 0, 9 do
+						if(not debris)then continue end
 						local p = debris:FindFirstChild(tostring(i + j))
+						if(not p)then continue end
+
 						local goal = p.Position + Vector3.yAxis * 485
 						local result = workspace:Raycast(goal + Vector3.yAxis * 50, Vector3.yAxis * -256, params)
 
@@ -2555,7 +2559,7 @@ local function world_slash()
 
 		local params = OverlapParams.new()
 		params.FilterType = Enum.RaycastFilterType.Exclude
-		params.FilterDescendantsInstances = {script, workspace:FindFirstChild("Base"), char}
+		params.FilterDescendantsInstances = {script, workspace:FindFirstChild("Base"), workspace:FindFirstChild("Baseplate"), char}
 
 		local dismantle = true
 		local cf, size = mdl:GetBoundingBox()
@@ -2879,6 +2883,26 @@ local function tryAttack(distance)
 		end
 	end
 end
+
+task.spawn(function()
+	local timestunned = 0
+	while task.wait(1) do
+		if(dbs.Stunned)then
+			timestunned += 1
+		else
+			timestunned = 0
+		end
+
+		if(timestunned > 8)then
+			dbs.Stunned = false
+			raga.Humanoid.AutoRotate = true
+			for _, name in next, attacknames do
+				dbs[name] = false
+			end
+			change()
+		end
+	end
+end)
 
 while task.wait(.3) do
 	if(halted)then continue end	
