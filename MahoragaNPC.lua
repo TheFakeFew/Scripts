@@ -2848,7 +2848,7 @@ local function getClosestRoot()
 	local root = nil
 	local closest = math.huge
 	for i, v in next, workspace:GetDescendants() do
-		if(v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") and v:FindFirstChildOfClass("Humanoid").Health > 0 and v:FindFirstChild("HumanoidRootPart") and v ~= char)then
+		if(v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") and v:FindFirstChildOfClass("Humanoid").Health > 0 and v:FindFirstChild("HumanoidRootPart") and v ~= raga and v ~= char)then
 			local rootpart = v:FindFirstChild("HumanoidRootPart")
 			if((rootpart.Position - raga.HumanoidRootPart.Position).Magnitude < closest)then
 				root = rootpart
