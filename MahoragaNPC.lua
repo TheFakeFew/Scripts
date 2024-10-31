@@ -2902,7 +2902,10 @@ task.spawn(function()
 			change()
 		end
 
-		raga.Humanoid.Sit = false
+		if(raga.Humanoid.Sit)then
+			raga.Humanoid.Sit = false
+			raga.Humanoid.Jump = true
+		end
 	end
 end)
 
