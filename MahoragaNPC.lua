@@ -1537,9 +1537,9 @@ local function stun(hum, t)
 
 		local mdl = hum:FindFirstAncestorOfClass("Model")
 
-		local ows = hum:GetAttribute("OWS") or raga.Humanoid.WalkSpeed
+		local ows = hum:GetAttribute("OWS") or hum.WalkSpeed
 		hum:SetAttribute("OWS", ows)
-		raga.Humanoid.WalkSpeed = .5
+		hum.WalkSpeed = .5
 
 		mdl:SetAttribute("Stunned", true)
 
@@ -1551,7 +1551,7 @@ local function stun(hum, t)
 			local thread = task.delay(t, function()
 				mdl:SetAttribute("Stunned", false)
 
-				raga.Humanoid.WalkSpeed = ows
+				hum.WalkSpeed = ows
 				stuns[hum][1]:Disconnect()
 			end)
 
@@ -2847,7 +2847,7 @@ local attacknames = {
 local function getClosestRoot()
 	local root = nil
 	local closest = math.huge
-	for i, v in next, workspace:GetChildren() do
+	for i, v in next, workspace:GetDescendants() do
 		if(v:IsA("Model") and v:FindFirstChildOfClass("Humanoid") and v:FindFirstChildOfClass("Humanoid").Health > 0 and v:FindFirstChild("HumanoidRootPart") and v ~= char)then
 			local rootpart = v:FindFirstChild("HumanoidRootPart")
 			if((rootpart.Position - raga.HumanoidRootPart.Position).Magnitude < closest)then
@@ -2880,13 +2880,16 @@ local function tryAttack(distance)
 	end
 end
 
-while task.wait(.5) do
+while task.wait(.3) do
 	if(halted)then continue end	
 
-	local closestRoot, distance = getClosestRoot()
-	if(closestRoot)then
-		mhit = closestRoot.Position
-		tryAttack(distance)
-		raga:FindFirstChildOfClass("Humanoid"):MoveTo(closestRoot.Position)
-	end
+	task.spawn(pcall, function()
+		local closestRoot, distance = getClosestRoot()
+		if(closestRoot)then
+			mhit = closestRoot.Position
+			tryAttack(distance)
+
+			raga:FindFirstChildOfClass("Humanoid"):MoveTo(closestRoot.Position)
+		end
+	end)
 end
