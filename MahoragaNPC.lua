@@ -2901,6 +2901,8 @@ task.spawn(function()
 			end
 			change()
 		end
+
+		raga.Humanoid.Sit = false
 	end
 end)
 
