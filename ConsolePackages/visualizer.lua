@@ -200,9 +200,7 @@ if(should)then
         if(send%5 == 0)then
             local spectrumforsend = {}
             for i, v in next, spectrum do
-                if(v>=.025)then
-                    spectrumforsend[i] = math.floor(v)
-                end
+                spectrumforsend[i] = math.round(v)
             end
         
             spectrumforsend = averagetbl(spectrumforsend, 8)
