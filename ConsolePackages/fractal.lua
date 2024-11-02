@@ -1,9 +1,13 @@
 return {
-    func = function(type, iterations)
+    func = function(type, iterations, angle)
         if(not tonumber(iterations))then
             iterations = 5
         end
+        if(not tonumber(angle))then
+            angle = 25
+        end
         iterations = tonumber(iterations)
+        angle = tonumber(angle)
 
         local done = false
 
@@ -124,7 +128,7 @@ return {
             listlayout.Parent = nil
             clearoutput()
 
-            drawFractalTree(UDim2.new(0.5, 0, 1, 0), 200, 20, 25, iterations, true)
+            drawFractalTree(UDim2.new(0.5, 0, 1, 0), 200, 20, angle, iterations, true)
         elseif(type == "triangle")then
             listlayout.Parent = nil
             clearoutput()
