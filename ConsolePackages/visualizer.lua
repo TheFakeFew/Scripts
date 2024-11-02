@@ -75,7 +75,7 @@ return {
                 str = str .. "\n"
             end
             
-            clear()
+            clearoutput()
             local t = addText(str)
             t.TextSize = 28
             t.TextWrapped = false
