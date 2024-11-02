@@ -68,11 +68,6 @@ return {
             drawFractalTree(startPos, length*.7, width * .7, angle, depth - 1, false, trunk)
         end
         
-        local function createFractalTree()
-            local initialPos = UDim2.new(0.5, 0, 1, 0)
-            drawFractalTree(initialPos, 200, 20, 25, iterations, true)
-        end
-        
         local function drawSierpinskiTriangle(p1, p2, p3, depth)
             index += 1
             if depth == 0 then
@@ -98,15 +93,6 @@ return {
             drawSierpinskiTriangle(p1, mid1, mid3, depth - 1)
             drawSierpinskiTriangle(mid1, p2, mid2, depth - 1)
             drawSierpinskiTriangle(mid3, mid2, p3, depth - 1)
-        end
-
-        local function createSierpinskiTriangle()
-            local points = {
-                Vector2.new(400, 800),
-                Vector2.new(800, 800),
-                Vector2.new(600, 400)
-            }
-            drawSierpinskiTriangle(points[1], points[2], points[3], iterations)
         end
         
         local function mandelbrotColor(i, maxIterations)
@@ -140,23 +126,27 @@ return {
                 task.wait()
             end
         end
-
-        local function createMandelbrot()
-            drawMandelbrot(300, 300, 3)
-        end
         
         if(type == "tree")then
             listlayout.Parent = nil
             clearoutput()
+
+            drawFractalTree(UDim2.new(0.5, 0, 1, 0), 200, 20, 25, iterations, true)
             createFractalTree()
         elseif(type == "triangle")then
             listlayout.Parent = nil
             clearoutput()
-            createSierpinskiTriangle()
+
+            local points = {
+                Vector2.new(400, 800),
+                Vector2.new(800, 800),
+                Vector2.new(600, 400)
+            }
+            drawSierpinskiTriangle(points[1], points[2], points[3], iterations)
         elseif(type == "mandelbrot")then
             listlayout.Parent = nil
             clearoutput()
-            createMandelbrot()
+            drawMandelbrot(300, 300, 3)
         else
             errortext("invalid fractal type. did you mean? (tree, triangle, mandelbrot)")
             return
