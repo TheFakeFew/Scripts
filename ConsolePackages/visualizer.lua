@@ -33,10 +33,10 @@ return {
         end)
 
         gracefulkeybind("v", true, function()
-            mus.Pitch += .2
+            music.Pitch += .2
         end)
         gracefulkeybind("b", true, function()
-            mus.Pitch -= .2
+            music.Pitch -= .2
         end)
 
         gracefulkeybind("n", true, function()
@@ -82,7 +82,7 @@ return {
 
             local heights = {}
             for i = 1, 64 do
-                local height = spec[i] or 0
+                local height = (spec[i] or 0) * (1+sensitivity)
                 heights[i] = min(height, maxHeight)
             end
 
@@ -198,7 +198,7 @@ if(should)then
         if(send%5 == 0)then
             local spectrumforsend = {}
             for i, v in next, spectrum do
-                if(v>=1)then
+                if(v>=.025)then
                     spectrumforsend[i] = math.floor(v)
                 end
             end
