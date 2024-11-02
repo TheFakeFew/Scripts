@@ -57,7 +57,7 @@ return {
         local vistext = addText("loading...")
         vistext.TextSize = 40
         vistext.TextWrapped = false
-        local t = addText("[^Z] Volume Up  [^X] Volume Down  [^V] Pitch Up  [^B] Pitch Down  [^N] Sensitivity Up  [^M] Sensitivity Down  [^C] Exit")
+        local t = addText("[^Z] Volume Up  [^X] Volume Down  [^V] Pitch Up  [^B] Pitch Down\n[^N] Sensitivity Up  [^M] Sensitivity Down  [^C] Exit")
         t.TextXAlignment = "Center"
         
         r.OnServerEvent:Connect(function(p, compress)
