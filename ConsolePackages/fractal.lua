@@ -123,7 +123,6 @@ return {
             clearoutput()
 
             drawFractalTree(UDim2.new(0.5, 0, 1, 0), 200, 20, 25, iterations, true)
-            createFractalTree()
         elseif(type == "triangle")then
             listlayout.Parent = nil
             clearoutput()
