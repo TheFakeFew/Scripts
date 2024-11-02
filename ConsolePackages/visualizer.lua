@@ -198,7 +198,7 @@ if(should)then
         lastspectrum = spectrum
         
         if(send%5 == 0)then
-            local spectrumforsend = averagetbl(spectrumforsend, 8)
+            local spectrumforsend = averagetbl(spectrum, 8)
         
             local stringify = ""
             for i, v in next, spectrumforsend do
