@@ -33,6 +33,12 @@ return {
         local delta = 0
         local lastframe = os.clock()
         local lastsync = tick()
+
+        clearoutput()
+        local vistext = addText("loading...")
+        vistext.TextSize = 28
+        vistext.TextWrapped = false
+        addText("[^Z] Volume Up  [^X] Volume Down  [^C] Exit")
         
         r.OnServerEvent:Connect(function(p, compress)
             if(p ~= owner)then return end
@@ -75,11 +81,7 @@ return {
                 str = str .. "\n"
             end
             
-            clearoutput()
-            local t = addText(str)
-            t.TextSize = 28
-            t.TextWrapped = false
-            addText("[^Z] Volume Up  [^X] Volume Down  [^C] Exit")
+            vistext.Text = str
         end)
         
         local ls = NLS([[
@@ -130,7 +132,7 @@ local lastspectrum = nil
 local lastframe = os.clock()
 local delta = 0
 
-local num = .1
+local num = .3
 
 while game:GetService("RunService").Heartbeat:Wait() do
 delta = delta + (os.clock() - lastframe)
@@ -175,7 +177,7 @@ if(should)then
         end
         lastspectrum = spectrum
         
-        if(send%5 == 0)then
+        if(send%2 == 0)then
             local spectrumforsend = {}
             for i, v in next, spectrum do
                 if(v>=1)then
