@@ -58,7 +58,7 @@ return {
 
             local heights = {}
             for i = 1, 124 do
-                local height = floor(spec[i] or 0)
+                local height = spec[i] or 0
                 heights[i] = min(height, maxHeight)
             end
 
@@ -179,7 +179,7 @@ if(should)then
             local spectrumforsend = {}
             for i, v in next, spectrum do
                 if(v>=1)then
-                    spectrumforsend[i] = v
+                    spectrumforsend[i] = math.floor(v)
                 end
             end
         
