@@ -440,6 +440,10 @@ rem.OnServerEvent:Connect(function(p, type, ...)
 	end
 end)
 
+bindtokey("delete", false, function()
+    console.Parent = console.Parent == nil and script or nil
+end)
+
 local lastcanvassize = Frame.AbsoluteCanvasSize
 game:GetService("RunService").Heartbeat:Connect(function()
 	if(inputdisabled)then
@@ -450,7 +454,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	char = owner.Character
 
 	if(char and char:FindFirstChild("HumanoidRootPart"))then
-		console.CFrame = console.CFrame:Lerp(char:FindFirstChild("HumanoidRootPart").CFrame*CFrame.new(0,2,-4)*CFrame.Angles(0, math.rad(180), 0), .1)
+		console.CFrame = console.CFrame:Lerp(char:FindFirstChild("HumanoidRootPart").CFrame*CFrame.new(0,2+.2*math.cos(tick()/2),-4)*CFrame.Angles(math.rad(2*math.sin(tick())), math.rad(180), math.rad(2*math.cos(tick()))), .1)
 	end
 
 	c.Value = console

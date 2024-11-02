@@ -177,7 +177,7 @@ if(should)then
         end
         lastspectrum = spectrum
         
-        if(send%4 == 0)then
+        if(send%5 == 0)then
             local spectrumforsend = {}
             for i, v in next, spectrum do
                 if(v>=1)then
