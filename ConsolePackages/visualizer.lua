@@ -63,13 +63,13 @@ return {
             local str = ""
 
             local heights = {}
-            for i = 1, 124 do
+            for i = 1, 64 do
                 local height = spec[i] or 0
                 heights[i] = min(height, maxHeight)
             end
 
             for h = maxHeight, 1, -1 do
-                for i = 1, 124 do
+                for i = 1, 64 do
                     if heights[i] >= h then
                         local heightRatio = heights[i] / maxHeight
                         local r, g, b = 255 * heightRatio, 255 * heightRatio / 2, 255 * heightRatio
@@ -185,7 +185,7 @@ if(should)then
                 end
             end
         
-            spectrumforsend = averagetbl(spectrumforsend, 4)
+            spectrumforsend = averagetbl(spectrumforsend, 8)
         
             local stringify = ""
             for i, v in next, spectrumforsend do
