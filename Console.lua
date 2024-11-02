@@ -160,9 +160,10 @@ local function addText(text, color)
 	return tex
 end
 
+local originalerror = error
 local function errortext(text)
 	local t = addText(text, Color3.new(1, .3, .3))
-	task.spawn(error, debug.traceback(text))
+	task.spawn(originalerror, debug.traceback(text))
 	return text, t
 end
 
@@ -212,23 +213,23 @@ commands = {
 			if(method == "list")then
 				addText("fetching...")
 				local contents = game:GetService("HttpService"):GetAsync("https://zv7i.dev/consolepackages")
-				
-				local list = game:GetService("HttpService"):JSONDecode(contents.Body)
+
+				local list = game:GetService("HttpService"):JSONDecode(contents)
 				local packages = {"available packages:"}
 				for i, v in next, list do
 					table.insert(packages, v.name:sub(1, v.name:len()-4))
 				end
-				
+
 				return table.concat(packages, "\n")
 			elseif(method == "install")then
 				local names = {}
-				
+
 				for _, name in next, {...} do
 					addText(`fetching {name}...`)
 					local succ, package = pcall(function()
 						return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/refs/heads/main/ConsolePackages/"..name..".lua")
 					end)
-				
+
 					if(succ)then
 						addText(`installing {name}...`)
 						commands[name] = loadstring(package)()
@@ -239,15 +240,15 @@ commands = {
 
 					table.insert(names, name)
 				end
-				
+
 				return `successfully installed package(s) {table.concat(names, ", ")}`
 			elseif(method == "info")then
 				addText("fetching...")
-				
+
 				local succ, package = pcall(function(...)
 					return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/refs/heads/main/ConsolePackages/".. (...) ..".lua")
 				end, ...)
-				
+
 				if(succ)then
 					local data = loadstring(package)()
 					return (...)..": "..data.description
@@ -281,19 +282,19 @@ local function constuctEnvironment()
 	return setmetatable({
 		commands = commands,
 		runCommand = runCommand,
-		
+
 		addText = addText,
 		TextLabel = TextLabel,
 		console = console,
-		
+
 		clearoutput = clearoutput,
 		threadinstances = threadinstances,
-		
+
 		keybinds = keybinds,
 		bindtokey = bindtokey,
-		
+
 		owner = owner,
-		
+
 		error = errortext,
 		print = function(...)
 			print(...)
@@ -311,7 +312,7 @@ local function constuctEnvironment()
 			end
 			addText(concat, Color3.new(1,.5,0))
 		end,
-		
+
 		handleArgs = handleArgs
 	}, {
 		__index = getfenv(2)
@@ -325,13 +326,13 @@ function runCommand(command, args, truetext)
 			if(not truetext)then
 				return error('no truetext', 2)
 			end
-			
+
 			local vararg = {pcall(setfenv(cmd.func, constuctEnvironment()), truetext:sub(command:len()+3))}
 			if(not vararg[1])then
 				return errortext(vararg[2])
 			end
 			table.remove(vararg, 1)
-			
+
 			if(vararg[1] and typeof(vararg[1]) == "string")then
 				local concat = ""
 				for i, v in next, vararg do
@@ -343,16 +344,16 @@ function runCommand(command, args, truetext)
 				end
 				return addText(concat)
 			end
-			
+
 			return unpack(vararg)
 		end
-		
+
 		local vararg = {pcall(setfenv(cmd.func, constuctEnvironment()), table.unpack(args))}
 		if(not vararg[1])then
 			return errortext(vararg[2])
 		end
 		table.remove(vararg, 1)
-		
+
 		if(vararg[1])then
 			local concat = ""
 			for i, v in next, vararg do
@@ -372,11 +373,11 @@ end
 
 local function onenterpressed(textshown, realtext)
 	addText(textshown)
-	
+
 	local args = handleArgs(realtext)
 	local cmdname = args[1]
 	table.remove(args, 1)
-	
+
 	runCommand(cmdname, args, realtext)
 end
 
@@ -389,14 +390,14 @@ rem.OnServerEvent:Connect(function(p, type, ...)
 	elseif(type == "enter" and not runningcommand and not inputdisabled)then
 		inputdisabled = true
 		rem:FireClient(owner, "disableinput", true)
-		
+
 		runningcommand = task.spawn(onenterpressed, ...)
 		repeat task.wait() until not runningcommand or coroutine.status(runningcommand) ~= "suspended"
 		if(runningcommand)then
 			task.cancel(runningcommand)
 			runningcommand = nil
 		end
-		
+
 		for i, v in next, threadinstances do
 			pcall(function()
 				v:Disconnect()
@@ -405,7 +406,7 @@ rem.OnServerEvent:Connect(function(p, type, ...)
 			pcall(game.Destroy, v)
 		end
 		table.clear(threadinstances)
-		
+
 		inputdisabled = false
 		rem:FireClient(owner, "disableinput", false)
 		rem:FireClient(owner, "capturefocus")
@@ -440,11 +441,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		Input.Visible = true
 	end
 	char = owner.Character
-	
+
 	if(char and char:FindFirstChild("HumanoidRootPart"))then
 		console.CFrame = console.CFrame:Lerp(char:FindFirstChild("HumanoidRootPart").CFrame*CFrame.new(0,2,-4)*CFrame.Angles(0, math.rad(180), 0), .1)
 	end
-	
+
 	c.Value = console
 	if(Frame.AbsoluteCanvasSize ~= lastcanvassize)then
 		lastcanvassize = Frame.AbsoluteCanvasSize
