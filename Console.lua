@@ -461,6 +461,6 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	c.Value = console
 	if(Frame.AbsoluteCanvasSize ~= lastcanvassize)then
 		lastcanvassize = Frame.AbsoluteCanvasSize
-		Frame.CanvasPosition = Vector2.new(0, lastcanvassize.Y + 60)
+		Frame.CanvasPosition = Vector2.new(0, lastcanvassize.Y + 120)
 	end
 end)
