@@ -3,7 +3,7 @@ return {
         --[[
         env:
         commands = {...}
-        runCommand(commandname, {args}, truetext? (nil or "string"))
+        runCommand(commandname, {args}, truetext? (nil or "string")) -- truetext is for commands that use absolute text instead of arguments
         addText(text, color?)
         TextLabel: template textlabel instance
         console: the console part
