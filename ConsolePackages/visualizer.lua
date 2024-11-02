@@ -12,6 +12,7 @@ return {
         end
         
         local split, floor, min = string.split, math.floor, math.min
+        done = false
         
         local music = Instance.new("Sound", console)
         music.Volume = 1
@@ -23,6 +24,7 @@ return {
 
         gracefulkeybind("c", true, function()
             clearoutput()
+            done = true
         end)
 
         gracefulkeybind("z", true, function()
@@ -228,7 +230,7 @@ end]], owner.PlayerGui)
         table.insert(threadinstances, r)
         table.insert(threadinstances, music)
         
-        coroutine.yield()
+        repeat task.wait() until done
     end,
     description = "in console visualizer"
 }
