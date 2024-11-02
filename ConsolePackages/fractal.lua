@@ -53,9 +53,11 @@ return {
             trunk.AnchorPoint = Vector2.new(.5, 1)
             
             if(istrunk)then
+                trunk.AnchorPoint = Vector2.new(.5, 1)
                 trunk.Rotation = 0
                 trunk.Position = startPos
             else
+                trunk.AnchorPoint = Vector2.new(.5 * (angle > 0 and 1 or -1), 1)
                 trunk.Rotation = angle
                 trunk.Position = UDim2.fromScale(2 * (angle > 0 and 1 or -1), 0, 0, 0)
                 trunk.Parent = last
