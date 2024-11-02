@@ -187,7 +187,7 @@ if(should)then
         
             local stringify = ""
             for i, v in next, spectrumforsend do
-                stringify = stringify .. tostring(i) .. ";" .. string.format("%.2f", tostring(v)) .. "|"
+                stringify = stringify .. tostring(i) .. ";" .. string.format("%d", tostring(v)) .. "|"
             end
         
             stringify = stringify:sub(1, stringify:len() - 1)

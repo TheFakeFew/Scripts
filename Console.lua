@@ -62,7 +62,9 @@ game:GetService("UserInputService").InputBegan:Connect(function(io, gpe)
 			input:ReleaseFocus()
 		else
 			if(game:GetService("UserInputService"):GetFocusedTextBox())then
-				game:GetService("UserInputService"):GetFocusedTextBox():ReleaseFocus()
+                pcall(function()
+				    game:GetService("UserInputService"):GetFocusedTextBox():ReleaseFocus()
+                end)
 			end
 			input:CaptureFocus()
 		end
@@ -85,7 +87,9 @@ rem.OnClientEvent:Connect(function(type, data)
 		inputdisabled = data
 	elseif(type == "capturefocus")then
 		if(game:GetService("UserInputService"):GetFocusedTextBox())then
-			game:GetService("UserInputService"):GetFocusedTextBox():ReleaseFocus()
+            pcall(function()
+			    game:GetService("UserInputService"):GetFocusedTextBox():ReleaseFocus()
+            end)
 		end
 		input:CaptureFocus()
 	end
