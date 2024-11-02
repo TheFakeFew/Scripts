@@ -19,14 +19,31 @@ return {
         music.Looped = true
         music:Resume()
 
+        local sensitivity = 0
+
+        gracefulkeybind("c", true, function()
+            clearoutput()
+        end)
+
         gracefulkeybind("z", true, function()
             music.Volume += 1
         end)
         gracefulkeybind("x", true, function()
             music.Volume -= 1
         end)
-        gracefulkeybind("c", true, function()
-            clearoutput()
+
+        gracefulkeybind("v", true, function()
+            mus.Pitch += .2
+        end)
+        gracefulkeybind("b", true, function()
+            mus.Pitch -= .2
+        end)
+
+        gracefulkeybind("n", true, function()
+            sensitivity += .5
+        end)
+        gracefulkeybind("m", true, function()
+            sensitivity -= .5
         end)
         
         local r = Instance.new("RemoteEvent", script)
@@ -38,7 +55,8 @@ return {
         local vistext = addText("loading...")
         vistext.TextSize = 40
         vistext.TextWrapped = false
-        addText("[^Z] Volume Up  [^X] Volume Down  [^C] Exit")
+        local t = addText("[^Z] Volume Up  [^X] Volume Down  [^V] Pitch Up  [^B] Pitch Down  [^N] Sensitivity Up  [^M] Sensitivity Down  [^C] Exit")
+        t.TextXAlignment = "Center"
         
         r.OnServerEvent:Connect(function(p, compress)
             if(p ~= owner)then return end
