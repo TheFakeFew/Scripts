@@ -28,10 +28,10 @@ return {
         end)
 
         gracefulkeybind("z", true, function()
-            music.Volume += 1
+            music.Volume += .5
         end)
         gracefulkeybind("x", true, function()
-            music.Volume -= 1
+            music.Volume -= .5
         end)
 
         gracefulkeybind("v", true, function()
