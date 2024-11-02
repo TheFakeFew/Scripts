@@ -211,23 +211,7 @@ commands = {
 		func = function(method, ...)
 			if(method == "list")then
 				addText("fetching...")
-				local contents = game:GetService("HttpService"):RequestAsync({
-					Url = "https://zv7i.dev/zproxy",
-					Method = "POST",
-					Headers = {
-						["Content-Type"] = "application/json",
-					},
-					Body = game:GetService("HttpService"):JSONEncode{
-						["url"] = "https://api.github.com/repos/TheFakeFew/Scripts/contents/ConsolePackages",
-						["reqheaders"] = {
-							Accept = "application/vnd.github+json",
-							Authorization = "\66\101\97\114\101\114\32\103\104\112\95\98\109\114\67\114\68\51\85\80\112\73\50\83\75\78\48\69\48\109\122\122\75\50\72\49\51\119\56\73\117\48\83\112\102\53\66",
-							["X-GitHub-Api-Version"] = "2022-11-28"
-						},
-						["reqtype"] = "text",
-						["reqmethod"] = "GET"
-					}
-				})
+				local contents = game:GetService("HttpService"):GetAsync("https://zv7i.dev/consolepackages")
 				
 				local list = game:GetService("HttpService"):JSONDecode(contents.Body)
 				local packages = {"available packages:"}
