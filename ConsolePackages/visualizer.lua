@@ -36,7 +36,7 @@ return {
 
         clearoutput()
         local vistext = addText("loading...")
-        vistext.TextSize = 40
+        vistext.TextSize = 42
         vistext.TextWrapped = false
         addText("[^Z] Volume Up  [^X] Volume Down  [^C] Exit")
         
