@@ -188,6 +188,7 @@ local function bindtokey(key, ctrl, func)
 	keybinds[key] = {func = func, ctrl = ctrl}
 end
 
+local frozen = false
 local threadinstances = {}
 local commands
 commands = {
@@ -240,7 +241,7 @@ commands = {
 
 					if(succ)then
 						addText(`installing {name}...`)
-						commands[name] = loadstring(package)()
+						commands[name] = loadstring(package, "="..name)()
 					else
 						error(`fetching package {name} errored (does it exist?) [{package}]`)
 						return
@@ -258,7 +259,7 @@ commands = {
 				end, ...)
 
 				if(succ)then
-					local data = loadstring(package)()
+					local data = loadstring(package, "="..(...))()
 					return (...)..": "..data.description
 				else
 					error(`fetching package {...} errored (does it exist?) [{package}]`)
@@ -283,6 +284,12 @@ commands = {
 			return table.concat(concat, "\n")
 		end,
 		description = "lists commands"
+	},
+	["freeze"] = {
+		func = function()
+			frozen = not frozen
+		end,
+		description = "freezes/unfreezes console movement"
 	}
 }
 
@@ -441,8 +448,27 @@ rem.OnServerEvent:Connect(function(p, type, ...)
 	end
 end)
 
+local origsize = console.Size
 bindtokey("delete", false, function()
-    console.Parent = console.Parent == nil and script or nil
+	if(console.Parent == nil)then
+		console.Parent = console.Parent == nil and script or nil
+		local tw = game:GetService('TweenService'):Create(console,TweenInfo.new(1),{
+			CFrame = console.CFrame,
+			Size = origsize,
+			Transparency = .1
+		})
+		tw:Play()
+		tw.Completed:Wait()
+	else
+		local tw = game:GetService('TweenService'):Create(console,TweenInfo.new(1),{
+			Size = Vector3.new(0,0,0),
+			Orientation = Vector3.new(0,0,math.random(-360,360)),
+			Transparency = 1
+		})
+		tw:Play()
+		tw.Completed:Wait()
+		console.Parent = console.Parent == nil and script or nil
+	end
 end)
 
 local lastcanvassize = Frame.AbsoluteCanvasSize
@@ -454,8 +480,8 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	end
 	char = owner.Character
 
-	if(char and char:FindFirstChild("HumanoidRootPart"))then
-		console.CFrame = console.CFrame:Lerp(char:FindFirstChild("HumanoidRootPart").CFrame*CFrame.new(0,2+.2*math.cos(tick()/2),-4)*CFrame.Angles(math.rad(2*math.sin(tick())), math.rad(180), math.rad(2*math.cos(tick()))), .1)
+	if(char and char:FindFirstChild("HumanoidRootPart") and not frozen)then
+		console.CFrame = console.CFrame:Lerp(char:FindFirstChild("HumanoidRootPart").CFrame*CFrame.new(0+.3*math.sin(tick()/2),2.5+.3*math.sin(tick()/2.5),-4.5+.3*math.sin(tick()/3))*CFrame.Angles(math.rad(0+2*math.sin(tick()/5)),math.rad(180),math.rad(0+2*math.sin(tick()/3))), .1)
 	end
 
 	c.Value = console
