@@ -72,6 +72,7 @@ game:GetService("UserInputService").InputBegan:Connect(function(io, gpe)
 		rem:FireServer("sigterm", input.Parent.Text..input.Text:sub(input.Parent.ContentText:len()+1))
 		input.Text = ""
 	else
+        if(gpe)then return end
 		rem:FireServer("key", io.KeyCode.Name:lower(), game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl))
 	end
 end)
