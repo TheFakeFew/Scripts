@@ -59,7 +59,7 @@ return {
                 spec[tonumber(data2[1])] = tonumber(data2[2])
             end
             
-            local maxHeight = 30
+            local maxHeight = 20
             local str = ""
 
             local heights = {}
