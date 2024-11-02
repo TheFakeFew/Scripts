@@ -130,7 +130,7 @@ local lastspectrum = nil
 local lastframe = os.clock()
 local delta = 0
 
-local num = .3
+local num = .2
 
 while game:GetService("RunService").Heartbeat:Wait() do
 delta = delta + (os.clock() - lastframe)
@@ -175,7 +175,7 @@ if(should)then
         end
         lastspectrum = spectrum
         
-        if(send%3 == 0)then
+        if(send%5 == 0)then
             local spectrumforsend = {}
             for i, v in next, spectrum do
                 if(v>=1)then
