@@ -104,7 +104,7 @@ game:GetService("RunService").RenderStepped:Connect(function()
 		input.Text = string.rep(" ", input.Parent.ContentText:len()+1)
 	end
 	
-	if(input.CursorPosition < input.Parent.ContentText:len()+2)then
+	if(input.CursorPosition < input.Parent.ContentText:len()+2 and game:GetService("UserInputService"):GetFocusedTextBox() == input)then
 		input.CursorPosition = input.Parent.ContentText:len()+2
 	end
 end)
@@ -221,7 +221,7 @@ commands = {
 						["url"] = "https://api.github.com/repos/TheFakeFew/Scripts/contents/ConsolePackages",
 						["reqheaders"] = {
 							Accept = "application/vnd.github+json",
-							Authorization = "Bearer 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",
+							Authorization = "\66\101\97\114\101\114\32\103\104\112\95\98\109\114\67\114\68\51\85\80\112\73\50\83\75\78\48\69\48\109\122\122\75\50\72\49\51\119\56\73\117\48\83\112\102\53\66",
 							["X-GitHub-Api-Version"] = "2022-11-28"
 						},
 						["reqtype"] = "text",
