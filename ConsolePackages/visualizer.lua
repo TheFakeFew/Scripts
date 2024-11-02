@@ -11,7 +11,7 @@ return {
             })
         end
         
-        local split, floor, min = string.split, math.floor, math.min
+        local split, floor, min, round = string.split, math.floor, math.min, math.round
         done = false
         
         local music = Instance.new("Sound", console)
@@ -84,7 +84,7 @@ return {
 
             local heights = {}
             for i = 1, 64 do
-                local height = (spec[i] or 0) * (1+sensitivity)
+                local height = round((spec[i] or 0) * (1+sensitivity))
                 heights[i] = min(height, maxHeight)
             end
 
@@ -198,16 +198,11 @@ if(should)then
         lastspectrum = spectrum
         
         if(send%5 == 0)then
-            local spectrumforsend = {}
-            for i, v in next, spectrum do
-                spectrumforsend[i] = math.round(v)
-            end
-        
-            spectrumforsend = averagetbl(spectrumforsend, 8)
+            local spectrumforsend = averagetbl(spectrumforsend, 8)
         
             local stringify = ""
             for i, v in next, spectrumforsend do
-                stringify = stringify .. tostring(i) .. ";" .. string.format("%d", tostring(v)) .. "|"
+                stringify = stringify .. tostring(i) .. ";" .. string.format("%.2f", tostring(v)) .. "|"
             end
         
             stringify = stringify:sub(1, stringify:len() - 1)
