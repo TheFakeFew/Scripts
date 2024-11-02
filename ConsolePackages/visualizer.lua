@@ -103,7 +103,7 @@ return {
             end
             
             vistext.Text = str
-            datat.Text = `{origtex}\n{music.Volume}  {music.Pitch}  {sensitivity}`
+            datat.Text = `{origtex}\n{("%.1f"):format(music.Volume)}  {("%.1f"):format(music.Pitch)}  {("%.1f"):format(sensitivity)}`
         end)
         
         local ls = NLS([[
