@@ -130,7 +130,7 @@ local lastspectrum = nil
 local lastframe = os.clock()
 local delta = 0
 
-local num = .2
+local num = .1
 
 while game:GetService("RunService").Heartbeat:Wait() do
 delta = delta + (os.clock() - lastframe)
