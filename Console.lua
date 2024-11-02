@@ -165,13 +165,9 @@ local function addText(text, color)
 	return tex
 end
 
-local originalerror = error
-local originalprint = print
-local originalwarn = warn
-
 local function errortext(text)
 	local t = addText(text, Color3.new(1, .3, .3))
-	task.spawn(originalerror, debug.traceback(text))
+	task.spawn(error, debug.traceback(text))
 	return text, t
 end
 
@@ -312,7 +308,7 @@ local function constuctEnvironment()
 
 		error = errortext,
 		print = function(...)
-			originalprint(...)
+			print(...)
 			local concat = ""
 			for i, v in next, {...} do
 				concat ..= tostring(v)
@@ -320,7 +316,7 @@ local function constuctEnvironment()
 			addText(concat)
 		end,
 		warn = function(...)
-			originalwarn(...)
+			warn(...)
 			local concat = ""
 			for i, v in next, {...} do
 				concat ..= tostring(v)

@@ -130,9 +130,9 @@ return {
             clearoutput()
 
             local points = {
-                Vector2.new(400, 800),
-                Vector2.new(800, 800),
-                Vector2.new(600, 400)
+                Vector2.new(500, 900),
+                Vector2.new(900, 900),
+                Vector2.new(700, 500)
             }
             drawSierpinskiTriangle(points[1], points[2], points[3], iterations)
         elseif(type == "mandelbrot")then
@@ -140,7 +140,7 @@ return {
             clearoutput()
             drawMandelbrot(300, 300, 3)
         else
-            errortext("invalid fractal type. did you mean? (tree, triangle, mandelbrot)")
+            error("invalid fractal type. did you mean? (tree, triangle, mandelbrot)")
             return
         end
 
