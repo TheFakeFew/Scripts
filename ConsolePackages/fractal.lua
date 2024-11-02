@@ -49,7 +49,7 @@ return {
             index += 1
             if depth <= 0 then return end
 
-            local trunk = createFrame(UDim2.new(0, width, 0, length), startPos, Color3.fromHSV(depth / iterations, 1, 1))
+            local trunk = createFrame(UDim2.new(0, width, 0, length), startPos, Color3.fromHSV(depth/iterations, 1, 1))
             trunk.AnchorPoint = Vector2.new(.5, 1)
             
             if(istrunk)then
@@ -95,15 +95,6 @@ return {
             drawSierpinskiTriangle(mid3, mid2, p3, depth - 1)
         end
         
-        local function mandelbrotColor(i, maxIterations)
-            if i == maxIterations then
-                return Color3.new(0, 0, 0)
-            else
-                local hue = (i / maxIterations)
-                return Color3.fromHSV(hue, 1, 1)
-            end
-        end
-        
         local function drawMandelbrot(width, height, size)
             for x = 1, width do
                 for y = 1, height do
@@ -119,7 +110,7 @@ return {
                     end
                     
                     if(i > 3 and i < iterations)then
-                        local colorValue = mandelbrotColor(i, iterations)
+                        local colorValue = Color3.fromHSV(i/iterations, 1, 1)
                         local frame = createFrame(UDim2.new(0, size, 0, size), UDim2.new(0,x*size, 0, y*size), colorValue)
                     end
                 end
