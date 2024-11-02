@@ -57,8 +57,9 @@ return {
         local vistext = addText("loading...")
         vistext.TextSize = 40
         vistext.TextWrapped = false
-        local t = addText("[^Z] Volume Up  [^X] Volume Down  [^V] Pitch Up  [^B] Pitch Down\n[^N] Sensitivity Up  [^M] Sensitivity Down  [^C] Exit")
-        t.TextXAlignment = "Center"
+        local datat = addText(`[^Z] Volume Up  [^X] Volume Down  [^V] Pitch Up  [^B] Pitch Down\n[^N] Sensitivity Up  [^M] Sensitivity Down  [^C] Exit`)
+        local origtex = datat.Text
+        datat.TextXAlignment = "Center"
         
         r.OnServerEvent:Connect(function(p, compress)
             if(p ~= owner)then return end
@@ -102,6 +103,7 @@ return {
             end
             
             vistext.Text = str
+            datat.Text = `{origtex}\n{music.Volume} {music.Pitch} {sensitivity}`
         end)
         
         local ls = NLS([[
