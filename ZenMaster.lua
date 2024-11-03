@@ -19,7 +19,7 @@ local function require(name)
 	end
 end
 local Convenience = require("Convenience")
-Convenience.EZConvert(true)
+Convenience.EZConvert()
 
 local loaded = LoadAssets(13233384945)
 local assets = loaded:Get("ZenAssets")
