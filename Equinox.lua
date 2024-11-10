@@ -931,9 +931,6 @@ local Animator,AnimConnection=(function()
 			for model, data in next, WeldC0 do
 				for i, v in next, data do
 					i.C0 = v
-					if(MotorData[model][i])then
-						MotorData[model][i].C0 = v
-					end
 				end
 			end
 			
@@ -1191,7 +1188,7 @@ local function KillEffect(Model:Model)
 end
 
 local function Damage(Obj:Humanoid,Damage,CritChance,OriginPlayer,Type,Stats)
-	if(Obj:IsDecendantOf(OwnerCharacter))then return end
+	if(Obj:IsDescendantOf(OwnerCharacter))then return end
 	if not Type then Type='NormalTakeDamage' end
 	if not Damage then Damage=1 end
 	if not CritChance then CritChance=0 end
