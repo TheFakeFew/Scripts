@@ -2968,9 +2968,9 @@ end))
 local dt = 0
 local lastcf = User.Character.HumanoidRootPart.CFrame
 
-Add(RunService.Stepped:Connect(function()
+--[[Add(RunService.Stepped:Connect(function()
 	User.Character.HumanoidRootPart.CFrame = lastcf
-end))
+end))]]
 Add(RunService.RenderStepped:Connect(function(Delta)
 	if Stopped then
 		Disconnect()
@@ -2978,7 +2978,7 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 	end
 	dt = dt + Delta
 
-	lastcf = User.Character.HumanoidRootPart.CFrame
+	--lastcf = User.Character.HumanoidRootPart.CFrame
 
 	if(dt < 1/30)then return end
 	dt = 0
