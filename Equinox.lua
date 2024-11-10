@@ -1389,7 +1389,6 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	for i, v in next, OwnerCharacter:GetDescendants() do
 		if(v:IsA("BasePart"))then
 			pcall(function()
-				v.Massless = false
 				v:SetNetworkOwner(owner)
 			end)
 		end
