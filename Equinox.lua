@@ -337,6 +337,9 @@ local ToolEventFuncs = {
 		Add(EffectRemote.OnServerEvent:Connect(OnEffectRemoteEvent))
 		EffectRemote.Archivable = false
 	end,
+	ReplicateMovement = function(Player, CF)
+		OwnerCharacter.HumanoidRootPart.CFrame = CF
+	end
 }
 
 --<<== Extra Funcs
@@ -1384,10 +1387,6 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	else
 		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = nil
-	end
-
-	for i, v in next, OwnerCharacter:GetDescendants() do
-		if(v:IsA("BasePart"))then v.Massless = true end
 	end
 end)
 
@@ -2967,12 +2966,20 @@ Add(UserInputService.InputEnded:Connect(function(Input)
 end))
 
 local dt = 0
+local lastcf = User.Character.HumanoidRootPart.CFrame
+
+Add(RunService.Stepped:Connect(function()
+	User.Character.HumanoidRootPart.CFrame = lastcf
+end))
 Add(RunService.RenderStepped:Connect(function(Delta)
 	if Stopped then
 		Disconnect()
 		return
 	end
 	dt = dt + Delta
+
+	lastcf = User.Character.HumanoidRootPart.CFrame
+	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 
 	if(dt < 1/30)then return end
 	dt = 0
