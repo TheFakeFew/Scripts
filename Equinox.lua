@@ -2967,7 +2967,7 @@ end))
 
 local dt = 0
 local lastcf = User.Character.HumanoidRootPart.CFrame
-Add(RunService.Heartbeat:Connect(function()
+Add(RunService.Stepped:Connect(function()
 	User.Character.HumanoidRootPart.CFrame = lastcf
 end))
 Add(RunService.RenderStepped:Connect(function(Delta)
