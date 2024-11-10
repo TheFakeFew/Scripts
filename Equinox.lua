@@ -2979,7 +2979,6 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 	dt = dt + Delta
 
 	lastcf = User.Character.HumanoidRootPart.CFrame
-	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 
 	if(dt < 1/30)then return end
 	dt = 0
@@ -2996,6 +2995,7 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 		end
 	end
 
+	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 ]=], scythe)
