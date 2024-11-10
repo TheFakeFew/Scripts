@@ -943,6 +943,13 @@ local Animator,AnimConnection=(function()
 		local jointCache = {}
 
 		local function UpdatePlaying()
+			for model, data in next, MotorData do
+				for i, v in next, data do
+					i.Enabled = true
+					v.Enabled = false
+				end
+			end
+
 			for model, data in next, WeldC0 do
 				for i, v in next, data do
 					i.C0 = v
@@ -994,14 +1001,6 @@ local Animator,AnimConnection=(function()
 							if Animation.Looped then
 								TimeSince = TimeSince%Length
 							else
-								if(Animation.Playing)then
-									for model, data in next, MotorData do
-										for i, v in next, data do
-											i.Enabled = true
-											v.Enabled = false
-										end
-									end
-								end
 								Animation.TimePosition = Length
 								Playing[Model][Animation] = nil
 								Animation.Playing = false
