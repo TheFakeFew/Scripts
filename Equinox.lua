@@ -583,7 +583,7 @@ function FrameEffect(StartPart:{}, StartMesh:{}, Frames:{})
 	end
 	StartPart.CanQuery = false
 	StartPart.CanTouch = false
-	local Part = Instance.new("Part", workspace)
+	local Part = Instance.new("Part", workspace.Terrain)
 	local Mesh = Instance.new("SpecialMesh", Part)
 	for i,v in pairs(StartPart) do
 		pcall(function()
@@ -1580,7 +1580,7 @@ function Slash(CF:CFrame,Rotate:CFrame,Duration:number,Scale:Vector3,Color:(Colo
 	SlashDecal1.Transparency =  Transparency1
 	SlashDecal2.Color3 = Color2
 	SlashDecal2.Transparency =  Transparency2
-	SlashPart.Parent = OwnerCharacter
+	SlashPart.Parent = workspace.Terrain
 
 	local TValue = Instance.new('NumberValue')
 	local NewTween = Tween(TValue,{Duration,Enum.EasingStyle.Circular,Enum.EasingDirection.Out},{Value=Rotate})
