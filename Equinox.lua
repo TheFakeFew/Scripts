@@ -1265,6 +1265,7 @@ local function Damage(Obj:Humanoid,Damage,CritChance,OriginPlayer,Type,Stats)
 end
 
 local function DoStuff(Target:Model,OriginPlayer:Player,ShieldBreak:boolean,Stats:{any},PlayHitSound:boolean,LifeSteal:{any},Type:string)
+	if(Target == OwnerCharacter or Target:IsDescendantOf(OwnerCharacter))then return end
 	if IsA(Target,'BasePart') then
 		Target=FindFirstAncestorOfClass(Target,'Model')
 	end
