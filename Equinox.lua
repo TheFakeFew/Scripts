@@ -1379,7 +1379,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	shield.Size = Vector3.one*(8-.5*math.cos(tick()))
 	w.C0 = CFrame.Angles(math.rad((tick()*20)%360), math.rad((tick()*10)%360), math.rad((tick()*30)%360))
 	
-	if(truehp > OwnerHumanoid.Health)then
+	if(truehp > OwnerHumanoid.MaxHealth)then
 		CombatUI.Health.HealthText.Text = "("..comma_value(tostring(math.floor(truehp - OwnerHumanoid.MaxHealth)))..") "..comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = OwnerCharacter
 	else
