@@ -1369,7 +1369,9 @@ local function comma_value(amount)
 	return formatted
 end
 
+local framei = 0
 game:GetService("RunService").Heartbeat:Connect(function()
+	framei += 1
 	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
 
 	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
@@ -1386,7 +1388,9 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		shield.Parent = nil
 	end
 
-	OwnerCharacter.HumanoidRootPart.CFrame = OwnerCharacter.HumanoidRootPart.CFrame
+	if(framei%5)then
+		OwnerCharacter.HumanoidRootPart.CFrame = OwnerCharacter.HumanoidRootPart.CFrame
+	end
 end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
