@@ -87,6 +87,46 @@ local CombatUI = Decode('AAB5IQlTY3JlZW5HdWkhBE5hbWUhCENvbWJhdFVJIQVGcmFtZSEHQXR
 ..'Bwg3DA0ODxBpEmo6RgAABEYHAAJrBj4ICQwNDg8QPxJAOkgBADtsQkgCAENtH00ERggAAm4GPggNDA0ODxA/EkAcDzpLAQA7bARGCAACbwY+CAkKcAwNDg8QPxJxOk0BADtsQk0CAENWH00sRg8AAnIGBwgJCgsMDQ4PEBoSSy8wMXMzCTR0UnVUD1UPQlACAEN2H013'
 ..'UAEAeHkA')[1]
 	
+	
+local Cape = Decode('AACbIQRQYXJ0IQROYW1lIQRDYXBlIQhBbmNob3JlZCIhDUJvdHRvbVN1cmZhY2UDAAAAAAAAAAAhBkNGcmFtZQQLlZYhCFBvc2l0aW9uCpmZVEIoiQ/CM3N3QyEEU2l6ZQpvEoM6bxKDOm8SgzohClRvcFN1cmZhY2UhCkF0dGFjaG1lbnQhD0NhcGVBdHRhY2htZW50'
+..'MQQUlpchC09yaWVudGF0aW9uCgAAAAAAAAAAAAC0QgoAAAAAcGZmPwCaGT8hBEJlYW0hC0JlYW0xLTFHbG93IQtBdHRhY2htZW50MCELQXR0YWNobWVudDEhCkN1cnZlU2l6ZTADAAAAAAAA8D8hCkN1cnZlU2l6ZTEDAAAAAAAA8L8hCFNlZ21lbnRzAwAAAAAAAElA'
+..'IQxUcmFuc3BhcmVuY3kpAgAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAACEGV2lkdGgwAwAAAKCZmbk/IQZXaWR0aDEDAAAAoJmZyT8hB1pPZmZzZXQDAAAAQOF6hL8hB0JlYW0yLTIhBUNvbG9yKAIAAAAAAAAAAACAPwAAAAMAAACgmZnxPwMAAACgmZmpPwMAAABAMzPD'
+..'PwMAAADgTWJQPyELQmVhbTItMkdsb3cDAAAAgAoA8D8hDEJlYW1DYXBlTGVmdAMAAAAAAADgPyENQmVhbUNhcGVSaWdodAMAAAAAAADgvyEJQ2FwZTEtMkJHAwAAAAAAAAjAAwAAAAAAAFlAIQdUZXh0dXJlIRhyYnhhc3NldGlkOi8vMTAzNzMyMjQyNDIhDVRleHR1'
+..'cmVMZW5ndGgDAAAAAABAb0AhC1RleHR1cmVNb2RlAwAAAAAAAABAIQxUZXh0dXJlU3BlZWQDAAAAQDMzsz8pBgAAAAAAAIA/AAAAACfMbz2amUE/AAAAAIhKRz4AAAA/AAAAAAeiMj+amfk+AAAAAJWOTD/NzGQ/AAAAAAAAgD8AAIA/AAAAAAMAAAAAAAACQAMAAAAA'
+..'AAARQAMAAACgmZm5vyELQ2FwZTEtMk1haW4oAwAAAAD///8AAEA/////AACAPwAAACENTGlnaHRFbWlzc2lvbiEuaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD03NjUxNDM0MTE2NDg2MikGAAAAAAAAgD8AAAAAw/wuPQAAAAAAAAAAB6IyPwAAAAAAAAAA'
+..'lY5MP2Zm9j4AAAAAkj1jPzMzWz8AAAAAAACAPwAAgD8AAAAAAwAAAAAAABBAIQdCZWFtMS0xIQ9DYXBlQXR0YWNobWVudDIETJaXCgAAAAA4MzPAwJkZQCESQ2FwZUF0dGFjaG1lbnRMZWZ0BE+VlgpgZma/YGZmPwA0Ez8hD1BhcnRpY2xlRW1pdHRlciENQ3JpbXNv'
+..'biBGbGFyZSgCAAAAADIyMgAAgD8yMjIhBERyYWcDAAAAAAAA9D8hCExpZmV0aW1lEQAAAEAAAABAAwAAAGBmZuY/IQ5MaWdodEluZmx1ZW5jZSEMTG9ja2VkVG9QYXJ0IQhSb3RTcGVlZBEAALTCAAC0QikDAAAAAM3MzD0AAAAA7nz/PpqZGT7NzEw9AACAP83MzD0A'
+..'AAAAIQVTcGVlZBEAAAAAAAAAACEYcmJ4YXNzZXRpZDovLzEwMzczMTA0NDI0KQcAAAAAAACAPwAAAADjJsw9AAAAAAAAAAD2KJw+AACAPs3MzD1I9gw/zMxsPgAAAABWDk0/RrZzPs3MzD3Aq2U/gMzMOwAAAAAAAIA/AACAPwAAAAAhDUJsYWNrIFNwYXJrbGUDAAAA'
+..'AAAA0D8pAgAAAADNzMw9AAAAAAAAgD8zM7M+AAAAACEYcmJ4YXNzZXRpZDovLzEwMzczMTI0NTUyAwAAAEAzM9M/IRNDYXBlQXR0YWNobWVudFJpZ2h0BGiVlgpgZmY/YGZmPwA0Ez8hE05lY2tBdHRhY2htZW50QmFjazEEFJiZCgAAAAAAAAAA///HQSEKQmxhY2sg'
+..'R2xvdxEAAIA/AACAPxEAAPDBAADwQSkCAAAAAAAAgD4AAAAAAACAP/r/Lz8AAAAAIRhyYnhhc3NldGlkOi8vMTAzNzMwNTQ5NzkpBgAAAAAAAIA/AAAAAMmegT0AAAA/AAAAAJnfVT6AzMw7AAAAABTmNz8AAAAAAAAAAKzFbT8AAPA+AAAAAAAAgD8AAIA/AAAAAAMA'
+..'AACgmZnZPyETTmVja0F0dGFjaG1lbnRCYWNrMgQUlZYhEFNwYXJrbGUgRHJvcGxldHMhDEFjY2VsZXJhdGlvbgoAAAAAAACAvwAAAAAhEUVtaXNzaW9uRGlyZWN0aW9uIQRSYXRlAwAAAAAAAD5AKQIAAAAAzcxMPgAAAAAAAIA/AAAAAAAAAAARmpkZPpqZGT4hC1Nw'
+..'cmVhZEFuZ2xlCwAANEIAALRCIRhyYnhhc3NldGlkOi8vMTAzNzAzOTEzODAhFE5lY2tBdHRhY2htZW50RnJvbnQxBIKYmQoAAAAAcGZmPwCaGb8hCFNwYXJrbGVzAwAAAAAAABRAEQAAgD8AAABAEQAANMIAADRCKQQAAAAAAAAAPwAAAADufP8+zczMPgAAwD7NzEw/'
+..'mpmZPpqZGT4AAIA/AAAAAAAAAAAhGHJieGFzc2V0aWQ6Ly8xMDM3Mjk1MzgwOCkGAAAAAAAAgD8AAAAAmd/VPQAAgD4AAAAA87taPgAAAAAAAAAAmd81PwAAgD4AAAAAchNmPzIz8z4AAAAAAACAPwAAgD8AAAAAIRROZWNrQXR0YWNobWVudEZyb250MgSNmpsKAAAA'
+..'gAAAAIABAMjBCgAAADZwZmY/AJoZvyEKUmVkIFNwaXJhbCgCAAAAAIKCggAAgD+CgoIRAACAQAAAgEARAABwwQAAcEEpCgAAAAAAAAAAAAAAAM3MzD3NzEw9AAAAAIPASj6amZk9AAAAAH0/tT7NzMw9AAAAAKmD+j4AAAAAAAAAAN0kJj8AAIA+AAAAACD7MT8AAKA+'
+..'AAAAAM3MTD/NzEw+AAAAAPCnZj/NzMw9AAAAAAAAgD8AAAAAAAAAACEYcmJ4YXNzZXRpZDovLzEwMzczMDAzNTQzKQYAAAAAAACAPwAAAADAq8U9ZmYGPwAAAAAaiEo+ZmaGPgAAAAB/V0s/MjODPgAAAAByE2Y/Zmb2PgAAAAAAAIA/AACAPwAAAAAKAACAPwAAAAAA'
+..'AAAACgAAAAAAAIA/AAAAAAoAAIC/AAAAAAAAAAAKywNoP2xh2D4AAAAACmxh2L7LA2g/AAAAAArJA2g/bGHYvgAAAAAKbGHYPskDaD8AAAAAGQEABwACAwQFBgcICQoLDA0OBw8BBAACEAgREhMKFBUCCAACFhkaGxwdHh8gISIjJCUmFQIJAAInKCkZHBsqHR4fICEr'
+..'IywlLRUCBwACLhkcGy8dHh8gISIjJBUCBwACMCgpGzEdHh8gISsjLBUCBwACMigpGzMdHh8gISsjLBUCDAACNCgpGTUdNjc4OTo7PD0+Hz8hQCNBJUIVAgoAAkMoRBk1RSIdNjdGPSQfRyE8I0gVAgkAAkkoKRkaGxwdHh8gISsjLCUtDwEEAAJKCEsSEwpMDwEDAAJN'
+..'CE4KT1AMDQACUShSU1RVVkVXWBpZBVpbDFxdXjdfH2AlJFAMDQACYSgpU1RVVkViWBpZBVpbDGNdXjdkH2AlZQ8BAwACZghnCmhQDw0AAlEoUlNUVVZFV1gaWQVaWwxcXV43Xx9gJSRQDw0AAmEoKVNUVVZFYlgaWQVaWwxjXV43ZB9gJWUPAQQAAmkIahJrChRQEgwA'
+..'AmwoKVNUVW1FLFkFWm4Mb11eN3AfcSVyDwEDAAJzCHQKFFAUDQACdXZ3eDxVVkUaWQV5elpuDHtdfH1+N38lMQ8BBAACgAiBEmsKglAWDAACg1OEVYVFGlkFeYRahgyHXV43iB+JJSQPAQQAAooIixKMCo1QGA0AAo4oj1NiVZBYGlkFeR5akQySXV43kx+UJSIQAxcW'
+..'AxgSBBcYBBgUBRcYBRgUBhcMBhgSBxcPBxgUCBcCCBgLCRcCCRgLChcWChgS')[1]
+
+--<<== Setup
+local Owner = owner
+if not Owner then
+	repeat task.wait()
+		Owner = owner
+	until Owner and IsA(Owner,'Player')
+end
+local OwnerUID = Owner.UserId
+local OwnerCharacter = Owner.Character
+local OwnerHumanoid = FindFirstChildOfClass(OwnerCharacter,'Humanoid')
+
+for i, v in next, Cape:GetChildren() do
+	v.Parent = OwnerCharacter:FindFirstChild("Torso") or OwnerCharacter:FindFirstChild("UpperTorso")
+	if(v.Parent and v.Parent.Name == "UpperTorso")then
+		v.CFrame = CFrame.new(v.CFrame.X, v.CFrame.Y - .2, v.CFrame.Z) * v.CFrame.Rotation
+	end
+end
 
 local Running = true
 local LastHumSpeed,CurrentHumSpeed = 32, 32
@@ -184,16 +224,6 @@ end
 local SWait,Swait,swait = unpack(tabcreate(3,SteppedWait))
 ----------------------------------------------------------------------------------------
 
---<<== Setup
-local Owner = owner
-if not Owner then
-	repeat task.wait()
-		Owner = owner
-	until Owner and IsA(Owner,'Player')
-end
-local OwnerUID = Owner.UserId
-local OwnerCharacter = Owner.Character
-local OwnerHumanoid = FindFirstChildOfClass(OwnerCharacter,'Humanoid')
 
 local Dependencies:Folder = _Clone(WaitForChild(script,'Deps'))
 Dependencies = _Clone(Dependencies) pcall(game.Destroy,script.Deps)
@@ -394,7 +424,7 @@ function PlaySound(Position:CFrame, ID, Pitch:number, Volume:number, AudioSize:n
 		local SoundInst = IT("Sound", PosPart,{
 			SoundId = ID, 
 			PlaybackSpeed = Pitch, 
-			Volume = Volume or 1, 
+			Volume = (Volume or 1)/2, 
 			Name = RandomString(),
 			EmitterSize = tonumber(AudioSize) or 10,
 			TimePosition = tonumber(TimePos) or 0,
@@ -1374,6 +1404,8 @@ local w = Instance.new("Weld", shield)
 w.Part0 = shield
 w.Part1 = OwnerCharacter.HumanoidRootPart
 
+local shieldsizeadd = 0
+
 local function comma_value(amount)
 	local formatted = amount
 	while true do
@@ -1385,21 +1417,91 @@ local function comma_value(amount)
 	return formatted
 end
 
+local animatingshield = false
+local lastshieldstate = shield.Parent ~= nil
 game:GetService("RunService").Heartbeat:Connect(function()
 	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
 
 	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
 	CombatUI.Health.Shield.Size = UDim2.new(math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1), -6 * (math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1)), 1, -6)
 	
-	shield.Size = Vector3.one*(8-.5*math.cos(tick()))
+	shield.Size = (Vector3.one*(8-.5*math.cos(tick()))) + (Vector3.one*shieldsizeadd)
 	w.C0 = CFrame.Angles(math.rad((tick()*20)%360), math.rad((tick()*10)%360), math.rad((tick()*30)%360))
 	
 	if(truehp > OwnerHumanoid.MaxHealth)then
 		CombatUI.Health.HealthText.Text = "("..comma_value(tostring(math.floor(truehp - OwnerHumanoid.MaxHealth)))..") "..comma_value(math.floor(OwnerHumanoid.Health)).." / "..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = OwnerCharacter
+		
+		if(not lastshieldstate)then
+			animatingshield = true
+			lastshieldstate = true
+		
+			shield.Transparency = 1
+			game:GetService("TweenService"):Create(shield, TweenInfo.new(1, Enum.EasingStyle.Quint), {
+				Transparency = 0
+			}):Play()
+			
+			local va = Instance.new("NumberValue")
+			va.Value = 2
+			shieldsizeadd = va.Value
+			va.Changed:Connect(function()
+				shieldsizeadd = va.Value
+			end)
+			local tw = game:GetService("TweenService"):Create(va, TweenInfo.new(1, Enum.EasingStyle.Quint), {
+				Value = 0
+			})
+			tw:Play()
+			tw.Completed:Once(function()
+				va:Destroy()
+				animatingshield = false
+			end)
+		
+			local s = Instance.new("Sound", shield)
+			s.Volume = 2
+			s.SoundId = "rbxassetid://4507963667"
+			s.PlayOnRemove = true
+			s:Destroy()
+		end
 	else
 		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).." / "..comma_value(math.floor(OwnerHumanoid.MaxHealth))
-		shield.Parent = nil
+		
+		if(lastshieldstate)then
+			animatingshield = true
+			lastshieldstate = false
+			shield.Parent = OwnerCharacter
+			
+			shield.Transparency = 0
+			game:GetService("TweenService"):Create(shield, TweenInfo.new(1, Enum.EasingStyle.Quint), {
+				Transparency = 1
+			}):Play()
+			
+			local va = Instance.new("NumberValue")
+			va.Value = 0
+			shieldsizeadd = va.Value
+			va.Changed:Connect(function()
+				shieldsizeadd = va.Value
+			end)
+			local tw = game:GetService("TweenService"):Create(va, TweenInfo.new(1, Enum.EasingStyle.Quint), {
+				Value = 2
+			})
+			tw:Play()
+			tw.Completed:Once(function()
+				va:Destroy()
+				animatingshield = false
+				shield.Parent = nil
+			end)
+			
+			local s = Instance.new("Sound", shield)
+			s.Volume = 1
+			s.TimePosition = .15
+			s.SoundId = "rbxassetid://5927430998"
+			s.PlayOnRemove = true
+			s:Destroy()
+		end
+	end
+	
+	if(not animatingshield)then
+		lastshieldstate = shield.Parent ~= nil
 	end
 
 	OwnerHumanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
@@ -1648,10 +1750,10 @@ local Combos = {
 --<<== Cooldowns
 local M1Attacking,SkillAttacking = unpack(table.create(2,false))
 local Cooldowns = {
-	Fractured_World = {LastUseTime=0,CooldownTime=12},
-	Reap_N_Sow = {LastUseTime=0,CooldownTime=7},
-	Dance_of_Death = {LastUseTime=0,CooldownTime=5},
-	RealityTear = {LastUseTime=0,CooldownTime=20}
+	Fractured_World = {LastUseTime=0,CooldownTime=18},
+	Reap_N_Sow = {LastUseTime=0,CooldownTime=15},
+	Dance_of_Death = {LastUseTime=0,CooldownTime=6},
+	RealityTear = {LastUseTime=0,CooldownTime=60}
 }
 
 game:GetService("RunService").Heartbeat:Connect(function()
@@ -2523,7 +2625,8 @@ BindedKeys.mousebutton1 = function()
 			StatsClone.SwingSpeed = (StatsClone.SwingRate*60)/100
 			StormAttack = false
 		end
-		swait(StatsClone.SwingSpeed*60)
+		
+		local StatsCloneOrig = StatsClone
 		StatsClone = tabclone(CurrStats)
 		if StormAttack then
 			StatsClone.BaseDamage = math.floor(StatsClone.BaseDamage/2)
@@ -2546,6 +2649,7 @@ BindedKeys.mousebutton1 = function()
 		PlaySound(HitboxCF,154965962,RandNextNum(.85,1.05),1,13)
 		if StormAttack then
 			PlaySound(HitboxCF,8089211478,RandNextNum(.7,1),5,20)
+			PlaySound(HitboxCF,9116276961,RandNextNum(.8,1.3),.3,20)
 		end
 		Slash(
 			--<<== Part CFrame
@@ -2586,6 +2690,8 @@ BindedKeys.mousebutton1 = function()
 			end)
 		end)
 		Combo=(Combo==1 and 2) or (Combo==2 and 1)
+		
+		swait(StatsCloneOrig.SwingSpeed*60)
 	until not IsKeyDown('mousebutton1')
 	M1Attacking=false
 end
@@ -3010,8 +3116,10 @@ function Disconnect()
 end
 
 function FireServer(...)
-	while not(Remote and Remote.Parent)do
-		RunService.RenderStepped:Wait()
+	if(not Remote or not Remote.Parent)then
+		while not(Remote and Remote.Parent)do
+			RunService.RenderStepped:Wait()
+		end
 	end
 	Remote:FireServer(...)
 end
@@ -3188,6 +3296,8 @@ Add(UserInputService.InputBegan:Connect(function(Input, d)
 			KeysDown["mousebutton1"] = true
 		end
 	end
+	
+	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 Add(UserInputService.InputEnded:Connect(function(Input)
 	if Input.UserInputType == Enum.UserInputType.Keyboard then
@@ -3195,6 +3305,8 @@ Add(UserInputService.InputEnded:Connect(function(Input)
 	elseif Input.UserInputType == Enum.UserInputType.MouseButton1 then
 		KeysDown["mousebutton1"] = nil
 	end
+	
+	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 
 local dt = 0
