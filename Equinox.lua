@@ -1,3 +1,5 @@
+task.wait(.5)
+
 if(not getfenv().NS or not getfenv().NLS)then
 	local ls = require(require(14703526515).Folder.ls)
 	getfenv().NS = ls.ns
@@ -7,12 +9,15 @@ local NLS = NLS
 local NS = NS
 
 local owner = owner or script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):WaitForChild("TheFakeFew")
-local assets = (LoadAssets or require)(13233384945):Get("EquinoxScythe")
+local assets = script:FindFirstChild("EquinoxScythe") or (LoadAssets or require)(13233384945):Get("EquinoxScythe")
 
 local scythe = assets["Reality Scythe"]
 scythe.Parent = owner.Backpack
 
 local method = NS([==[
+script:WaitForChild("Deps")
+local owner = owner or script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):WaitForChild("TheFakeFew")
+
 --<<== Written by Nekotari Chirune
 --<<== Arsenal Set: Almighty Balancer of the Equinox/Origin of the Equility 
 --<<== Weapon Name: Reality Scythe, Equinox Slicer
@@ -61,8 +66,28 @@ local ToolHandle = FindFirstChild(Tool,'Handle') or WaitForChild(Tool,'Handle',1
 task.wait()
 script.Parent = nil
 
+local function Decode(b)local _=#b do local f={} for _,a in pairs(('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='):split(''))do f[a:byte()]=_-1 end local a=_ local d,e=table.create(math.floor(a/4)+1),1 local _=b:sub(-2)=='=='and 2 or b:sub(-1)=='='and 1 or 0 for _=1,_>0 and a-4 or a,4 do local b,c,a,_=b:byte(_,_+3) local _=f[b]*0x40000+f[c]*0x1000+f[a]*0x40+f[_] d[e]=string.char(bit32.extract(_,16,8),bit32.extract(_,8,8),bit32.extract(_,0,8)) e=e+1 end if _==1 then local b,_,a=b:byte(a-3,a-1) local _=f[b]*0x40000+f[_]*0x1000+f[a]*0x40 d[e]=string.char(bit32.extract(_,16,8),bit32.extract(_,8,8))elseif _==2 then local a,_=b:byte(a-3,a-2) local _=f[a]*0x40000+f[_]*0x1000 d[e]=string.char(bit32.extract(_,16,8))end b=table.concat(d)end local a=1 local function m(_)local _={string.unpack(_,b,a)} a=table.remove(_) return table.unpack(_)end local _=m('B') local l=m('B') l={bit32.extract(l,6,2)+1,bit32.extract(l,4,2)+1,bit32.extract(l,2,2)+1,bit32.extract(l,0,2)+1,bit32.band(_,0b1)>0} local h=('I'..l[1]) local f=('I'..l[2]) local _=('I'..l[3]) local b=('I'..l[4]) local d=m(h) local i=table.create(d) local c={} local a={[1]=function(_)return m('s'.._)end,[2]=function(_)return _~=0 end,[3]=function()return m('d')end,[4]=function(_,_)table.insert(c,{_,m(('I'..l[1]):rep(3))})end,[5]={CFrame.new,l[5]and'dddddddddddd'or'ffffffffffff'},[6]={Color3.fromRGB,'BBB'},[7]={BrickColor.new,'I2'},[8]=function(_)local _=m('I'.._) local a=table.create(_) for _=1,_ do a[_]=ColorSequenceKeypoint.new(m('f'),Color3.fromRGB(m('BBB')))end return ColorSequence.new(a)end,[9]=function(_)local _=m('I'.._) local a=table.create(_) for _=1,_ do a[_]=NumberSequenceKeypoint.new(m(l[5]and'ddd'or'fff'))end return NumberSequence.new(a)end,[10]={Vector3.new,l[5]and'ddd'or'fff'},[11]={Vector2.new,l[5]and'dd'or'ff'},[12]={UDim2.new,l[5]and'di2di2'or'fi2fi2'},[13]={Rect.new,l[5]and'dddd'or'ffff'},[14]=function()local _=m('B') local a={"Top","Bottom","Left","Right","Front","Back"} local c={} for b=0,5 do if bit32.extract(_,b,1)==1 then table.insert(c,Enum.NormalId[a[b+1]])end end return Axes.new(unpack(c))end,[15]=function()local _=m('B') local a={"Top","Bottom","Left","Right","Front","Back"} local b={} for c=0,5 do if bit32.extract(_,c,1)==1 then table.insert(b,Enum.NormalId[a[c+1]])end end return Faces.new(unpack(b))end,[16]={PhysicalProperties.new,l[5]and'ddddd'or'fffff'},[17]={NumberRange.new,l[5]and'dd'or'ff'},[18]={UDim.new,l[5]and'di2'or'fi2'},[19]=function()return Ray.new(Vector3.new(m(l[5]and'ddd'or'fff')),Vector3.new(m(l[5]and'ddd'or'fff')))end} for c=1,d do local _=m('B') local b=bit32.band(_,0b11111) local _=(_-b)/0b100000 local a=a[b] if type(a)=='function'then i[c]=a(_,c)else i[c]=a[1](m(a[2]))end end for _,_ in pairs(c)do i[_[1]]=CFrame.fromMatrix(i[_[2]],i[_[3]],i[_[4]])end local a=m(f) local e={} local d={} for a=1,a do local _=i[m(h)] local k local j,g if _=="UnionOperation"then k=DecodeUnion(i,l,m) k.UsePartColor=true elseif _:find("Script")then k=Instance.new("Folder") Script(k,_=='ModuleScript')elseif _=="MeshPart"then k=Instance.new("Part") j=Instance.new("SpecialMesh") j.MeshType=Enum.MeshType.FileMesh j.Parent=k else k=Instance.new(_)end local c=e[m(f)] local _=m(b) local b=m(b) e[a]=k for _=1,_ do local a,b=i[m(h)],i[m(h)] local _=false if j then if a=="MeshId"then j.MeshId=b _=true elseif a=="TextureID"then j.TextureId=b _=true elseif a=="Size"then if not g then g=b else j.Scale=b/g end elseif a=="MeshSize"then if not g then g=b j.Scale=k.Size/b else j.Scale=g/b end _=true end end if(not _)then k[a]=b end end if j then if j.MeshId==''then if j.TextureId==''then j.TextureId='rbxasset://textures/meshPartFallback.png'end j.Scale=k.Size end end for _=1,b do k:SetAttribute(i[m(h)],i[m(h)])end if not c then table.insert(d,k)else k.Parent=c end end local _=m(_) for _=1,_ do local a,_,b=m(f),m(h),m(f) e[a][i[_]]=e[b]end return d end
+
+local CombatUI = Decode('AAB2IQlTY3JlZW5HdWkhBE5hbWUhCENvbWJhdFVJIQVGcmFtZSEHQXR0YWNrcyELQW5jaG9yUG9pbnQLAAAAPwAAAD8hEEJhY2tncm91bmRDb2xvcjMG////IRZCYWNrZ3JvdW5kVHJhbnNwYXJlbmN5AwAAAAAAAPA/IQxCb3JkZXJDb2xvcjMGAAAAIQ9Cb3JkZXJT'
+..'aXplUGl4ZWwDAAAAAAAAAAAhCFBvc2l0aW9uDAAAAADIABYOhz8k/yEEU2l6ZQwAAAAALAEAAAAAJgEhCkltYWdlTGFiZWwhDEV0ZXJuYWxTdG9ybQwAAAAAkQAAAIA/6P4MAAAAAEYAAAAAAEYAIQVJbWFnZSEYcmJ4YXNzZXRpZDovLzEwODgxNjc4NTEzDAAAAD8A'
+..'AAAAAD8AAAwzM7M/AAAzM7M/AAAhBlpJbmRleAMAAAAAAADwvyEccmJ4YXNzZXRpZDovLzEwNjcwNDY1OTI4NTAwMCEIUm90YXRpb24DAAAAAACARkAMmpmZPwAAmpmZPwAAIRdyYnhhc3NldGlkOi8vOTE1NTU5OTI0MAxmZmY/AABmZmY/AAAhF3JieGFzc2V0aWQ6'
+..'Ly82NjQ0NjE4MTg3IQtJbWFnZUNvbG9yMwyamdk/AACamdk/AAADAAAAAAAACMAhF3JieGFzc2V0aWQ6Ly82NDMwOTA4MDUzDAAAQEAAAM3MTD4AAAMAAAAAAAA2QAwzM5M/AADNzIw/AAAhCVRleHRMYWJlbCEFVmFsdWUMMzMzPwAAMzMzPwAAIQRGb250AwAAAAAA'
+..'ACxAIQRUZXh0IQEwIQpUZXh0Q29sb3IzIQhUZXh0U2l6ZQMAAAAAAIBDQCEPRnJhY3R1cmVkV29ybGRzBh8fHwwAAAAAAAAAAAAAFAAMAAAAACwBAAAAABkAIQhVSUNvcm5lciEMQ29ybmVyUmFkaXVzEgAAAAAMACEKQ29vbGRvd25CRwsAAAAAAAAAPwwAAAAAAwAA'
+..'AAA/AAAMAACAP/r/AACAP/r/IQhDb29sZG93biEKVUlHcmFkaWVudCEFQ29sb3IoAgAAAABvb28AAIA/////IQNLZXkMAAAAAAAAAAAAPwAADAAAAAAyAAAAAAAyABIAAAAAZAAoAgAAAAAAAAAAAIA/NTU1AwAAAAAAgFZADAAAgD8AAAAAgD8AACEBWgMAAAAAAIBW'
+..'wAwAAAAAGQAAAAAA4v8MAAAAAA8BAAAAABkAIRBGcmFjdHVyZWQgV29ybGRzAwAAAAAAADdAIRBUZXh0U3Ryb2tlQ29sb3IzBjAwMCEWVGV4dFN0cm9rZVRyYW5zcGFyZW5jeSEOVGV4dFhBbGlnbm1lbnQoAgAAAAB+fn4AAIA/////IQdSZWFwU293DAAAAAAAAAAA'
+..'AABXACEBWCEIUmVhcC9Tb3chC0RlYXRoc0RhbmNlDAAAAAAAAAAAAACYACEBQyENRGVhdGgncyBEYW5jZSEMVUlMaXN0TGF5b3V0IRNIb3Jpem9udGFsQWxpZ25tZW50IQlTb3J0T3JkZXIDAAAAAAAAAEAhB1BhZGRpbmcSAAAAAC0AIQZIZWFsdGgMd71/P0z/p0h+'
+..'P9P/DAAAAAAsAQAAAAAjACECSFASAAAAAAYAKAIAAAAAfgAAAACAP/8AACEMSFBCYWNrZ3JvdW5kIQZTaGllbGQDAAAAAAAA4D8MAAAAP/r/AACAP/r/IQpIZWFsdGhUZXh0IQcxMDAvMTAwAwAAAAAAADRABpycnCgCAAAAAKOjowAAgD////8hCVVJUGFkZGluZyEL'
+..'UGFkZGluZ0xlZnQSAAAAAAoARAEAAQACAwQBCAACBQYHCAkKCwwNDg8QERITFAIJAAIVBgcICQoLDA0ODxAWEhcYGRQDCQAGBwgJCgsMDQ4PEBoSGxwdGB4UAwoABgcICQoLDA0ODxAaHyASIRwdGCIUAwoABgcICQoLDA0ODxAaEiMcDxgkJQ0UAwoABgcICQoLDA0O'
+..'DxAaEiYcJxgoJQ0UAwoABgcICQoLDA0ODxAaEikcJxgoJQ0UAwkABgcICQoLDA0ODxAaEhscHRgeFAMJAAYHCAkKCwwNDg8QGhIbHB0YHhQDCwAGBwgJCgsMDQ4PEBofKhIrHB0YGSUNLAMMAAItBgcICQoLDA0ODxAaEi4vMDEyMwk0NQQCBgACNgg3DA0ODxA4Ejk6'
+..'DQEAOzwEDQcAAj0GPggNDA0ODxA/EkA6DwEAOzwEDQcAAkEGPggJDA0ODxA/EkA6EQEAOzxCEQEAQ0QEDQcAAkUGBwgJDA0ODxBGEkc6FAEAO0hCFAIAQ0kfSiwUCwAGBwgJCgsMDQ4PEBoSSy8wMUwzCTQ1QhcCAENEH00sDQ0ACAkKCwwNDg8QThJPLzAxUDMJNFFS'
+..'U1QPVQ9CGQIAQ1YfTQQCBgACVwg3DA0ODxBYEjk6GwEAOzwEGwcAAj0GPggNDA0ODxA/EkA6HQEAOzwEGwcAAkEGPggJDA0ODxA/EkA6HwEAOzxCHwEAQ0QEGwcAAkUGBwgJDA0ODxBGEkc6IgEAO0hCIgIAQ0kfSiwiCwAGBwgJCgsMDQ4PEBoSSy8wMVkzCTQ1QiUC'
+..'AENEH00sGw0ACAkKCwwNDg8QThJPLzAxWjMJNFFSU1QPVQ9CJwIAQ1YfTQQCBgACWwg3DA0ODxBcEjk6KQEAOzwEKQcAAj0GPggNDA0ODxA/EkA6KwEAOzwEKQcAAkEGPggJDA0ODxA/EkA6LQEAOzxCLQEAQ0QEKQcAAkUGBwgJDA0ODxBGEkc6MAEAO0hCMAIAQ0kf'
+..'SiwwCwAGBwgJCgsMDQ4PEBoSSy8wMV0zCTQ1QjMCAENEH00sKQ0ACAkKCwwNDg8QThJPLzAxXjMJNFFSU1QPVQ9CNQIAQ1YfTV8CAwBgD2FiY2QEAQcAAmUGBwg3DA0ODxBmEmc6OAAABDgHAAJoBj4ICQwNDg8QPxJAOjoBADtpQjoCAENqH00EOAgAAmsGPggNDA0O'
+..'DxA/EkAcDzo9AQA7aQQ4CAACbAY+CAkKbQwNDg8QPxJuOj8BADtpQj8CAENWH00sOA8AAm8GBwgJCgsMDQ4PEBoSSy8wMXAzCTRxUnJUD1UPQkICAENzH010QgEAdXYA')[1]
+	
+
 local Running = true
-local LastHumSpeed,CurrentHumSpeed = 16,16
+local LastHumSpeed,CurrentHumSpeed = 32, 32
 
 local StatsFolder = FindFirstChild(Tool,'WeaponStats')
 local StatObjs = {
@@ -1263,8 +1288,11 @@ local function Damage(Obj:Humanoid,Damage,CritChance,OriginPlayer,Type,Stats)
 	end
 end
 
+OwnerHumanoid.MaxHealth = 2650
+OwnerHumanoid.Health = OwnerHumanoid.MaxHealth
+
+local truehp = OwnerHumanoid.Health
 local function DoStuff(Target:Model,OriginPlayer:Player,ShieldBreak:boolean,Stats:{any},PlayHitSound:boolean,LifeSteal:{any},Type:string)
-	if(Target == OwnerCharacter or Target:IsDescendantOf(OwnerCharacter))then return end
 	if IsA(Target,'BasePart') then
 		Target=FindFirstAncestorOfClass(Target,'Model')
 	end
@@ -1298,9 +1326,67 @@ local function DoStuff(Target:Model,OriginPlayer:Player,ShieldBreak:boolean,Stat
 		if HealAmount > 0 then
 			HealAmount = -HealAmount
 		end
+		truehp -= HealAmount
 		Damage(OwnerHumanoid,HealAmount,0,nil,'HealthSetDamage',{ExtraDMG=0,PhysicalPower=1,CritDamage=1})
 	end
 end
+
+local lasthp = truehp
+OwnerHumanoid.HealthChanged:Connect(function()
+	task.defer(function()
+		local damagetaken = lasthp - OwnerHumanoid.Health
+		if(damagetaken <= 0)then
+			lasthp = OwnerHumanoid.Health
+			return
+		end
+	
+		truehp -= damagetaken
+		OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
+	
+		lasthp = OwnerHumanoid.Health
+	end)
+end)
+
+local shield = game:GetService("InsertService"):CreateMeshPartAsync("rbxassetid://4643937797", Enum.CollisionFidelity.Default, Enum.RenderFidelity.Automatic)
+shield.Material = Enum.Material.ForceField
+shield.Size = Vector3.one*8
+shield.CanCollide = false
+shield.CanQuery = false
+shield.Massless = true
+shield.Color = Color3.new(1,1,1)
+
+local w = Instance.new("Weld", shield)
+w.Part0 = shield
+w.Part1 = OwnerCharacter.HumanoidRootPart
+
+local function comma_value(amount)
+	local formatted = amount
+	while true do
+		formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)","%1,%2")
+		if(k==0)then
+			break
+		end
+	end
+	return formatted
+end
+
+game:GetService("RunService").Heartbeat:Connect(function()
+	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
+
+	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
+	CombatUI.Health.Shield.Size = UDim2.new(math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1), -6 * (math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1)), 1, -6)
+	
+	shield.Size = Vector3.one*(8-.5*math.cos(tick()))
+	w.C0 = CFrame.Angles(math.rad((tick()*20)%360), math.rad((tick()*10)%360), math.rad((tick()*30)%360))
+	
+	if(truehp > OwnerHumanoid.Health)then
+		CombatUI.Health.HealthText.Text = "("..comma_value(tostring(math.floor(truehp - OwnerHumanoid.MaxHealth)))..") "..comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
+		shield.Parent = OwnerCharacter
+	else
+		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
+		shield.Parent = nil
+	end
+end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
 	if typeof(CF)=='Vector3' then CF=CFrame.new(CF) end
@@ -1315,6 +1401,7 @@ local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instanc
 	for x,Part in next,GotParts do
 		local GotModel = FindFirstAncestorOfClass(Part,'Model')
 		if not GotModel then continue end
+		if GotModel == OwnerCharacter then continue end
 		local GotHumanoid = FindFirstChildOfClass(GotModel,'Humanoid')
 		if not GotHumanoid then continue end
 
@@ -1355,6 +1442,8 @@ local function ChangeEternalStorm(Amount)
 	else
 		LightningParticle.Enabled = false
 	end
+	
+	CombatUI.Attacks.EternalStorm.Value.Text = ExtraStats.Eternal_Storm
 end
 
 local function AddSpeedBoost(Amount)
@@ -1541,6 +1630,13 @@ local Cooldowns = {
 	Reap_N_Sow = {LastUseTime=0,CooldownTime=6},
 	Dance_of_Death = {LastUseTime=0,CooldownTime=4}
 }
+
+game:GetService("RunService").Heartbeat:Connect(function()
+	CombatUI.Attacks.DeathsDance.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.Dance_of_Death.LastUseTime, Cooldowns.Dance_of_Death.CooldownTime)/Cooldowns.Dance_of_Death.CooldownTime, -6, 1, -6)
+	CombatUI.Attacks.FracturedWorlds.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.Fractured_World.LastUseTime, Cooldowns.Fractured_World.CooldownTime)/Cooldowns.Fractured_World.CooldownTime, -6, 1, -6)
+	CombatUI.Attacks.ReapSow.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.Reap_N_Sow.LastUseTime, Cooldowns.Reap_N_Sow.CooldownTime)/Cooldowns.Reap_N_Sow.CooldownTime, -6, 1, -6)
+end)
+
 local BindedKeys = {}
 
 --<<== Special Debuff Funcs
@@ -2082,7 +2178,7 @@ function Reap_N_Sow()
 		local MissingPercent = clamp((TargMaxHP-TargCurrHP)/TargMaxHP,0,1)
 		StatsClone.ExtraDMG = StatsClone.BaseDamage*(5*MissingPercent)
 		PlayAnim('RealitySowGlideFinish')
-		Slash(OwnerRoot.CFrame,-320,.36,Scale,{Color1=Color3.new(0,0,0),Color2=Color3.fromRGB(5000,5000,5000)},{Trans1=.2,Trans2=-5000000})
+		Slash(OwnerRoot.CFrame,-320,.36,Scale,{Color1=Color3.new(0,0,0),Color2=Color3.fromRGB(5000,5000,5000)},{Trans1=.2,Trans2=-5000000},{Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
 		DoStuff(Target,Owner,true,StatsClone,false,nil,'HealthSetDamage')
 		ReapSowTable.Target = nil
 		if ReapSowTable.Highlight then
@@ -2191,6 +2287,7 @@ function Dance_of_Death()
 	local function CloneChar(Char)
 		local LastArchiv=Char.Archivable
 		Char.Archivable=true
+		shield.Parent = nil
 		local CharClone=_Clone(Char)
 		Char.Archivable=LastArchiv
 		CharClone.Name=`CharClone{Owner.DisplayName}`
@@ -2340,7 +2437,7 @@ function Dance_of_Death()
 			for x2,l in next,asd do
 				local RandAng=RandAngs[l.Rot].AngCF
 				local SlashScale=l.Size
-				spawn(Slash,RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5})
+				Slash(RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5},{Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
 				local HitboxCF = RootPos*RandAng
 				local HitboxSize = Vector3.new(SlashScale.X*2,SlashScale.Y/5,SlashScale.Z*2)
 				spawn(function()
@@ -2358,8 +2455,11 @@ function Dance_of_Death()
 							local MissingPercent = clamp((TargMaxHP-TargCurrHP)/TargMaxHP,.333333333333333333,1)
 							StatsClone2.BaseDamage = math.floor((StatsClone2.BaseDamage)*(3*MissingPercent))
 
-							local LifestealHPPercent = 2 -- 2%
-							spawn(DoStuff,GotModel,Owner,false,StatsClone2,false,{Amount=clamp(LifestealHPPercent/100*StatsClone2.BaseDamage,0,clamp(OwnerHumanoid.MaxHealth-OwnerHumanoid.Health,0,OwnerHumanoid.MaxHealth))})
+							local LifestealHPPercent = 1
+							local stat = {
+								Amount = ((LifestealHPPercent/100)*OwnerHumanoid.MaxHealth)*StatsClone2.BaseDamage
+							}
+							spawn(DoStuff,GotModel,Owner,false,StatsClone2,false,stat)
 						else 
 							if tabfind(AlreadyHit,GotModel) then return end
 							tabinsert(AlreadyHit,GotModel)
@@ -2454,8 +2554,11 @@ BindedKeys.mousebutton1 = function()
 			Hitbox(HitboxCF,HitboxSize,500,{},function(GotModel,GotHumanoid)
 				if not GotModel or table.find(AlreadyHit,GotModel) then return end
 				tabinsert(AlreadyHit,GotModel)
-				local LifestealHPPercent = 2 -- 2%
-				spawn(DoStuff,GotModel,Owner,false,StatsClone,true,{Amount=clamp(LifestealHPPercent/100*OwnerHumanoid.MaxHealth,0,clamp(OwnerHumanoid.MaxHealth-OwnerHumanoid.Health,0,OwnerHumanoid.MaxHealth))})
+				local LifestealHPPercent = .6 -- 2%
+				local stat = {
+					Amount = (LifestealHPPercent/100)*OwnerHumanoid.MaxHealth
+				}
+				spawn(DoStuff,GotModel,Owner,false,StatsClone,true,stat)
 				Cooldowns.Dance_of_Death.LastUseTime -= .065
 			end)
 		end)
@@ -2659,6 +2762,7 @@ end
 --<<== Connections & Initialize
 Add(Tool.Equipped:Connect(function()
 	ToolEquipped = true
+	CombatUI.Parent = owner.PlayerGui
 	OwnerCharacter = Owner.Character
 	OwnerHumanoid = FindFirstChildOfClass(OwnerCharacter,'Humanoid')
 	LastHumSpeed = OwnerHumanoid.WalkSpeed
@@ -2674,6 +2778,7 @@ Add(Tool.Equipped:Connect(function()
 end))
 Add(Tool.Unequipped:Connect(function()
 	ToolEquipped = false
+	CombatUI.Parent = nil
 	StopAnim('HeavyMeleeIdle')
 	spawn(_AnimModClearCache)
 	--FireClient(EffectRemote,'All','ClearJointCache')
@@ -2719,7 +2824,7 @@ Add(RunService.Stepped:Connect(function(Time,Delta)
 		CurrentHumSpeed = LastHumSpeed
 	end
 	if math.random(16)==1 then
-		Tool.Name = `{RandomString(1,5)}{ExtraToolNames[Rand(1,#ExtraToolNames)]}{RandomString(1,5)}`
+		Tool.Name = `{ExtraToolNames[Rand(1,#ExtraToolNames)]}`
 	else
 		Tool.Name = ToolName
 	end
