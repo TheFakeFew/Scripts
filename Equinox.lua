@@ -158,10 +158,10 @@ local SWait,Swait,swait = unpack(tabcreate(3,SteppedWait))
 ----------------------------------------------------------------------------------------
 
 --<<== Setup
-local Owner = FindFirstAncestorWhichIsA(Tool,'Player')
+local Owner = owner
 if not Owner then
 	repeat task.wait()
-		Owner = FindFirstAncestorWhichIsA(Tool,'Player')
+		Owner = owner
 	until Owner and IsA(Owner,'Player')
 end
 local OwnerUID = Owner.UserId
@@ -1180,6 +1180,7 @@ local function KillEffect(Model:Model)
 end
 
 local function Damage(Obj:Humanoid,Damage,CritChance,OriginPlayer,Type,Stats)
+	if(Obj:IsDecendantOf(OwnerCharacter))then return end
 	if not Type then Type='NormalTakeDamage' end
 	if not Damage then Damage=1 end
 	if not CritChance then CritChance=0 end
