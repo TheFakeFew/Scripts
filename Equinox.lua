@@ -1069,14 +1069,14 @@ local Animator,AnimConnection=(function()
 
 									Pose[1].Enabled = false
 									MotorData[Model][Pose[1]].Enabled = true
-									game:GetService("TweenService"):Create(MotorData[Model][Pose[1]], TweenInfo.new(.2), {
+									game:GetService("TweenService"):Create(MotorData[Model][Pose[1]], TweenInfo.new(.1), {
 										C0 = WeldC0[Model][Pose[1]] * TCF
 									}):Play()
 								else
 									if FadeIn and TimeSince < FadeIn then
 										TCF = Pose[1].C0*(WeldC0[Model][Pose[1]]:Inverse()):Lerp(TCF, TimeSince / FadeIn)
 									end
-									game:GetService("TweenService"):Create(Pose[1], TweenInfo.new(.2), {
+									game:GetService("TweenService"):Create(Pose[1], TweenInfo.new(.1), {
 										C0 = WeldC0[Model][Pose[1]] * TCF
 									}):Play()
 								end
