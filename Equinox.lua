@@ -1215,6 +1215,14 @@ local function KillEffect(Model:Model)
 	--<<== coming soon
 end
 
+local function calculateDamage(maxhp, dmg, k)
+	dmg = dmg or 20
+	k = k or 0.45
+
+	local damage = dmg * (1 - k * ((maxhp - 100) / maxhp) * (1 - maxhp / 100))
+	return math.max(damage, 0)
+end
+
 local function Damage(Obj:Humanoid,Damage,CritChance,OriginPlayer,Type,Stats)
 	if not Type then Type='NormalTakeDamage' end
 	if not Damage then Damage=1 end
@@ -1259,6 +1267,9 @@ local function Damage(Obj:Humanoid,Damage,CritChance,OriginPlayer,Type,Stats)
 	if CharModel and Players:GetPlayerFromCharacter(CharModel) then
 		local TargetPlayer=Players:GetPlayerFromCharacter(CharModel)
 		if TargetPlayer and FindFirstChild(TargetPlayer,'nopvp') then return end
+	end
+	if(Damage > 0)then
+		Damage = calculateDamage(Obj.MaxHealth, Damage)
 	end
 	if Damage == 0 then return end
 	if Type=='NormalTakeDamage' then
