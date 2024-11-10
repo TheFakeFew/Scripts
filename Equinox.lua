@@ -1247,7 +1247,7 @@ end
 
 local function calculateDamage(maxhp, dmg, k)
 	dmg = dmg or 20
-	k = k or 0.3
+	k = k or 0.25
 
 	local damage = dmg * (1 - k * ((maxhp - 100) / maxhp) * (1 - maxhp / 100))
 	return math.max(damage, 0)
