@@ -2169,6 +2169,7 @@ function Reap_N_Sow()
 		swait(.45*60)
 		OwnerCharacter:PivotTo(Target:GetPivot()*CFrame.new(0,2.45,2.45))
 		OwnerRoot.CFrame = CFrame.lookAt(OwnerRoot.Position,TargetRoot.Position)
+		ToolRemote:FireClient(owner, "UpdatePosition", OwnerRoot.CFrame)
 		Warp(RootPos)
 		PlaySound(RootPos,6290067239,2,3,25,0,{ChorusSoundEffect={}})
 		for x,l in next,SavedTransparency do
@@ -2391,11 +2392,13 @@ function Dance_of_Death()
 		local HitPart,HitPos,Normal=FindPartOnRayWithIgnoreList(Ray.new(OwnerRoot.Position,Vector.Unit*8),{unpack(GetRRTIgnoreList())},true,true)
 		if HitPart then
 			OwnerRoot.CFrame = CFrame.new(HitPos-Vector*2,HitPos+Vector)
+			ToolRemote:FireClient(owner, "UpdatePosition", OwnerRoot.CFrame)
 			DashHitbox(OwnerRoot.CFrame)
 			CloneChar(OwnerCharacter)
 			break
 		else
 			OwnerRoot.CFrame = CFrame.new(HitPos,HitPos+Vector)
+			ToolRemote:FireClient(owner, "UpdatePosition", OwnerRoot.CFrame)
 			DashHitbox(OwnerRoot.CFrame)
 			CloneChar(OwnerCharacter)
 		end
@@ -2895,6 +2898,7 @@ function FireServer(...)
 	Remote:FireServer(...)
 end
 
+local lastcf = User.Character.HumanoidRootPart.CFrame
 local EndKey
 local ClientEventFuncs = {
 	Notify = function(Data)
@@ -2912,6 +2916,10 @@ local ClientEventFuncs = {
 			EndKey=Key
 		end
 	end,
+	UpdatePosition = function(CF)
+		User.Character.HumanoidRootPart.CFrame = CF
+		lastcf = CF
+	end
 }
 
 function Add(Con)
@@ -2966,7 +2974,6 @@ Add(UserInputService.InputEnded:Connect(function(Input)
 end))
 
 local dt = 0
-local lastcf = User.Character.HumanoidRootPart.CFrame
 Add(RunService.Stepped:Connect(function()
 	User.Character.HumanoidRootPart.CFrame = lastcf
 end))
