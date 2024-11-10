@@ -1386,15 +1386,14 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		shield.Parent = nil
 	end
 
-	--[[for i, v in next, OwnerCharacter:GetDescendants() do
+	for i, v in next, OwnerCharacter:GetDescendants() do
 		if(v:IsA("BasePart"))then
 			pcall(function()
-				v.Massless = true
+				v.Massless = false
 				v:SetNetworkOwner(owner)
 			end)
 		end
 	end
-	OwnerCharacter.HumanoidRootPart.Massless = false]]
 end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
