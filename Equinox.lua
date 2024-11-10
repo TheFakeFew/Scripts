@@ -2857,11 +2857,17 @@ Add(UserInputService.InputEnded:Connect(function(Input)
 	end
 end))
 
-Add(RunService.Heartbeat:Connect(function(Delta)
+local dt = 0
+Add(RunService.RenderStepped:Connect(function(Delta)
 	if Stopped then
 		Disconnect()
 		return
 	end
+	dt = dt + Delta
+
+	if(dt < 1/60)then return end
+	dt = 0
+
 	if not(Remote and Remote.Parent and game:IsAncestorOf(Remote))then
 		Remote = FindRemote()
 		if Remote and Remote.Parent then
@@ -2873,6 +2879,7 @@ Add(RunService.Heartbeat:Connect(function(Delta)
 			end))
 		end
 	end
+
 	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 ]=], scythe)
