@@ -521,7 +521,7 @@ local warpmodule = (function()
 		DistortionClone.Transparency = DistortTransparency
 		DistortionClone.CanCollide,DistortionClone.CanTouch,DistortionClone.CanQuery = unpack(table.create(3,false))
 		DistortionClone.Anchored = true
-		DistortionClone.Parent = workspace.Terrain
+		DistortionClone.Parent = workspace
 		local Highlight = FindFirstChildOfClass(DistortionClone,'Highlight')
 		local Tween1,Tween2 = Tween(DistortionClone,TInfo or {Time,Enum.EasingStyle.Quart,Enum.EasingDirection.Out},{Transparency=2,Size=EndSize}),
 		Tween(DistortionClone,{1,Enum.EasingStyle.Back,Enum.EasingDirection.InOut},{Size=DistortionClone.Size-Vector3.one,Transparency=1})
@@ -1352,6 +1352,7 @@ shield.CanCollide = false
 shield.CanQuery = false
 shield.Massless = true
 shield.Color = Color3.new(1,1,1)
+shield.CastShadow = false
 
 local w = Instance.new("Weld", shield)
 w.Part0 = shield
@@ -1490,6 +1491,10 @@ local SlashFlipbook = {
 		"rbxassetid://14960830159",
 	}
 }
+local FlipbookFolder = Dependencies.Flipbook
+for x=1,#GetChildren(FlipbookFolder) do
+	SlashFlipbook.Core[x] = FlipbookFolder[tostring(x)].Texture
+end
 
 function Glowify(Color,Func)
 	local New = Color3.fromRGB((Color.R*65)^2,(Color.G*65)^2,(Color.B*65)^2)
@@ -1567,7 +1572,7 @@ function Slash(CF:CFrame,Rotate:CFrame,Duration:number,Scale:Vector3,Color:(Colo
 	SlashDecal1.Transparency =  Transparency1
 	SlashDecal2.Color3 = Color2
 	SlashDecal2.Transparency =  Transparency2
-	SlashPart.Parent = workspace.Terrain
+	SlashPart.Parent = OwnerCharacter
 
 	local TValue = Instance.new('NumberValue')
 	local NewTween = Tween(TValue,{Duration,Enum.EasingStyle.Circular,Enum.EasingDirection.Out},{Value=Rotate})
@@ -2033,7 +2038,7 @@ function Reap_N_Sow()
 		SlashClone.CFrame = OwnerCharacter:GetPivot()
 		SlashClone.CFrame = CFrame.lookAt(SlashClone.Position,MouseHitPos)
 		SlashClone.Anchored = true
-		SlashClone.Parent = workspace.Terrain
+		SlashClone.Parent = OwnerCharacter
 
 		local ParticleAtt:Attachment = FindFirstChildOfClass(SlashClone,'Attachment')
 		local Particle:Particle = FindFirstChildOfClass(ParticleAtt,'ParticleEmitter')
@@ -2176,7 +2181,7 @@ function Reap_N_Sow()
 		local MissingPercent = clamp((TargMaxHP-TargCurrHP)/TargMaxHP,0,1)
 		StatsClone.ExtraDMG = StatsClone.BaseDamage*(5*MissingPercent)
 		PlayAnim('RealitySowGlideFinish')
-		Slash(OwnerRoot.CFrame,-320,.36,Scale,{Color1=Color3.new(0,0,0),Color2=Color3.fromRGB(5000,5000,5000)},{Trans1=.2,Trans2=-5000000},{Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
+		Slash(OwnerRoot.CFrame,-320,.36,Scale,{Color1=Color3.new(0,0,0),Color2=Color3.fromRGB(5000,5000,5000)},{Trans1=.2,Trans2=-5000000})
 		DoStuff(Target,Owner,true,StatsClone,false,nil,'HealthSetDamage')
 		ReapSowTable.Target = nil
 		if ReapSowTable.Highlight then
@@ -2435,7 +2440,7 @@ function Dance_of_Death()
 			for x2,l in next,asd do
 				local RandAng=RandAngs[l.Rot].AngCF
 				local SlashScale=l.Size
-				Slash(RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5},{Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
+				Slash(RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5})
 				local HitboxCF = RootPos*RandAng
 				local HitboxSize = Vector3.new(SlashScale.X*2,SlashScale.Y/5,SlashScale.Z*2)
 				spawn(function()
