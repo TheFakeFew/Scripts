@@ -1385,6 +1385,16 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = nil
 	end
+
+	for i, v in next, OwnerCharacter:GetDescendants() do
+		if(v:IsA("BasePart"))then
+			pcall(function()
+				v.Massless = true
+				v:SetNetworkOwner(owner)
+			end)
+		end
+	end
+	OwnerCharacter.HumanoidRootPart.Massless = false
 end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
@@ -2181,7 +2191,7 @@ function Reap_N_Sow()
 		local MissingPercent = clamp((TargMaxHP-TargCurrHP)/TargMaxHP,0,1)
 		StatsClone.ExtraDMG = StatsClone.BaseDamage*(5*MissingPercent)
 		PlayAnim('RealitySowGlideFinish')
-		Slash(OwnerRoot.CFrame,-320,.36,Scale,{Color1=Color3.new(0,0,0),Color2=Color3.fromRGB(5000,5000,5000)},{Trans1=.2,Trans2=-5000000})
+		Slash(OwnerRoot.CFrame,-320,.36,Scale,{Color1=Color3.new(0,0,0),Color2=Color3.fromRGB(5000,5000,5000)},{Trans1=.2,Trans2=-5000000}, {Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
 		DoStuff(Target,Owner,true,StatsClone,false,nil,'HealthSetDamage')
 		ReapSowTable.Target = nil
 		if ReapSowTable.Highlight then
@@ -2440,7 +2450,7 @@ function Dance_of_Death()
 			for x2,l in next,asd do
 				local RandAng=RandAngs[l.Rot].AngCF
 				local SlashScale=l.Size
-				Slash(RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5})
+				Slash(RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5}, {Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
 				local HitboxCF = RootPos*RandAng
 				local HitboxSize = Vector3.new(SlashScale.X*2,SlashScale.Y/5,SlashScale.Z*2)
 				spawn(function()
