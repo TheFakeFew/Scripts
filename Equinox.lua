@@ -1376,20 +1376,7 @@ local function DoStuff(Target:Model,OriginPlayer:Player,ShieldBreak:boolean,Stat
 end
 
 local lasthp = truehp
-OwnerHumanoid.HealthChanged:Connect(function()
-	task.defer(function()
-		local damagetaken = lasthp - OwnerHumanoid.Health
-		if(damagetaken <= 0)then
-			lasthp = OwnerHumanoid.Health
-			return
-		end
-	
-		truehp -= damagetaken
-		OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
-	
-		lasthp = OwnerHumanoid.Health
-	end)
-end)
+local lasthit = tick()
 
 local shield = game:GetService("InsertService"):CreateMeshPartAsync("rbxassetid://4643937797", Enum.CollisionFidelity.Default, Enum.RenderFidelity.Automatic)
 shield.Material = Enum.Material.ForceField
@@ -1400,9 +1387,50 @@ shield.Massless = true
 shield.Color = Color3.new(1,1,1)
 shield.CastShadow = false
 
+local s = Instance.new("Sound", shield)
+s.Volume = 1
+s.SoundId = "rbxassetid://1462066094"
+s.Looped = true
+s.Playing = true
+
 local w = Instance.new("Weld", shield)
 w.Part0 = shield
 w.Part1 = OwnerCharacter.HumanoidRootPart
+
+OwnerHumanoid.HealthChanged:Connect(function()
+	task.defer(function()
+		local damagetaken = lasthp - OwnerHumanoid.Health
+		if(damagetaken <= 0)then
+			lasthp = OwnerHumanoid.Health
+			return
+		end
+		
+		if(truehp > OwnerHumanoid.MaxHealth and damagetaken > (truehp - OwnerHumanoid.MaxHealth))then
+			damagetaken = (truehp - OwnerHumanoid.MaxHealth)
+		end
+	
+		truehp -= damagetaken
+		OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
+		
+		if(truehp > OwnerHumanoid.MaxHealth and tick() - lasthit >= .6)then
+			local s = Instance.new("Sound", shield)
+			s.Volume = 2
+			s.SoundId = "rbxassetid://6276706377"
+			s.PlayOnRemove = true
+			s.Pitch = math.random(80, 120)/100
+			s:Destroy()
+			
+			game:GetService("TweenService"):Create(shield, TweenInfo.new(.1, Enum.EasingStyle.Quint, Enum.EasingDirection.In, 0, true), {
+				Color = Color3.new()
+			}):Play()
+			
+			lasthit = tick()
+		end
+	
+		lasthp = OwnerHumanoid.Health
+	end)
+end)
+
 
 local shieldsizeadd = 0
 
