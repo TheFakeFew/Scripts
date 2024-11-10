@@ -336,6 +336,9 @@ local ToolEventFuncs = {
 		EffectRemote.Name = string.char(math.random(255))..'CEFFect_'..tostring(OwnerUID):reverse()..string.char(math.random(255))
 		Add(EffectRemote.OnServerEvent:Connect(OnEffectRemoteEvent))
 		EffectRemote.Archivable = false
+	end,
+	ReplicateMovement = function(Player, CF)
+		OwnerCharacter.HumanoidRootPart.CFrame = CF
 	end
 }
 
@@ -1369,9 +1372,7 @@ local function comma_value(amount)
 	return formatted
 end
 
-local framei = 0
 game:GetService("RunService").Heartbeat:Connect(function()
-	framei += 1
 	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
 
 	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
@@ -1381,15 +1382,11 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	w.C0 = CFrame.Angles(math.rad((tick()*20)%360), math.rad((tick()*10)%360), math.rad((tick()*30)%360))
 	
 	if(truehp > OwnerHumanoid.MaxHealth)then
-		CombatUI.Health.HealthText.Text = "("..comma_value(tostring(math.floor(truehp - OwnerHumanoid.MaxHealth)))..") "..comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
+		CombatUI.Health.HealthText.Text = "("..comma_value(tostring(math.floor(truehp - OwnerHumanoid.MaxHealth)))..") "..comma_value(math.floor(OwnerHumanoid.Health)).." / "..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = OwnerCharacter
 	else
-		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
+		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).." / "..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = nil
-	end
-
-	if(framei%5 == 0)then
-		OwnerCharacter.HumanoidRootPart.CFrame = OwnerCharacter.HumanoidRootPart.CFrame
 	end
 end)
 
@@ -2969,7 +2966,12 @@ Add(UserInputService.InputEnded:Connect(function(Input)
 end))
 
 local dt = 0
-
+local lastcf = User.Character.HumanoidRootPart.CFrame
+Add(RunService.Stepped:Connect(function()
+	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
+	User.Character.HumanoidRootPart.CFrame = lastcf
+	lastcf = User.Character.HumanoidRootPart.CFrame
+end))
 Add(RunService.RenderStepped:Connect(function(Delta)
 	if Stopped then
 		Disconnect()
