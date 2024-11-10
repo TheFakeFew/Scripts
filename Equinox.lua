@@ -336,9 +336,6 @@ local ToolEventFuncs = {
 		EffectRemote.Name = string.char(math.random(255))..'CEFFect_'..tostring(OwnerUID):reverse()..string.char(math.random(255))
 		Add(EffectRemote.OnServerEvent:Connect(OnEffectRemoteEvent))
 		EffectRemote.Archivable = false
-	end,
-	ReplicateMovement = function(Player, CF)
-		OwnerCharacter.HumanoidRootPart.CFrame = CF
 	end
 }
 
@@ -1388,6 +1385,8 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).."/"..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = nil
 	end
+
+	OwnerCharacter.HumanoidRootPart.CFrame = CF
 end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
@@ -2966,20 +2965,13 @@ Add(UserInputService.InputEnded:Connect(function(Input)
 end))
 
 local dt = 0
-local lastcf = User.Character.HumanoidRootPart.CFrame
 
-Add(RunService.Stepped:Connect(function()
-	User.Character.HumanoidRootPart.CFrame = lastcf
-	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
-end))
 Add(RunService.RenderStepped:Connect(function(Delta)
 	if Stopped then
 		Disconnect()
 		return
 	end
 	dt = dt + Delta
-
-	lastcf = User.Character.HumanoidRootPart.CFrame
 
 	if(dt < 1/30)then return end
 	dt = 0
@@ -2996,7 +2988,6 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 		end
 	end
 
-	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 ]=], scythe)
