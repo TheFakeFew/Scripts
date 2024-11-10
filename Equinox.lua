@@ -2968,7 +2968,6 @@ end))
 local dt = 0
 local lastcf = User.Character.HumanoidRootPart.CFrame
 Add(RunService.Heartbeat:Connect(function()
-	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 	User.Character.HumanoidRootPart.CFrame = lastcf
 end))
 Add(RunService.RenderStepped:Connect(function(Delta)
@@ -2994,6 +2993,7 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 	end
 
 	lastcf = User.Character.HumanoidRootPart.CFrame
+	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 ]=], scythe)
