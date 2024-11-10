@@ -1386,7 +1386,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		shield.Parent = nil
 	end
 
-	OwnerCharacter.HumanoidRootPart.CFrame = CF
+	OwnerCharacter.HumanoidRootPart.CFrame = OwnerCharacter.HumanoidRootPart.CFrame
 end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
