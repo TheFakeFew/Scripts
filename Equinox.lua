@@ -2967,9 +2967,11 @@ end))
 
 local dt = 0
 local lastcf = User.Character.HumanoidRootPart.CFrame
-Add(RunService.Stepped:Connect(function()
+Add(RunService.Heartbeat:Connect(function()
 	coroutine.wrap(FireServer)("ReplicateMovement", User.Character.HumanoidRootPart.CFrame)
 	User.Character.HumanoidRootPart.CFrame = lastcf
+end))
+Add(RunService.Stepped:Connect(function()
 	lastcf = User.Character.HumanoidRootPart.CFrame
 end))
 Add(RunService.RenderStepped:Connect(function(Delta)
