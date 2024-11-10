@@ -523,12 +523,9 @@ local warpmodule = (function()
 		DistortionClone.Anchored = true
 		DistortionClone.Parent = workspace.Terrain
 		local Highlight = FindFirstChildOfClass(DistortionClone,'Highlight')
-		local Tween1,Tween2 = Tween(DistortionClone,TInfo or {Time,Enum.EasingStyle.Quart,Enum.EasingDirection.Out},{Transparency=1,Size=EndSize}),
-		Tween(DistortionClone,{1,Enum.EasingStyle.Back,Enum.EasingDirection.InOut},{Size=DistortionClone.Size-Vector3.zero,Transparency=1})
+		local Tween1,Tween2 = Tween(DistortionClone,TInfo or {Time,Enum.EasingStyle.Quart,Enum.EasingDirection.Out},{Transparency=2,Size=EndSize}),
+		Tween(DistortionClone,{1,Enum.EasingStyle.Back,Enum.EasingDirection.InOut},{Size=DistortionClone.Size-Vector3.one,Transparency=1})
 		Tween1.Completed:Once(function()
-			if Highlight then pcall(Destroy,Highlight) end 
-			DistortionClone.Transparency = .99
-			DistortionClone.Material = Enum.Material.SmoothPlastic
 			Tween2:Play() 
 		end)
 		Tween2.Completed:Once(function()pcall(Destroy,DistortionClone)end)
@@ -946,13 +943,6 @@ local Animator,AnimConnection=(function()
 		local jointCache = {}
 
 		local function UpdatePlaying()
-			for model, data in next, MotorData do
-				for i, v in next, data do
-					i.Enabled = true
-					v.Enabled = false
-				end
-			end
-			
 			for model, data in next, WeldC0 do
 				for i, v in next, data do
 					i.C0 = v
@@ -1004,6 +994,14 @@ local Animator,AnimConnection=(function()
 							if Animation.Looped then
 								TimeSince = TimeSince%Length
 							else
+								if(Animation.Playing)then
+									for model, data in next, MotorData do
+										for i, v in next, data do
+											i.Enabled = true
+											v.Enabled = false
+										end
+									end
+								end
 								Animation.TimePosition = Length
 								Playing[Model][Animation] = nil
 								Animation.Playing = false
@@ -1094,6 +1092,7 @@ local Animator,AnimConnection=(function()
 
 									Pose[1].Enabled = false
 									MotorData[Model][Pose[1]].Enabled = true
+
 									game:GetService("TweenService"):Create(MotorData[Model][Pose[1]], TweenInfo.new(.1), {
 										C0 = WeldC0[Model][Pose[1]] * TCF
 									}):Play()
