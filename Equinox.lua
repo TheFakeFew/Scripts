@@ -68,22 +68,24 @@ script.Parent = nil
 
 local function Decode(b)local _=#b do local f={} for _,a in pairs(('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='):split(''))do f[a:byte()]=_-1 end local a=_ local d,e=table.create(math.floor(a/4)+1),1 local _=b:sub(-2)=='=='and 2 or b:sub(-1)=='='and 1 or 0 for _=1,_>0 and a-4 or a,4 do local b,c,a,_=b:byte(_,_+3) local _=f[b]*0x40000+f[c]*0x1000+f[a]*0x40+f[_] d[e]=string.char(bit32.extract(_,16,8),bit32.extract(_,8,8),bit32.extract(_,0,8)) e=e+1 end if _==1 then local b,_,a=b:byte(a-3,a-1) local _=f[b]*0x40000+f[_]*0x1000+f[a]*0x40 d[e]=string.char(bit32.extract(_,16,8),bit32.extract(_,8,8))elseif _==2 then local a,_=b:byte(a-3,a-2) local _=f[a]*0x40000+f[_]*0x1000 d[e]=string.char(bit32.extract(_,16,8))end b=table.concat(d)end local a=1 local function m(_)local _={string.unpack(_,b,a)} a=table.remove(_) return table.unpack(_)end local _=m('B') local l=m('B') l={bit32.extract(l,6,2)+1,bit32.extract(l,4,2)+1,bit32.extract(l,2,2)+1,bit32.extract(l,0,2)+1,bit32.band(_,0b1)>0} local h=('I'..l[1]) local f=('I'..l[2]) local _=('I'..l[3]) local b=('I'..l[4]) local d=m(h) local i=table.create(d) local c={} local a={[1]=function(_)return m('s'.._)end,[2]=function(_)return _~=0 end,[3]=function()return m('d')end,[4]=function(_,_)table.insert(c,{_,m(('I'..l[1]):rep(3))})end,[5]={CFrame.new,l[5]and'dddddddddddd'or'ffffffffffff'},[6]={Color3.fromRGB,'BBB'},[7]={BrickColor.new,'I2'},[8]=function(_)local _=m('I'.._) local a=table.create(_) for _=1,_ do a[_]=ColorSequenceKeypoint.new(m('f'),Color3.fromRGB(m('BBB')))end return ColorSequence.new(a)end,[9]=function(_)local _=m('I'.._) local a=table.create(_) for _=1,_ do a[_]=NumberSequenceKeypoint.new(m(l[5]and'ddd'or'fff'))end return NumberSequence.new(a)end,[10]={Vector3.new,l[5]and'ddd'or'fff'},[11]={Vector2.new,l[5]and'dd'or'ff'},[12]={UDim2.new,l[5]and'di2di2'or'fi2fi2'},[13]={Rect.new,l[5]and'dddd'or'ffff'},[14]=function()local _=m('B') local a={"Top","Bottom","Left","Right","Front","Back"} local c={} for b=0,5 do if bit32.extract(_,b,1)==1 then table.insert(c,Enum.NormalId[a[b+1]])end end return Axes.new(unpack(c))end,[15]=function()local _=m('B') local a={"Top","Bottom","Left","Right","Front","Back"} local b={} for c=0,5 do if bit32.extract(_,c,1)==1 then table.insert(b,Enum.NormalId[a[c+1]])end end return Faces.new(unpack(b))end,[16]={PhysicalProperties.new,l[5]and'ddddd'or'fffff'},[17]={NumberRange.new,l[5]and'dd'or'ff'},[18]={UDim.new,l[5]and'di2'or'fi2'},[19]=function()return Ray.new(Vector3.new(m(l[5]and'ddd'or'fff')),Vector3.new(m(l[5]and'ddd'or'fff')))end} for c=1,d do local _=m('B') local b=bit32.band(_,0b11111) local _=(_-b)/0b100000 local a=a[b] if type(a)=='function'then i[c]=a(_,c)else i[c]=a[1](m(a[2]))end end for _,_ in pairs(c)do i[_[1]]=CFrame.fromMatrix(i[_[2]],i[_[3]],i[_[4]])end local a=m(f) local e={} local d={} for a=1,a do local _=i[m(h)] local k local j,g if _=="UnionOperation"then k=DecodeUnion(i,l,m) k.UsePartColor=true elseif _:find("Script")then k=Instance.new("Folder") Script(k,_=='ModuleScript')elseif _=="MeshPart"then k=Instance.new("Part") j=Instance.new("SpecialMesh") j.MeshType=Enum.MeshType.FileMesh j.Parent=k else k=Instance.new(_)end local c=e[m(f)] local _=m(b) local b=m(b) e[a]=k for _=1,_ do local a,b=i[m(h)],i[m(h)] local _=false if j then if a=="MeshId"then j.MeshId=b _=true elseif a=="TextureID"then j.TextureId=b _=true elseif a=="Size"then if not g then g=b else j.Scale=b/g end elseif a=="MeshSize"then if not g then g=b j.Scale=k.Size/b else j.Scale=g/b end _=true end end if(not _)then k[a]=b end end if j then if j.MeshId==''then if j.TextureId==''then j.TextureId='rbxasset://textures/meshPartFallback.png'end j.Scale=k.Size end end for _=1,b do k:SetAttribute(i[m(h)],i[m(h)])end if not c then table.insert(d,k)else k.Parent=c end end local _=m(_) for _=1,_ do local a,_,b=m(f),m(h),m(f) e[a][i[_]]=e[b]end return d end
 
-local CombatUI = Decode('AAB2IQlTY3JlZW5HdWkhBE5hbWUhCENvbWJhdFVJIQVGcmFtZSEHQXR0YWNrcyELQW5jaG9yUG9pbnQLAAAAPwAAAD8hEEJhY2tncm91bmRDb2xvcjMG////IRZCYWNrZ3JvdW5kVHJhbnNwYXJlbmN5AwAAAAAAAPA/IQxCb3JkZXJDb2xvcjMGAAAAIQ9Cb3JkZXJT'
-..'aXplUGl4ZWwDAAAAAAAAAAAhCFBvc2l0aW9uDAAAAADIABYOhz8k/yEEU2l6ZQwAAAAALAEAAAAAJgEhCkltYWdlTGFiZWwhDEV0ZXJuYWxTdG9ybQwAAAAAkQAAAIA/6P4MAAAAAEYAAAAAAEYAIQVJbWFnZSEYcmJ4YXNzZXRpZDovLzEwODgxNjc4NTEzDAAAAD8A'
+local CombatUI = Decode('AAB5IQlTY3JlZW5HdWkhBE5hbWUhCENvbWJhdFVJIQVGcmFtZSEHQXR0YWNrcyELQW5jaG9yUG9pbnQLAAAAPwAAAD8hEEJhY2tncm91bmRDb2xvcjMG////IRZCYWNrZ3JvdW5kVHJhbnNwYXJlbmN5AwAAAAAAAPA/IQxCb3JkZXJDb2xvcjMGAAAAIQ9Cb3JkZXJT'
+..'aXplUGl4ZWwDAAAAAAAAAAAhCFBvc2l0aW9uDAAAAADIAD0Khz/U/iEEU2l6ZQwAAAAALAEAAAAAJgEhCkltYWdlTGFiZWwhDEV0ZXJuYWxTdG9ybQwAAAAAkQAAAIA/6P4MAAAAAEYAAAAAAEYAIQVJbWFnZSEYcmJ4YXNzZXRpZDovLzEwODgxNjc4NTEzDAAAAD8A'
 ..'AAAAAD8AAAwzM7M/AAAzM7M/AAAhBlpJbmRleAMAAAAAAADwvyEccmJ4YXNzZXRpZDovLzEwNjcwNDY1OTI4NTAwMCEIUm90YXRpb24DAAAAAACARkAMmpmZPwAAmpmZPwAAIRdyYnhhc3NldGlkOi8vOTE1NTU5OTI0MAxmZmY/AABmZmY/AAAhF3JieGFzc2V0aWQ6'
 ..'Ly82NjQ0NjE4MTg3IQtJbWFnZUNvbG9yMwyamdk/AACamdk/AAADAAAAAAAACMAhF3JieGFzc2V0aWQ6Ly82NDMwOTA4MDUzDAAAQEAAAM3MTD4AAAMAAAAAAAA2QAwzM5M/AADNzIw/AAAhCVRleHRMYWJlbCEFVmFsdWUMMzMzPwAAMzMzPwAAIQRGb250AwAAAAAA'
 ..'ACxAIQRUZXh0IQEwIQpUZXh0Q29sb3IzIQhUZXh0U2l6ZQMAAAAAAIBDQCEPRnJhY3R1cmVkV29ybGRzBh8fHwwAAAAAAAAAAAAAFAAMAAAAACwBAAAAABkAIQhVSUNvcm5lciEMQ29ybmVyUmFkaXVzEgAAAAAMACEKQ29vbGRvd25CRwsAAAAAAAAAPwwAAAAAAwAA'
 ..'AAA/AAAMAACAP/r/AACAP/r/IQhDb29sZG93biEKVUlHcmFkaWVudCEFQ29sb3IoAgAAAABvb28AAIA/////IQNLZXkMAAAAAAAAAAAAPwAADAAAAAAyAAAAAAAyABIAAAAAZAAoAgAAAAAAAAAAAIA/NTU1AwAAAAAAgFZADAAAgD8AAAAAgD8AACEBWgMAAAAAAIBW'
 ..'wAwAAAAAGQAAAAAA4v8MAAAAAA8BAAAAABkAIRBGcmFjdHVyZWQgV29ybGRzAwAAAAAAADdAIRBUZXh0U3Ryb2tlQ29sb3IzBjAwMCEWVGV4dFN0cm9rZVRyYW5zcGFyZW5jeSEOVGV4dFhBbGlnbm1lbnQoAgAAAAB+fn4AAIA/////IQdSZWFwU293DAAAAAAAAAAA'
-..'AABXACEBWCEIUmVhcC9Tb3chC0RlYXRoc0RhbmNlDAAAAAAAAAAAAACYACEBQyENRGVhdGgncyBEYW5jZSEMVUlMaXN0TGF5b3V0IRNIb3Jpem9udGFsQWxpZ25tZW50IQlTb3J0T3JkZXIDAAAAAAAAAEAhB1BhZGRpbmcSAAAAAC0AIQZIZWFsdGgMd71/P0z/p0h+'
-..'P9P/DAAAAAAsAQAAAAAjACECSFASAAAAAAYAKAIAAAAAfgAAAACAP/8AACEMSFBCYWNrZ3JvdW5kIQZTaGllbGQDAAAAAAAA4D8MAAAAP/r/AACAP/r/IQpIZWFsdGhUZXh0IQcxMDAvMTAwAwAAAAAAADRABpycnCgCAAAAAKOjowAAgD////8hCVVJUGFkZGluZyEL'
-..'UGFkZGluZ0xlZnQSAAAAAAoARAEAAQACAwQBCAACBQYHCAkKCwwNDg8QERITFAIJAAIVBgcICQoLDA0ODxAWEhcYGRQDCQAGBwgJCgsMDQ4PEBoSGxwdGB4UAwoABgcICQoLDA0ODxAaHyASIRwdGCIUAwoABgcICQoLDA0ODxAaEiMcDxgkJQ0UAwoABgcICQoLDA0O'
-..'DxAaEiYcJxgoJQ0UAwoABgcICQoLDA0ODxAaEikcJxgoJQ0UAwkABgcICQoLDA0ODxAaEhscHRgeFAMJAAYHCAkKCwwNDg8QGhIbHB0YHhQDCwAGBwgJCgsMDQ4PEBofKhIrHB0YGSUNLAMMAAItBgcICQoLDA0ODxAaEi4vMDEyMwk0NQQCBgACNgg3DA0ODxA4Ejk6'
-..'DQEAOzwEDQcAAj0GPggNDA0ODxA/EkA6DwEAOzwEDQcAAkEGPggJDA0ODxA/EkA6EQEAOzxCEQEAQ0QEDQcAAkUGBwgJDA0ODxBGEkc6FAEAO0hCFAIAQ0kfSiwUCwAGBwgJCgsMDQ4PEBoSSy8wMUwzCTQ1QhcCAENEH00sDQ0ACAkKCwwNDg8QThJPLzAxUDMJNFFS'
-..'U1QPVQ9CGQIAQ1YfTQQCBgACVwg3DA0ODxBYEjk6GwEAOzwEGwcAAj0GPggNDA0ODxA/EkA6HQEAOzwEGwcAAkEGPggJDA0ODxA/EkA6HwEAOzxCHwEAQ0QEGwcAAkUGBwgJDA0ODxBGEkc6IgEAO0hCIgIAQ0kfSiwiCwAGBwgJCgsMDQ4PEBoSSy8wMVkzCTQ1QiUC'
-..'AENEH00sGw0ACAkKCwwNDg8QThJPLzAxWjMJNFFSU1QPVQ9CJwIAQ1YfTQQCBgACWwg3DA0ODxBcEjk6KQEAOzwEKQcAAj0GPggNDA0ODxA/EkA6KwEAOzwEKQcAAkEGPggJDA0ODxA/EkA6LQEAOzxCLQEAQ0QEKQcAAkUGBwgJDA0ODxBGEkc6MAEAO0hCMAIAQ0kf'
-..'SiwwCwAGBwgJCgsMDQ4PEBoSSy8wMV0zCTQ1QjMCAENEH00sKQ0ACAkKCwwNDg8QThJPLzAxXjMJNFFSU1QPVQ9CNQIAQ1YfTV8CAwBgD2FiY2QEAQcAAmUGBwg3DA0ODxBmEmc6OAAABDgHAAJoBj4ICQwNDg8QPxJAOjoBADtpQjoCAENqH00EOAgAAmsGPggNDA0O'
-..'DxA/EkAcDzo9AQA7aQQ4CAACbAY+CAkKbQwNDg8QPxJuOj8BADtpQj8CAENWH00sOA8AAm8GBwgJCgsMDQ4PEBoSSy8wMXAzCTRxUnJUD1UPQkICAENzH010QgEAdXYA')[1]
+..'AABXACEBWCEIUmVhcC9Tb3chC0RlYXRoc0RhbmNlDAAAAAAAAAAAAACYACEBQyENRGVhdGgncyBEYW5jZSEMVUlMaXN0TGF5b3V0IRNIb3Jpem9udGFsQWxpZ25tZW50IQlTb3J0T3JkZXIDAAAAAAAAAEAhB1BhZGRpbmcSAAAAAC0AIQtSZWFsaXR5VGVhciEBViEM'
+..'UmVhbGl0eSBUZWFyIQZIZWFsdGgMd71/P0z/p0h+P9P/DAAAAAAsAQAAAAAjACECSFASAAAAAAYAKAIAAAAAfgAAAACAP/8AACEMSFBCYWNrZ3JvdW5kIQZTaGllbGQDAAAAAAAA4D8MAAAAP/r/AACAP/r/IQpIZWFsdGhUZXh0IQcxMDAvMTAwAwAAAAAAADRABpyc'
+..'nCgCAAAAAKOjowAAgD////8hCVVJUGFkZGluZyELUGFkZGluZ0xlZnQSAAAAAAoAUgEAAQACAwQBCAACBQYHCAkKCwwNDg8QERITFAIJAAIVBgcICQoLDA0ODxAWEhcYGRQDCQAGBwgJCgsMDQ4PEBoSGxwdGB4UAwoABgcICQoLDA0ODxAaHyASIRwdGCIUAwoABgcI'
+..'CQoLDA0ODxAaEiMcDxgkJQ0UAwoABgcICQoLDA0ODxAaEiYcJxgoJQ0UAwoABgcICQoLDA0ODxAaEikcJxgoJQ0UAwkABgcICQoLDA0ODxAaEhscHRgeFAMJAAYHCAkKCwwNDg8QGhIbHB0YHhQDCwAGBwgJCgsMDQ4PEBofKhIrHB0YGSUNLAMMAAItBgcICQoLDA0O'
+..'DxAaEi4vMDEyMwk0NQQCBgACNgg3DA0ODxA4Ejk6DQEAOzwEDQcAAj0GPggNDA0ODxA/EkA6DwEAOzwEDQcAAkEGPggJDA0ODxA/EkA6EQEAOzxCEQEAQ0QEDQcAAkUGBwgJDA0ODxBGEkc6FAEAO0hCFAIAQ0kfSiwUCwAGBwgJCgsMDQ4PEBoSSy8wMUwzCTQ1QhcC'
+..'AENEH00sDQ0ACAkKCwwNDg8QThJPLzAxUDMJNFFSU1QPVQ9CGQIAQ1YfTQQCBgACVwg3DA0ODxBYEjk6GwEAOzwEGwcAAj0GPggNDA0ODxA/EkA6HQEAOzwEGwcAAkEGPggJDA0ODxA/EkA6HwEAOzxCHwEAQ0QEGwcAAkUGBwgJDA0ODxBGEkc6IgEAO0hCIgIAQ0kf'
+..'SiwiCwAGBwgJCgsMDQ4PEBoSSy8wMVkzCTQ1QiUCAENEH00sGw0ACAkKCwwNDg8QThJPLzAxWjMJNFFSU1QPVQ9CJwIAQ1YfTQQCBgACWwg3DA0ODxBcEjk6KQEAOzwEKQcAAj0GPggNDA0ODxA/EkA6KwEAOzwEKQcAAkEGPggJDA0ODxA/EkA6LQEAOzxCLQEAQ0QE'
+..'KQcAAkUGBwgJDA0ODxBGEkc6MAEAO0hCMAIAQ0kfSiwwCwAGBwgJCgsMDQ4PEBoSSy8wMV0zCTQ1QjMCAENEH00sKQ0ACAkKCwwNDg8QThJPLzAxXjMJNFFSU1QPVQ9CNQIAQ1YfTV8CAwBgD2FiY2QEAgYAAmUINwwNDg8QWBI5OjgBADs8BDgHAAI9Bj4IDQwNDg8Q'
+..'PxJAOjoBADs8BDgHAAJBBj4ICQwNDg8QPxJAOjwBADs8QjwBAENEBDgHAAJFBgcICQwNDg8QRhJHOj8BADtIQj8CAENJH0osPwsABgcICQoLDA0ODxAaEksvMDFmMwk0NUJCAgBDRB9NLDgNAAgJCgsMDQ4PEE4STy8wMWczCTRRUlNUD1UPQkQCAENWH00EAQcAAmgG'
+..'Bwg3DA0ODxBpEmo6RgAABEYHAAJrBj4ICQwNDg8QPxJAOkgBADtsQkgCAENtH00ERggAAm4GPggNDA0ODxA/EkAcDzpLAQA7bARGCAACbwY+CAkKcAwNDg8QPxJxOk0BADtsQk0CAENWH00sRg8AAnIGBwgJCgsMDQ4PEBoSSy8wMXMzCTR0UnVUD1UPQlACAEN2H013'
+..'UAEAeHkA')[1]
 	
 
 local Running = true
@@ -1635,15 +1637,17 @@ local Combos = {
 --<<== Cooldowns
 local M1Attacking,SkillAttacking = unpack(table.create(2,false))
 local Cooldowns = {
-	Fractured_World = {LastUseTime=0,CooldownTime=10},
-	Reap_N_Sow = {LastUseTime=0,CooldownTime=6},
-	Dance_of_Death = {LastUseTime=0,CooldownTime=4}
+	Fractured_World = {LastUseTime=0,CooldownTime=12},
+	Reap_N_Sow = {LastUseTime=0,CooldownTime=7},
+	Dance_of_Death = {LastUseTime=0,CooldownTime=5},
+	RealityTear = {LastUseTime=0,CooldownTime=20}
 }
 
 game:GetService("RunService").Heartbeat:Connect(function()
 	CombatUI.Attacks.DeathsDance.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.Dance_of_Death.LastUseTime, Cooldowns.Dance_of_Death.CooldownTime)/Cooldowns.Dance_of_Death.CooldownTime, -6, 1, -6)
 	CombatUI.Attacks.FracturedWorlds.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.Fractured_World.LastUseTime, Cooldowns.Fractured_World.CooldownTime)/Cooldowns.Fractured_World.CooldownTime, -6, 1, -6)
 	CombatUI.Attacks.ReapSow.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.Reap_N_Sow.LastUseTime, Cooldowns.Reap_N_Sow.CooldownTime)/Cooldowns.Reap_N_Sow.CooldownTime, -6, 1, -6)
+	CombatUI.Attacks.RealityTear.Cooldown.Size = UDim2.new(math.min(os.clock() - Cooldowns.RealityTear.LastUseTime, Cooldowns.RealityTear.CooldownTime)/Cooldowns.RealityTear.CooldownTime, -6, 1, -6)
 end)
 
 local BindedKeys = {}
@@ -1984,7 +1988,7 @@ function Fractured_World()
 	CRTween(OuterShell,{4.8,Enum.EasingStyle.Circular,Enum.EasingDirection.Out,0,false,1.3},{Color=Color3.new(0,0,0)})
 	CRTween(Floor,{4.8,Enum.EasingStyle.Circular,Enum.EasingDirection.Out,0,false,1.3},{Color=Color3.new(1,1,1)})
 	CRTween(FloorBlack,{4.8,Enum.EasingStyle.Circular,Enum.EasingDirection.Out,0,false,1.3},{Color=Color3.new(0,0,0)})
-	ChangeEternalStorm(3)
+	ChangeEternalStorm(6)
 	Debris:AddItem(FracturedWorldDomain,20)
 	SkillAttacking = false
 end
@@ -2344,7 +2348,7 @@ function Dance_of_Death()
 		if l.Transparency >= 1 then continue end
 		tabinsert(SavedTransparency,{Part=l,LastTransparency=l.Transparency})
 	end
-	ChangeEternalStorm(3)
+	ChangeEternalStorm(4)
 	Warp(RootPos)
 	PlaySound(RootPos,6290067239,2,3,25,0,{ChorusSoundEffect={}})
 	for x,l in next,SavedTransparency do
@@ -2577,6 +2581,110 @@ end
 BindedKeys.z = Fractured_World
 BindedKeys.x = Reap_N_Sow
 BindedKeys.c = Dance_of_Death
+BindedKeys.v = function()
+	local Cooldown = Cooldowns.RealityTear
+	if os.clock()-Cooldown.LastUseTime<Cooldown.CooldownTime then return end
+	if SkillAttacking then return end
+	SkillAttacking = true
+	Cooldown.LastUseTime = os.clock()
+	
+	PlayAnim("RealityReap")
+	task.wait(.5)
+
+	pcall(function()
+		ToolRemote:FireClient(owner, "TearReality")
+	
+		local TweenService,RunService,Debris = game:GetService'TweenService',game:GetService'RunService',game:GetService'Debris'
+
+		local ColorCorrection = Instance.new("ColorCorrectionEffect")
+		ColorCorrection.Parent = game:GetService("Lighting")
+		Debris:AddItem(ColorCorrection,30)
+		
+		TweenService:Create(ColorCorrection,TweenInfo.new(.9,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{
+			Brightness=-.3,
+			Contrast=1
+		}):Play()
+	
+		local s = Instance.new("Sound", workspace)
+		s.Volume = 4
+		s.SoundId = "rbxassetid://11060067"
+		s.PlayOnRemove = true
+		s:Destroy()
+	
+		local s = Instance.new("Sound", workspace)
+		s.Volume = 2
+		s.PlaybackSpeed = 1.5
+		s.SoundId = "rbxassetid://7390331288"
+		s.PlayOnRemove = true
+		s:Destroy()
+	
+		task.delay(0.45, function()
+			local s = Instance.new("Sound", workspace)
+			s.Volume = 1.25
+			s.PlaybackSpeed = .2
+			s.SoundId = "rbxassetid://5989945551"
+			s.PlayOnRemove = true
+			s:Destroy()
+		end)
+	
+		for i = 1, 16 do
+			task.wait()
+		end
+		
+		task.wait(.37)
+		
+		local HitboxCF = OwnerHumanoid.RootPart.CFrame
+		local HitboxSize = Vector3.one*2048
+		
+		local StatsClone = tabclone(CurrStats)
+		StatsClone.BaseDamage *= 6
+		
+		ChangeEternalStorm(6)
+		
+		local AlreadyHit = {}
+		Hitbox(HitboxCF,HitboxSize,math.huge,{},function(GotModel,GotHumanoid)
+			if not GotModel or table.find(AlreadyHit,GotModel) then return end
+			tabinsert(AlreadyHit,GotModel)
+			local LifestealHPPercent = .6 -- 2%
+			local stat = {
+				Amount = (LifestealHPPercent/100)*OwnerHumanoid.MaxHealth
+			}
+			spawn(DoStuff,GotModel,Owner,false,StatsClone,false,stat)
+			Cooldowns.Dance_of_Death.LastUseTime -= .065
+		end)
+	
+		local s = Instance.new("Sound", workspace)
+		s.Volume = 1.6
+		s.PlaybackSpeed = .6
+		s.SoundId = "rbxassetid://5149987460"
+		s.PlayOnRemove = true
+		s:Destroy()
+	
+		local s = Instance.new("Sound", workspace)
+		s.Volume = 2
+		s.PlaybackSpeed = 1
+		s.SoundId = "rbxassetid://4965926555"
+		s.TimePosition = .45
+		s.PlayOnRemove = true
+		s:Destroy()
+	
+		local s = Instance.new("Sound", workspace)
+		s.Volume = 3
+		s.PlaybackSpeed = 1
+		s.SoundId = "rbxassetid://9112078011"
+		s.PlayOnRemove = true
+		s:Destroy()
+	
+		TweenService:Create(ColorCorrection,TweenInfo.new(.5,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{
+			Brightness=0,
+			Contrast=0
+		}):Play()
+		task.wait(.5)
+		ColorCorrection.Enabled = false
+	end)
+	
+	SkillAttacking = false
+end
 Add(KeyDown:Connect(function(Key)
 	if not Running then return end
 	if not ToolEquipped then return end
@@ -2847,7 +2955,7 @@ Add(RunService.Heartbeat:Connect(UpdateStats))
 ]==], scythe)
 assets.Deps.Parent = method
 
-NLS([=[
+local client = NLS([=[
 --<<== Written by Nekotari Chirune
 local Tool = script.Parent
 task.wait()
@@ -2897,6 +3005,111 @@ function FireServer(...)
 	Remote:FireServer(...)
 end
 
+local function realitytear()
+	local Camera = workspace.CurrentCamera
+	local TweenService,RunService,Debris = game:GetService'TweenService',game:GetService'RunService',game:GetService'Debris'
+	local TearModel = script.Tear:Clone()
+	local SlicesFolder = TearModel.Slices
+	local Center,Glass1,Glass2,Star = TearModel.Center,TearModel.Glass1, TearModel.Glass2, TearModel.Star
+
+	Debris:AddItem(TearModel,30)
+
+	for x,l in next,Camera:GetChildren() do
+		if l:IsA'Model' and l.Name=='tear' then
+			pcall(game.Destroy,l)
+		elseif l:IsA'ColorCorrectionEffect' and l.Name=='RealityCorrection' then
+			pcall(game.Destroy,l)
+		end
+	end
+
+	local function Create(ClassName)
+		local Exist,NewInst = pcall(Instance.new,ClassName)
+		if Exist and NewInst then
+			return function(Properties)
+				for x,l in next,Properties do
+					pcall(function()
+						NewInst[x]=l
+					end)
+				end
+				return NewInst
+			end
+		else
+			return nil
+		end
+	end
+
+	local SetCFrameCon = RunService.RenderStepped:Connect(function(Delta)
+		task.spawn(function()
+			local Pos = (Camera.CFrame*CFrame.new(0,0,-.154)).Position
+			Center.CFrame = CFrame.lookAt(Pos,Camera.CFrame.Position)
+		end)
+	end)
+
+	local function Slash()
+		local SlashPart = Create'Part'{Material=Enum.Material.Neon,Color=Color3.new(1,1,1),CastShadow=false,CanQuery=false,CanTouch=false,CanCollide=false,CFrame=Center.CFrame,Size=Vector3.new(1,.1,1),Parent=SlicesFolder}
+		local SlashSound = Center:WaitForChild'Slash' SlashSound.PlayOnRemove=true SlashSound.Parent=SlashPart pcall(game.Destroy,SlashSound)
+		local Weld = Create'Weld'{Part0=Center,Part1=SlashPart,C0=CFrame.new()*CFrame.Angles(math.rad(math.random(-3,3))+math.rad(math.random(-15,15)),math.rad(math.random(-10,10))+math.rad(math.random(-90,90)),math.rad(math.random(-10,10))+math.rad(math.random(-90,90))),Parent=SlashPart}
+		local BlockMesh = Create'BlockMesh'{Scale=Vector3.new(3,.1,3),Parent=SlashPart}
+		local ScaleTween = TweenService:Create(BlockMesh,TweenInfo.new(.075,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{
+			Scale=Vector3.new(.005,10000,.005)
+		}) ScaleTween:Play()
+	end
+	
+	Glass1.Transparency = .65
+	Glass2.Transparency = .65
+	TearModel.Parent = Camera
+	
+	task.spawn(function()
+		for x,l in next,Glass1:GetDescendants() do
+			if l:IsA'JointInstance' then pcall(game.Destroy,l) end
+		end
+		for x,l in next,Glass2:GetDescendants() do
+			if l:IsA'JointInstance' then pcall(game.Destroy,l) end
+		end
+	end)
+	
+	task.spawn(function()
+		task.wait(.045)
+		Slash()
+	end)
+
+	local GlassPrimWeld,GlassSecWeld = Center.GlassPrimary,Center.GlassSecondary
+	local RandAng1,RandAng2 = CFrame.Angles(math.rad(math.random(-20,20))+math.rad(math.random(-5,5)),math.rad(math.random(-20,20))+math.rad(math.random(-5,5)),math.rad(math.random(-20,20))+math.rad(math.random(-5,5))),CFrame.Angles(math.rad(math.random(-20,20))+math.rad(math.random(-5,5)),math.rad(math.random(-20,20))+math.rad(math.random(-5,5)),math.rad(math.random(-20,20))+math.rad(math.random(-5,5)))
+	for x=1,16 do
+		local DT = task.wait()
+		GlassPrimWeld.C0 = GlassPrimWeld.C0:Lerp(RandAng1,1-(2e-6^DT))
+		GlassSecWeld.C0 = GlassSecWeld.C0:Lerp(RandAng2,1-(2e-6^DT))
+	end
+	task.wait(.37)
+	local StarScale = TweenService:Create(Star,TweenInfo.new(.4,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{
+		Size=Vector3.new(15,15,0)
+	})
+	StarScale:Play() StarScale.Completed:Wait()
+	for x,l in next,SlicesFolder:GetChildren() do
+		pcall(game.Destroy,l)
+	end
+	
+	TweenService:Create(Star,TweenInfo.new(3.2,Enum.EasingStyle.Sine,Enum.EasingDirection.Out,0,false,0),{
+		Transparency=1
+	}):Play()
+	
+	Glass1.Transparency = 1
+	Glass2.Transparency = 1
+	Glass1.Glass.Enabled=true
+	Glass2.Glass.Enabled=true
+	task.spawn(function()
+		for x=1,32 do
+			task.wait()
+			Glass1.Glass:Emit(24)
+			Glass2.Glass:Emit(24)
+			Glass1.Glass.TimeScale = x
+			Glass2.Glass.TimeScale = x
+		end
+		Glass1.Glass.Enabled=false
+		Glass2.Glass.Enabled=false
+	end)
+end
+
 local lastcf = User.Character.HumanoidRootPart.CFrame
 local EndKey
 local ClientEventFuncs = {
@@ -2918,7 +3131,8 @@ local ClientEventFuncs = {
 	UpdatePosition = function(CF)
 		User.Character.HumanoidRootPart.CFrame = CF
 		lastcf = CF
-	end
+	end,
+	TearReality = realitytear
 }
 
 function Add(Con)
@@ -3003,3 +3217,33 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 	coroutine.wrap(FireServer)("ClientData",workspace.CurrentCamera.CFrame,KeysDown,Mouse.Hit,Mouse.Target,Mouse.UnitRay,UserInputService.MouseBehavior==Enum.MouseBehavior.LockCenter)
 end))
 ]=], scythe)
+
+local function Decode(b)local _=#b do local f={} for _,a in pairs(('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='):split(''))do f[a:byte()]=_-1 end local a=_ local d,e=table.create(math.floor(a/4)+1),1 local _=b:sub(-2)=='=='and 2 or b:sub(-1)=='='and 1 or 0 for _=1,_>0 and a-4 or a,4 do local b,c,a,_=b:byte(_,_+3) local _=f[b]*0x40000+f[c]*0x1000+f[a]*0x40+f[_] d[e]=string.char(bit32.extract(_,16,8),bit32.extract(_,8,8),bit32.extract(_,0,8)) e=e+1 end if _==1 then local b,_,a=b:byte(a-3,a-1) local _=f[b]*0x40000+f[_]*0x1000+f[a]*0x40 d[e]=string.char(bit32.extract(_,16,8),bit32.extract(_,8,8))elseif _==2 then local a,_=b:byte(a-3,a-2) local _=f[a]*0x40000+f[_]*0x1000 d[e]=string.char(bit32.extract(_,16,8))end b=table.concat(d)end local a=1 local function m(_)local _={string.unpack(_,b,a)} a=table.remove(_) return table.unpack(_)end local _=m('B') local l=m('B') l={bit32.extract(l,6,2)+1,bit32.extract(l,4,2)+1,bit32.extract(l,2,2)+1,bit32.extract(l,0,2)+1,bit32.band(_,0b1)>0} local h=('I'..l[1]) local f=('I'..l[2]) local _=('I'..l[3]) local b=('I'..l[4]) local d=m(h) local i=table.create(d) local c={} local a={[1]=function(_)return m('s'.._)end,[2]=function(_)return _~=0 end,[3]=function()return m('d')end,[4]=function(_,_)table.insert(c,{_,m(('I'..l[1]):rep(3))})end,[5]={CFrame.new,l[5]and'dddddddddddd'or'ffffffffffff'},[6]={Color3.fromRGB,'BBB'},[7]={BrickColor.new,'I2'},[8]=function(_)local _=m('I'.._) local a=table.create(_) for _=1,_ do a[_]=ColorSequenceKeypoint.new(m('f'),Color3.fromRGB(m('BBB')))end return ColorSequence.new(a)end,[9]=function(_)local _=m('I'.._) local a=table.create(_) for _=1,_ do a[_]=NumberSequenceKeypoint.new(m(l[5]and'ddd'or'fff'))end return NumberSequence.new(a)end,[10]={Vector3.new,l[5]and'ddd'or'fff'},[11]={Vector2.new,l[5]and'dd'or'ff'},[12]={UDim2.new,l[5]and'di2di2'or'fi2fi2'},[13]={Rect.new,l[5]and'dddd'or'ffff'},[14]=function()local _=m('B') local a={"Top","Bottom","Left","Right","Front","Back"} local c={} for b=0,5 do if bit32.extract(_,b,1)==1 then table.insert(c,Enum.NormalId[a[b+1]])end end return Axes.new(unpack(c))end,[15]=function()local _=m('B') local a={"Top","Bottom","Left","Right","Front","Back"} local b={} for c=0,5 do if bit32.extract(_,c,1)==1 then table.insert(b,Enum.NormalId[a[c+1]])end end return Faces.new(unpack(b))end,[16]={PhysicalProperties.new,l[5]and'ddddd'or'fffff'},[17]={NumberRange.new,l[5]and'dd'or'ff'},[18]={UDim.new,l[5]and'di2'or'fi2'},[19]=function()return Ray.new(Vector3.new(m(l[5]and'ddd'or'fff')),Vector3.new(m(l[5]and'ddd'or'fff')))end} for c=1,d do local _=m('B') local b=bit32.band(_,0b11111) local _=(_-b)/0b100000 local a=a[b] if type(a)=='function'then i[c]=a(_,c)else i[c]=a[1](m(a[2]))end end for _,_ in pairs(c)do i[_[1]]=CFrame.fromMatrix(i[_[2]],i[_[3]],i[_[4]])end local a=m(f) local e={} local d={} for a=1,a do local _=i[m(h)] local k local j,g if _=="UnionOperation"then k=DecodeUnion(i,l,m) k.UsePartColor=true elseif _:find("Script")then k=Instance.new("Folder") Script(k,_=='ModuleScript')elseif _=="MeshPart"then k=Instance.new("Part") j=Instance.new("SpecialMesh") j.MeshType=Enum.MeshType.FileMesh j.Parent=k else k=Instance.new(_)end local c=e[m(f)] local _=m(b) local b=m(b) e[a]=k for _=1,_ do local a,b=i[m(h)],i[m(h)] local _=false if j then if a=="MeshId"then j.MeshId=b _=true elseif a=="TextureID"then j.TextureId=b _=true elseif a=="Size"then if not g then g=b else j.Scale=b/g end elseif a=="MeshSize"then if not g then g=b j.Scale=k.Size/b else j.Scale=g/b end _=true end end if(not _)then k[a]=b end end if j then if j.MeshId==''then if j.TextureId==''then j.TextureId='rbxasset://textures/meshPartFallback.png'end j.Scale=k.Size end end for _=1,b do k:SetAttribute(i[m(h)],i[m(h)])end if not c then table.insert(d,k)else k.Parent=c end end local _=m(_) for _=1,_ do local a,_,b=m(f),m(h),m(f) e[a][i[_]]=e[b]end return d end
+
+local tearmodel = Decode('AABlIQVNb2RlbCEETmFtZSEEdGVhciEKV29ybGRQaXZvdARiY2QhBkZvbGRlciEGU2xpY2VzIQRQYXJ0IQZDZW50ZXIhCEFuY2hvcmVkIiENQm90dG9tU3VyZmFjZQMAAAAAAAAAACEKQnJpY2tDb2xvcgfpAyEGQ0ZyYW1lBB1jZCEKQ2FuQ29sbGlkZQIhCENhblRv'
+	..'dWNoIQpDYXN0U2hhZG93IQVDb2xvcgb///8hBkxvY2tlZCEITWFzc2xlc3MhCE1hdGVyaWFsAwAAAAAAgJhAIQhQb3NpdGlvbgoAAAAAAAAkQgA0s70hC1JlZmxlY3RhbmNlAwAAAAAAAPA/IQRTaXplCm8SgzpvEoM6bxKDOiEKVG9wU3VyZmFjZSEMVHJhbnNwYXJl'
+	..'bmN5IQVTb3VuZCEGUGF1c2UyIQ1QbGF5YmFja1NwZWVkAwAAAAAAAPg/IQdTb3VuZElkIRdyYnhhc3NldGlkOi8vNzM5MDMzMTI4OCEGVm9sdW1lAwAAAAAAAABAIQVTbGFzaAMAAAAAAAD0PyEXcmJ4YXNzZXRpZDovLzU5ODk5NDU1NTEDAAAAoJmZyT8hBVBhdXNl'
+	..'IRVyYnhhc3NldGlkOi8vMTEwNjAwNjcDAAAAAAAAEEAhCFNoYXR0ZXIzIRdyYnhhc3NldGlkOi8vOTExMjA3ODAxMQMAAAAAAAAIQCEIU2hhdHRlcjIhF3JieGFzc2V0aWQ6Ly80OTY1OTI2NTU1IQxUaW1lUG9zaXRpb24DzczMzMzM3D8hB1NoYXR0ZXIDAAAAQDMz'
+	..'4z8hF3JieGFzc2V0aWQ6Ly81MTQ5OTg3NDYwAwAAAKCZmfk/IQRXZWxkIQZCVFdlbGQhAkMwBGVjZCEFUGFydDAhDkdsYXNzU2Vjb25kYXJ5IQVQYXJ0MSEMR2xhc3NQcmltYXJ5IQZHbGFzczIhC0JhY2tTdXJmYWNlAwAAAAAAACRAIQxGcm9udFN1cmZhY2UhC0xl'
+	..'ZnRTdXJmYWNlIQxSaWdodFN1cmZhY2UKAADIQgAAoELNzMw9IQ9QYXJ0aWNsZUVtaXR0ZXIhBUdsYXNzIQdFbmFibGVkIQhMaWZldGltZREAAIA/AABAQCENTGlnaHRFbWlzc2lvbiEMTG9ja2VkVG9QYXJ0IQhSb3RTcGVlZBEAAJbDAACWQyEIUm90YXRpb24RAAAA'
+	..'AAAAtEMpAgAAAAA6UX8+gjL6PgAAgD8AAAAAAAAAACEFU3BlZWQRAADIQQAAyEEhC1NwcmVhZEFuZ2xlCwAAtEMAALRDIQdUZXh0dXJlIRdyYnhhc3NldGlkOi8vNDI5Mjk3MDY0MiEHWk9mZnNldAMAAAAAAADwvyEGR2xhc3MxCgAAAAAAACRCADyMvQoAAIA/AAAA'
+	..'AAAAAAAKAAAAAAAAgD8AAAAACgAAAAAAAAAAzcxMPhABAAIAAgMEBQYBAQACBwgBEQACCQoLDA0ODxAREhMUExUTFhcYCxkLGhscHR4fICEiDSMfJAMEAAIlJicoKSorJAMEAAIsJi0oLiovJAMDAAIwKDEqMiQDAwACMyg0KjUkAwQAAjYoNzg5KiskAwQAAjomOyg8'
+	..'Kj0+AwIAAj9AQT4DAQACQz4DAQACRQgBFAACRkdIDEgODxAREhMUExUTFhdJSEpIGAsZCxobHB0eH0tIIEwiSCMfTQ0MAAJOTxNQUVIfUwtUVVZXIFhZWltcXV5fYAgBFAACYUdIDEgODxAREhMUExUTFhdJSEpIGAsZCxobHB0eH0tIIEwiSCMfTQ8MAAJOTxNQUVIf'
+	..'UwtUVVZXIFhZWltcXV5fYAUKQgMLQgMLRA0MQgMMRA8=')[1]
+local starmesh = game:GetService("InsertService"):CreateMeshPartAsync("rbxassetid://4886514859", Enum.CollisionFidelity.Box, Enum.RenderFidelity.Precise)
+starmesh.Size = Vector3.zero
+starmesh.CastShadow = false
+starmesh.CanCollide = false
+starmesh.CanQuery = false
+starmesh.CanTouch = false
+starmesh.Anchored = false
+starmesh.Massless = true
+starmesh.Material = Enum.Material.Neon
+starmesh.Color = Color3.fromRGB(248, 248, 248)
+starmesh.CFrame = CFrame.new(0, 41, 0.112)
+starmesh.Name = "Star"
+starmesh.Parent = tearmodel
+tearmodel.Center.BTWeld.Part1 = starmesh
+
+tearmodel.Name = "Tear"
+tearmodel.Parent = client
