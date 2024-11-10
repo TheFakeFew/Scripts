@@ -1388,6 +1388,9 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		CombatUI.Health.HealthText.Text = comma_value(math.floor(OwnerHumanoid.Health)).." / "..comma_value(math.floor(OwnerHumanoid.MaxHealth))
 		shield.Parent = nil
 	end
+
+	OwnerHumanoid:SetStateEnabled(Enum.HumanoidStateType.FallingDown, false)
+	OwnerHumanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll, false)
 end)
 
 local function Hitbox(CF:CFrame,Size:Vector3,MaxParts:number,IgnoreList:{Instance},Func:void)
@@ -2156,7 +2159,6 @@ function Reap_N_Sow()
 			CRTween(Whirlwind,{2,Enum.EasingStyle.Quint,Enum.EasingDirection.Out},{CFrame=Whirlwind.CFrame*(Ang3-Ang3.Position)})
 			CRTween(Whirlwind,{.7,Enum.EasingStyle.Quad,Enum.EasingDirection.Out},{Transparency=1})
 		end
-		OwnerHumanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,false)
 		OwnerRoot.Anchored = true
 		OwnerRoot.Velocity = Vector3.zero
 		PlayAnim('RealitySowGlide')
@@ -2240,9 +2242,6 @@ function Reap_N_Sow()
 		OwnerRoot.Anchored = false
 		OwnerRoot.Velocity = Vector3.zero
 		ChangeEternalStorm(3)
-		delay(2,function()
-			OwnerHumanoid:SetStateEnabled(Enum.HumanoidStateType.Ragdoll,true)
-		end)
 	end
 	if ReapSowTable.Highlight and not IsAncestorOf(workspace,ReapSowTable.Highlight) then
 		if ReapSowTable.Target then
