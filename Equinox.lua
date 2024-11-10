@@ -2970,7 +2970,7 @@ Add(RunService.RenderStepped:Connect(function(Delta)
 	end
 	dt = dt + Delta
 
-	if(dt < 1/60)then return end
+	if(dt < 1/30)then return end
 	dt = 0
 
 	if not(Remote and Remote.Parent and game:IsAncestorOf(Remote))then
