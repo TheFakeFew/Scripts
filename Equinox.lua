@@ -931,6 +931,9 @@ local Animator,AnimConnection=(function()
 			for model, data in next, WeldC0 do
 				for i, v in next, data do
 					i.C0 = v
+					if(MotorData[model][i])then
+						MotorData[model][i].C0 = v
+					end
 				end
 			end
 			
@@ -1061,16 +1064,24 @@ local Animator,AnimConnection=(function()
 							local Pose = ToAnimate[i]
 							if not Pose[4] then
 								local TCF = Pose[2]
-								if FadeIn and TimeSince < FadeIn then
-									TCF = Pose[1].C0*(WeldC0[Model][Pose[1]]:Inverse()):Lerp(TCF, TimeSince / FadeIn)
-								end
 								
 								if(MotorData[Model][Pose[1]])then
+									if FadeIn and TimeSince < FadeIn then
+										TCF = MotorData[Model][Pose[1]].C0*(WeldC0[Model][Pose[1]]:Inverse()):Lerp(TCF, TimeSince / FadeIn)
+									end
+
 									Pose[1].Enabled = false
 									MotorData[Model][Pose[1]].Enabled = true
-									MotorData[Model][Pose[1]].C0 = WeldC0[Model][Pose[1]] * TCF
+									game:GetService("TweenService"):Create(MotorData[Model][Pose[1]], TweenInfo.new(.2), {
+										C0 = WeldC0[Model][Pose[1]] * TCF
+									}):Play()
 								else
-									Pose[1].C0 = WeldC0[Model][Pose[1]] * TCF
+									if FadeIn and TimeSince < FadeIn then
+										TCF = Pose[1].C0*(WeldC0[Model][Pose[1]]:Inverse()):Lerp(TCF, TimeSince / FadeIn)
+									end
+									game:GetService("TweenService"):Create(Pose[1], TweenInfo.new(.2), {
+										C0 = WeldC0[Model][Pose[1]] * TCF
+									}):Play()
 								end
 							end
 							if Pose[3] ~= LastPoseName and Pose[3] ~= 'Keyframe' then
