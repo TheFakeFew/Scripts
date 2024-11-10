@@ -1448,6 +1448,7 @@ end
 local animatingshield = false
 local lastshieldstate = shield.Parent ~= nil
 game:GetService("RunService").Heartbeat:Connect(function()
+	OwnerHumanoid.MaxHealth = 2650
 	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
 
 	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
