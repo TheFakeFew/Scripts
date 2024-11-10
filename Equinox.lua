@@ -1388,7 +1388,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 		shield.Parent = nil
 	end
 
-	if(framei%5)then
+	if(framei%5 == 0)then
 		OwnerCharacter.HumanoidRootPart.CFrame = OwnerCharacter.HumanoidRootPart.CFrame
 	end
 end)
