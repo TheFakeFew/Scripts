@@ -129,7 +129,7 @@ for i, v in next, Cape:GetChildren() do
 end
 
 local Running = true
-local LastHumSpeed,CurrentHumSpeed = 32, 32
+local LastHumSpeed,CurrentHumSpeed = 52, 52
 
 local StatsFolder = FindFirstChild(Tool,'WeaponStats')
 local StatObjs = {
@@ -228,6 +228,41 @@ local SWait,Swait,swait = unpack(tabcreate(3,SteppedWait))
 local Dependencies:Folder = _Clone(WaitForChild(script,'Deps'))
 Dependencies = _Clone(Dependencies) pcall(game.Destroy,script.Deps)
 local Assets:Folder = Dependencies
+
+local SlashFlipbook = {
+	Core={},
+	Contrast = {
+		"rbxassetid://14960930926",
+		"rbxassetid://14960930836",
+		"rbxassetid://14960930707",
+		"rbxassetid://14960930600",
+		"rbxassetid://14960930484",
+		"rbxassetid://14960930341",
+		"rbxassetid://14960930228",
+		"rbxassetid://14960930009",
+		"rbxassetid://14960929870",
+		"rbxassetid://14960929784",
+		"rbxassetid://14960929661",
+		"rbxassetid://14960929511",
+		"rbxassetid://14960929425",
+		"rbxassetid://14960929294"
+	},
+	Contrast2 = {
+		"rbxassetid://14960824401",
+		"rbxassetid://14960831000",
+		"rbxassetid://14960830883",
+		"rbxassetid://14960830725",
+		"rbxassetid://14960830595",
+		"rbxassetid://14960830439",
+		"rbxassetid://14960830326",
+		"rbxassetid://14960830231",
+		"rbxassetid://14960830159",
+	}
+}
+local FlipbookFolder = Dependencies.Flipbook
+for x=1,#GetChildren(FlipbookFolder) do
+	SlashFlipbook.Core[x] = FlipbookFolder[tostring(x)].Texture
+end
 
 local ToolEquipped = false
 
@@ -1397,11 +1432,28 @@ local w = Instance.new("Weld", shield)
 w.Part0 = shield
 w.Part1 = OwnerCharacter.HumanoidRootPart
 
+local lastcountered = tick()
+
 OwnerHumanoid.HealthChanged:Connect(function()
 	task.defer(function()
 		local damagetaken = lasthp - OwnerHumanoid.Health
 		if(damagetaken <= 0)then
 			lasthp = OwnerHumanoid.Health
+			return
+		end
+		
+		if(tick() - lastcountered < .5)then
+			OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
+			lasthp = OwnerHumanoid.Health
+			return
+		end
+		
+		if(math.random(1, 5) == 1 and tick() - lastcountered > 5)then
+			OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
+			lasthp = OwnerHumanoid.Health
+			lastcountered = tick()
+			
+			counterDamage()
 			return
 		end
 		
@@ -1431,6 +1483,13 @@ OwnerHumanoid.HealthChanged:Connect(function()
 	end)
 end)
 
+task.spawn(function()
+	while task.wait(.5) do
+		if(truehp >= OwnerHumanoid.MaxHealth)then
+			truehp += 10
+		end
+	end
+end)
 
 local shieldsizeadd = 0
 
@@ -1449,7 +1508,13 @@ local animatingshield = false
 local lastshieldstate = shield.Parent ~= nil
 game:GetService("RunService").Heartbeat:Connect(function()
 	OwnerHumanoid.MaxHealth = 2650
-	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
+	OwnerHumanoid.UseJumpPower = true
+	OwnerHumanoid.JumpPower = 50+40
+	
+	if(truehp < OwnerHumanoid.Health)then
+		truehp = OwnerHumanoid.Health
+	end
+	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1200)
 
 	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
 	CombatUI.Health.Shield.Size = UDim2.new(math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1), -6 * (math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1)), 1, -6)
@@ -1611,40 +1676,6 @@ local function AddSpeedBoost(Amount)
 end
 
 --<<== Slash Utilities & KeyFrameSequences
-local SlashFlipbook = {
-	Core={},
-	Contrast = {
-		"rbxassetid://14960930926",
-		"rbxassetid://14960930836",
-		"rbxassetid://14960930707",
-		"rbxassetid://14960930600",
-		"rbxassetid://14960930484",
-		"rbxassetid://14960930341",
-		"rbxassetid://14960930228",
-		"rbxassetid://14960930009",
-		"rbxassetid://14960929870",
-		"rbxassetid://14960929784",
-		"rbxassetid://14960929661",
-		"rbxassetid://14960929511",
-		"rbxassetid://14960929425",
-		"rbxassetid://14960929294"
-	},
-	Contrast2 = {
-		"rbxassetid://14960824401",
-		"rbxassetid://14960831000",
-		"rbxassetid://14960830883",
-		"rbxassetid://14960830725",
-		"rbxassetid://14960830595",
-		"rbxassetid://14960830439",
-		"rbxassetid://14960830326",
-		"rbxassetid://14960830231",
-		"rbxassetid://14960830159",
-	}
-}
-local FlipbookFolder = Dependencies.Flipbook
-for x=1,#GetChildren(FlipbookFolder) do
-	SlashFlipbook.Core[x] = FlipbookFolder[tostring(x)].Texture
-end
 
 function Glowify(Color,Func)
 	local New = Color3.fromRGB((Color.R*65)^2,(Color.G*65)^2,(Color.B*65)^2)
@@ -2831,6 +2862,72 @@ BindedKeys.v = function()
 	
 	SkillAttacking = false
 end
+
+function counterDamage()
+	PlayAnim('RealityScytheSpin',1.25)
+	
+	task.wait(.2)
+	
+	ChangeEternalStorm(2)
+	
+	local DefaultScale = Vector3.new(15,10,15)
+	local asd = {
+		Inner = {Rot=1,Size=DefaultScale/1.5},
+		Outer = {Rot=2,Size=DefaultScale*1.5}
+	}
+	
+	local TempSfx = IT('Sound',OwnerHumanoid.RootPart,{Pitch=1.8,Volume=2,EmitterSize=25,Name='DeathDanceSFX',SoundId=`rbxassetid://{6310837681}`})
+	IT('PitchShiftSoundEffect',TempSfx,{Octave=.5})
+	
+	local RandAngs = {
+		--[1]
+		{AngCF=CFrame.Angles(math.rad(Rand(4,7,1e8)),0,math.rad(Rand(1,2,1e8))),},
+		--[2]
+		{AngCF=CFrame.Angles(math.rad(-(Rand(4,7,1e8))),0,math.rad(-(Rand(1,2.5,1e8)))),}
+	}
+	
+	for x=1,3 do
+		RootPos = OwnerHumanoid.RootPart.CFrame
+		spawn(function()
+			for x2,l in next,asd do
+				local RandAng=RandAngs[l.Rot].AngCF
+				local SlashScale=l.Size
+				Slash(RootPos*RandAng,({720,-720})[l.Rot],.8,l.Size,{Color1=Color3.new(0,0,0),Color2=Glowify(Color3.new(1,1,1))},{Trans1=0,Trans2=-2.5}, {Main=SlashFlipbook.Contrast,Sub=SlashFlipbook.Contrast2})
+				local HitboxCF = RootPos*RandAng
+				local HitboxSize = Vector3.new(SlashScale.X*2,SlashScale.Y/5,SlashScale.Z*2)
+				spawn(function()
+					local AlreadyHit = {}
+					Hitbox(HitboxCF,HitboxSize,650,{},function(GotModel,GotHumanoid)
+						if not GotModel or tabfind(AlreadyHit,GotModel) then return end
+						if tostring(x2)=='Inner' then
+							if tabfind(AlreadyHit,GotModel) then return end
+							tabinsert(AlreadyHit,GotModel)
+							local StatsClone2:WeaponStats = tabclone(CurrStats)
+							StatsClone2.BaseDamage = math.floor(StatsClone2.BaseDamage/2.25)
+
+							local TargMaxHP,TargCurrHP = GotHumanoid.MaxHealth,GotHumanoid.Health
+							
+							local MissingPercent = clamp((TargMaxHP-TargCurrHP)/TargMaxHP,.333333333333333333,1)
+							StatsClone2.BaseDamage = math.floor((StatsClone2.BaseDamage)*(3*MissingPercent))/2
+
+							spawn(DoStuff,GotModel,Owner,false,StatsClone2,false)
+						else 
+							if tabfind(AlreadyHit,GotModel) then return end
+							tabinsert(AlreadyHit,GotModel)
+							local StatsClone2:WeaponStats = tabclone(CurrStats)
+							StatsClone2.BaseDamage = math.floor(StatsClone2.BaseDamage/3)
+							spawn(DoStuff,GotModel,Owner,false,StatsClone2,false)
+						end
+					end)
+				end)
+			end
+		end)
+		
+		TempSfx:Play()
+		swait(.125*60)
+	end
+end
+
 Add(KeyDown:Connect(function(Key)
 	if not Running then return end
 	if not ToolEquipped then return end
@@ -3020,6 +3117,13 @@ function NewRemotes()
 	end
 	EffectRemote.Archivable = false
 end
+
+LoadAnim(IdleKF,OwnerCharacter)
+spawn(function()
+	for x,l in next,{Atk1KF,Atk2KF,SlamKF,SpinKF,ReapKF,SowKF,SowFinishKF} do
+		LoadAnim(l,OwnerCharacter)
+	end
+end)
 
 --<<== Connections & Initialize
 Add(Tool.Equipped:Connect(function()
