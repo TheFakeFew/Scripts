@@ -1442,6 +1442,8 @@ OwnerHumanoid.HealthChanged:Connect(function()
 			lasthp = OwnerHumanoid.Health
 			return
 		end
+		
+		lastdamaged = tick()
 
 		if(truehp > OwnerHumanoid.MaxHealth and damagetaken > (truehp - OwnerHumanoid.MaxHealth))then
 			damagetaken = (truehp - OwnerHumanoid.MaxHealth)
@@ -1463,8 +1465,6 @@ OwnerHumanoid.HealthChanged:Connect(function()
 				return
 			end
 		end
-
-		lastdamaged = tick()
 
 		truehp -= damagetaken
 		OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
