@@ -1487,9 +1487,9 @@ OwnerHumanoid.HealthChanged:Connect(function()
 end)
 
 task.spawn(function()
-	while task.wait(.5) do
+	while task.wait(.25) do
 		if(truehp >= OwnerHumanoid.MaxHealth and tick() - lastdamaged > 5)then
-			truehp += 10
+			truehp += 5
 		end
 	end
 end)
