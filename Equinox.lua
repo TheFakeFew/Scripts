@@ -1512,6 +1512,8 @@ end
 local animatingshield = false
 local lastshieldstate = shield.Parent ~= nil
 game:GetService("RunService").Heartbeat:Connect(function()
+	if(OwnerHumanoid.Health <= 0)then return end
+
 	OwnerHumanoid.MaxHealth = 2650
 	OwnerHumanoid.UseJumpPower = true
 	OwnerHumanoid.JumpPower = 50+40
