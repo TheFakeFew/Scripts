@@ -1443,27 +1443,29 @@ OwnerHumanoid.HealthChanged:Connect(function()
 			return
 		end
 		
-		if(tick() - lastcountered < .5)then
-			OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
-			lasthp = OwnerHumanoid.Health
-			return
-		end
-		
-		if(tick() - lastcountered > 5)then
-			OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
-			lasthp = OwnerHumanoid.Health
-			lastcountered = tick()
-			
-			counterDamage()
-			return
-		end
-		
 		lastdamaged = tick()
 
 		if(truehp > OwnerHumanoid.MaxHealth and damagetaken > (truehp - OwnerHumanoid.MaxHealth))then
 			damagetaken = (truehp - OwnerHumanoid.MaxHealth)
 		end
-	
+
+		if((truehp-damagetaken) < OwnerHumanoid.MaxHealth)then
+			if(tick() - lastcountered < .5)then
+				OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
+				lasthp = OwnerHumanoid.Health
+				return
+			end
+		
+			if(tick() - lastcountered > 5)then
+				OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
+				lasthp = OwnerHumanoid.Health
+				lastcountered = tick()
+
+				counterDamage()
+				return
+			end
+		end
+
 		truehp -= damagetaken
 		OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
 		
