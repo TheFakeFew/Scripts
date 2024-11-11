@@ -1433,6 +1433,7 @@ w.Part0 = shield
 w.Part1 = OwnerCharacter.HumanoidRootPart
 
 local lastcountered = tick()
+local lastdamaged = tick()
 
 OwnerHumanoid.HealthChanged:Connect(function()
 	task.defer(function()
@@ -1457,6 +1458,8 @@ OwnerHumanoid.HealthChanged:Connect(function()
 			return
 		end
 		
+		lastdamaged = tick()
+
 		if(truehp > OwnerHumanoid.MaxHealth and damagetaken > (truehp - OwnerHumanoid.MaxHealth))then
 			damagetaken = (truehp - OwnerHumanoid.MaxHealth)
 		end
@@ -1485,7 +1488,7 @@ end)
 
 task.spawn(function()
 	while task.wait(.5) do
-		if(truehp >= OwnerHumanoid.MaxHealth)then
+		if(truehp >= OwnerHumanoid.MaxHealth and tick() - lastdamaged > 5)then
 			truehp += 10
 		end
 	end
