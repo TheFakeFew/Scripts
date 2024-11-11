@@ -1449,7 +1449,7 @@ OwnerHumanoid.HealthChanged:Connect(function()
 			return
 		end
 		
-		if(math.random(1, 5) == 1 and tick() - lastcountered > 5)then
+		if(tick() - lastcountered > 5)then
 			OwnerHumanoid.Health = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth)
 			lasthp = OwnerHumanoid.Health
 			lastcountered = tick()
