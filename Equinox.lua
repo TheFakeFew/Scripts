@@ -1436,14 +1436,14 @@ local lastcountered = tick()
 local lastdamaged = tick()
 
 OwnerHumanoid.HealthChanged:Connect(function()
+	lastdamaged = tick()
+
 	task.defer(function()
 		local damagetaken = lasthp - OwnerHumanoid.Health
 		if(damagetaken <= 0)then
 			lasthp = OwnerHumanoid.Health
 			return
 		end
-		
-		lastdamaged = tick()
 
 		if(truehp > OwnerHumanoid.MaxHealth and damagetaken > (truehp - OwnerHumanoid.MaxHealth))then
 			damagetaken = (truehp - OwnerHumanoid.MaxHealth)
