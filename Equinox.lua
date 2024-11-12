@@ -1282,7 +1282,7 @@ end
 
 local function calculateDamage(maxhp, dmg, k)
 	dmg = dmg or 20
-	k = k or 0.25
+	k = k or 0.20
 
 	local damage = dmg * (1 - k * ((maxhp - 100) / maxhp) * (1 - maxhp / 100))
 	return math.max(damage, dmg)
@@ -1521,7 +1521,7 @@ game:GetService("RunService").Heartbeat:Connect(function()
 	if(truehp < OwnerHumanoid.Health)then
 		truehp = OwnerHumanoid.Health
 	end
-	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1200)
+	truehp = math.clamp(truehp, 0, OwnerHumanoid.MaxHealth+1000)
 
 	CombatUI.Health.HP.Size = UDim2.new(math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), -6*math.min(OwnerHumanoid.Health/OwnerHumanoid.MaxHealth, 1), 1, -6)
 	CombatUI.Health.Shield.Size = UDim2.new(math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1), -6 * (math.clamp((truehp - OwnerHumanoid.MaxHealth)/OwnerHumanoid.MaxHealth, 0, 1)), 1, -6)
