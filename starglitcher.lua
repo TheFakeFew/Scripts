@@ -1,8 +1,6 @@
 local mouse, Mouse, Client, MouseEventConnections = nil, nil, nil, nil
     local Player = owner
-    if(not Player)then
-        return
-    end
+	
         MouseEventConnections = {}
         Client = NLS([[
             local Player = game:GetService('Players').LocalPlayer
@@ -3950,7 +3948,7 @@ function attackthree()
 	attack = false
 end
 local attacktype = 1
-mouse.Button1Down:connect(function()
+mouse.Button1Down:Connect(function()
 	if attack == false and attacktype == 1 then
 		attacktype = 2
 		attackone()
@@ -3964,7 +3962,7 @@ mouse.Button1Down:connect(function()
 		attacktype = 1
 	end
 end)
-mouse.KeyDown:connect(function(k)
+mouse.KeyDown:Connect(function(k)
 	if k == "q" and attack == false and ModeOfGlitch ~= 2 then
 		ModeOfGlitch = 2
 		storehumanoidWS = 16
