@@ -183,6 +183,8 @@ end)
 
 --//Paste script below this line.
 
+task.wait(.5)
+
 warn("Star Glitcher Loaded.")
 warn("All purpose switcher...")
 warn("Edit By Frepix.")
