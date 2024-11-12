@@ -1,6 +1,8 @@
-local Mouse, Client, MouseEventConnections = nil, nil, nil, nil
+local mouse, Mouse, Client, MouseEventConnections = nil, nil, nil, nil
     local Player = owner
-	
+    if(not Player)then
+        return
+    end
         MouseEventConnections = {}
         Client = NLS([[
             local Player = game:GetService('Players').LocalPlayer
@@ -41,8 +43,8 @@ end)
         Event.Name = "_MouseEvent"
         Client.Remote.Value = Event
         Client.Disabled = false
-        local mouse = {}
-        mouse.CleanUp = function()
+        local fakemouse = {}
+        fakemouse.CleanUp = function()
             for i,v in next, MouseEventConnections do
                 pcall(function()
                     v:Disconnect()
@@ -54,22 +56,22 @@ end)
                 Client:Destroy()
             end)
         end
-        mouse.KeyDown = {}
-        mouse.KeyUp = {}
-        mouse.Button1Down = {}
-        mouse.Button1Up = {}
-        local function setmouseenv(data)
-            mouse.Hit = data.Hit or CFrame.identity
-            mouse.Target = data.Target or nil
+        fakemouse.KeyDown = {}
+        fakemouse.KeyUp = {}
+        fakemouse.Button1Down = {}
+        fakemouse.Button1Up = {}
+        local function setfakemouseenv(data)
+            fakemouse.Hit = data.Hit or CFrame.identity
+            fakemouse.Target = data.Target or nil
         end
-        setmouseenv({})
-        function mouse.KeyDown:Connect(func)
+        setfakemouseenv({})
+        function fakemouse.KeyDown:Connect(func)
             local returned = {}
             local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
                 if(Plr ~= Player)then return end
                 if(type == "KeyEvent")and(data.Key ~= "mouse1")then
                     if(not data.Up)then
-                        setmouseenv(data)
+                        setfakemouseenv(data)
                         func(data.Key)
                     end
                 end
@@ -80,13 +82,13 @@ end)
             end
             return returned
         end
-        function mouse.KeyUp:Connect(func)
+        function fakemouse.KeyUp:Connect(func)
             local returned = {}
             local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
                 if(Plr ~= Player)then return end
                 if(type == "KeyEvent")and(data.Key ~= "mouse1")then
                     if(data.Up)then
-                        setmouseenv(data)
+                        setfakemouseenv(data)
                         func(data.Key)
                     end
                 end
@@ -97,13 +99,13 @@ end)
             end
             return returned
         end
-        function mouse.Button1Down:Connect(func)
+        function fakemouse.Button1Down:Connect(func)
             local returned = {}
             local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
                 if(Plr ~= Player)then return end
                 if(type == "KeyEvent")then
                     if(not data.Up)and(data.Key == "mouse1")then
-                        setmouseenv(data)
+                        setfakemouseenv(data)
                         func()
                     end
                 end
@@ -114,13 +116,13 @@ end)
             end
             return returned
         end
-        function mouse.Button1Up:Connect(func)
+        function fakemouse.Button1Up:Connect(func)
             local returned = {}
             local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
                 if(Plr ~= Player)then return end
                 if(type == "KeyEvent")then
                     if(data.Up)and(data.Key == "mouse1")then
-                        setmouseenv(data)
+                        setfakemouseenv(data)
                         func()
                     end
                 end
@@ -134,11 +136,11 @@ end)
         local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
             if(Plr ~= Player)then return end
             if(type == "MouseUpdate")then
-                setmouseenv(data)
+                setfakemouseenv(data)
             end
         end)
         table.insert(MouseEventConnections, ev)
-    Mouse = mouse
+    mouse, Mouse = fakemouse, fakemouse
 
 	local ArtificialHB = Instance.new("BindableEvent", script)
 	if(ArtificialHB)then
@@ -1259,7 +1261,6 @@ function RecolorTextAndRename(name, col1, col2)
 	text.TextColor3 = col1
 	text.Text = name
 end
-mouse = Player:GetMouse()
 RSH, LSH = nil, nil
 RW, LW = Instance.new("Weld"), Instance.new("Weld")
 RW.Name = "Right Shoulder"
