@@ -150,7 +150,7 @@ for i,v in next, assets:GetChildren() do
 	v.Parent = script
 end
 
-Player = game:GetService("Players").LocalPlayer
+Player = owner
 
 NLS([[
 while true do
