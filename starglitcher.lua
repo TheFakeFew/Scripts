@@ -146,6 +146,41 @@ end)
         Mouse = fakemouse
     end
 
+	local ArtificialHB = Instance.new("BindableEvent", script)
+	if(ArtificialHB)then
+		ArtificialHB.Name = "Heartbeat"
+		
+		local tf = 0
+		local allowframeloss = false
+		local tossremainder = false
+		local lastframe = tick()
+		local frame = 1/60
+	
+		game:GetService("RunService").Heartbeat:Connect(function(delta)
+			tf = tf + delta
+			if tf >= frame then
+				if allowframeloss then
+					ArtificialHB:Fire(tf)
+					lastframe = tick()
+				else
+					for i = 1, math.floor(tf / frame) do
+						ArtificialHB:Fire(tf)
+					end
+					lastframe = tick()
+				end
+				if tossremainder then
+					tf = 0
+				else
+					tf = tf - frame * math.floor(tf / frame)
+				end
+			end
+		end)
+	else
+		ArtificialHB = {
+			Event = game:GetService("RunService").Heartbeat
+		}
+	end
+
 --//Paste script below this line.
 
 warn("Star Glitcher Loaded.")
@@ -1322,10 +1357,10 @@ local bodvel = Instance.new("BodyVelocity")
 local bg = Instance.new("BodyGyro")
 function swait(num)
 	if num == 0 or num == nil then
-		game:service("RunService").Stepped:wait(0)
+		ArtificialHB.Event:wait(0)
 	else
 		for i = 0, num do
-			game:service("RunService").Stepped:wait(0)
+			ArtificialHB.Event:wait(0)
 		end
 	end
 end
