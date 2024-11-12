@@ -3874,7 +3874,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = false
 		RecolorTextAndRename("Corruption", Color3.new(0, 0, 0), Color3.new(0.35, 0, 1))
-		newTheme("rbxassetid://15212480247", 58.15, 1,2)
+		newTheme("rbxassetid://95317815095881", 58.15, .8,2)
 		MAINRUINCOLOR = BrickColor.new("Royal purple")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
@@ -3989,7 +3989,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = false
 		chaosmode = false
 		RecolorTextAndRename("Solitude", Color3.new(0, 0, 0), Color3.new(255, 255, 255))
-		newTheme("rbxassetid://15212492421", 10, 1, 3.2)
+		newTheme("rbxassetid://129046186357554", 10, .8, 3.2)
 		ModeOfGlitch = 1		
 		MAINRUINCOLOR = BrickColor.new("Really black")
 		for i, v in pairs(mw2:GetChildren()) do
@@ -4106,7 +4106,7 @@ mouse.KeyDown:connect(function(k)
 		rainbowmode = true
 		chaosmode = false
 		RecolorTextAndRename("StarLight", Color3.new(1, 1, 1), Color3.new(1, 1, 1))
-		newTheme("rbxassetid://152539141", 0, 1, 1)
+		newTheme("rbxassetid://96572411054164", 0, .8, 1)
 		MAINRUINCOLOR = BrickColor.new("White")
 		for i, v in pairs(mw2:GetChildren()) do
 			if v:IsA("Part") then
