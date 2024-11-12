@@ -1,4 +1,4 @@
-local mouse, Mouse, Client, MouseEventConnections = nil, nil, nil, nil
+local mouse, Mouse, Client, MouseEventConnections, Camera = nil, nil, nil, nil, nil
     local Player = owner
     if(not Player)then
         return
@@ -33,7 +33,8 @@ end)
 game:GetService('RunService').RenderStepped:Connect(function()
     script.Remote.Value:FireServer("MouseUpdate", {
         Hit = Mouse.Hit,
-        Target = Mouse.Target
+        Target = Mouse.Target,
+		CamCFrame = workspace.CurrentCamera.CFrame
     })
 end)
             ]], Player:FindFirstChildOfClass("PlayerGui"))
@@ -63,6 +64,7 @@ end)
         local function setfakemouseenv(data)
             fakemouse.Hit = data.Hit or CFrame.identity
             fakemouse.Target = data.Target or nil
+			Camera = {CFrame = data.CamCFrame, FieldOfView = 70}
         end
         setfakemouseenv({})
         function fakemouse.KeyDown:Connect(func)
@@ -187,8 +189,7 @@ warn("Please Support The Original Creator Of This Script.")
 plr = owner
 char = plr.Character
 hum = char.Humanoid
-local cam = workspace.CurrentCamera
-Camera = cam
+local cam = Camera
 local CamInterrupt = false
 local TwoD = false
 local TargetInfo = {nil, nil}
