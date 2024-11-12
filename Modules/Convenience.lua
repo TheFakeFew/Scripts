@@ -381,7 +381,7 @@ end)
 	end
 
 	function wrapuserdata(u)
-		if(_typeof(u) == "CFrame" or _typeof(u) == "Vector3" or _typeof(u) == "Vector2" or _typeof(u) == "UDim2" or _typeof(u) == "UDim")then
+		if(_typeof(u) == "CFrame" or _typeof(u) == "Vector3" or _typeof(u) == "Vector2" or _typeof(u) == "UDim2" or _typeof(u) == "UDim" or _typeof(u) == "Color3")then
 			realObjects[u] = u; wrappedObjects[u] = u
 			return u
 		end
