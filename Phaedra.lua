@@ -159,7 +159,6 @@ while true do
 end
 ]], script)
 
-Mouse=Player:GetMouse()
 moue=Mouse
 PlayerGui = Player.PlayerGui
 Cam = Camera
