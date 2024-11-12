@@ -1,9 +1,8 @@
-mouse, Mouse, Client, MouseEventConnections = nil, nil, nil, nil
+local mouse, Mouse, Client, MouseEventConnections = nil, nil, nil, nil
     local Player = owner
     if(not Player)then
         return
     end
-    do
         MouseEventConnections = {}
         Client = NLS([[
             local Player = game:GetService('Players').LocalPlayer
@@ -141,10 +140,7 @@ end)
             end
         end)
         table.insert(MouseEventConnections, ev)
-        mouse, Mouse = fakemouse, fakemouse
-        mouse = fakemouse
-        Mouse = fakemouse
-    end
+    mouse, Mouse = fakemouse, fakemouse
 
 	local ArtificialHB = Instance.new("BindableEvent", script)
 	if(ArtificialHB)then
@@ -182,8 +178,6 @@ end)
 	end
 
 --//Paste script below this line.
-
-task.wait(2)
 
 warn("Star Glitcher Loaded.")
 warn("All purpose switcher...")
