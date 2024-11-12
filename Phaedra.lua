@@ -645,7 +645,7 @@ function Reset()
 		local LeLeg = Instance.new("Part",c)LeLeg.Name = "Left Leg" LeLeg.Size = Vector3.new(1,2,1) 
 		makejoint(c.Torso, LHC0, LHC1, c.Torso, LeLeg, "Left Hip")
 		c.HumanoidRootPart.CFrame = LastPos*CFrame.new(math.random(-5,5),0,math.random(-5,5))
-		Resetting = false c.Humanoid.Died:connect(Reset) c.Parent = workspace
+		Resetting = false c.Humanoid.Died:Connect(Reset) c.Parent = workspace
 	end
 end
 -------------------------------------------------------------------------------------------------------------------------------------
@@ -1058,7 +1058,7 @@ function refit()
 		end
 	end
 end
-Humanoid.Died:connect(function()
+Humanoid.Died:Connect(function()
 	refit()
 end)
 local LEVEL = 1
@@ -1132,7 +1132,7 @@ function Eliminate(MODEL)
 						CHILD:Destroy()
 					elseif CHILD:IsA("Humanoid") then
 						if CHILD.Health > 0 then
-							DIE = CHILD.Changed:connect(function()
+							DIE = CHILD.Changed:Connect(function()
 								CHILD.Health = 0
 								MODEL:BreakJoints()
 								if CHILD.Parent ~= MODEL or MODEL.Parent ~= PARENT then
@@ -2617,16 +2617,16 @@ end
 function KeyUp(Key)
 	KEYHOLD = false
 end
-Mouse.Button1Down:connect(function(NEWKEY)
+Mouse.Button1Down:Connect(function(NEWKEY)
 	MouseDown(NEWKEY)
 end)
-Mouse.Button1Up:connect(function(NEWKEY)
+Mouse.Button1Up:Connect(function(NEWKEY)
 	MouseUp(NEWKEY)
 end)
-Mouse.KeyDown:connect(function(NEWKEY)
+Mouse.KeyDown:Connect(function(NEWKEY)
 	KeyDown(NEWKEY)
 end)
-Mouse.KeyUp:connect(function(NEWKEY)
+Mouse.KeyUp:Connect(function(NEWKEY)
 	KeyUp(NEWKEY)
 end)
 function unanchor()
@@ -2640,7 +2640,7 @@ function unanchor()
 	end
 	RootPart.Anchored = true
 end
-Humanoid.Changed:connect(function(Jump)
+Humanoid.Changed:Connect(function(Jump)
 	if Jump == "Jump" and Disable_Jump == true then
 		Humanoid.Jump = false
 	end
