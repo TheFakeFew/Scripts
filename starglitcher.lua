@@ -183,7 +183,7 @@ end)
 
 --//Paste script below this line.
 
-task.wait(.5)
+task.wait(2)
 
 warn("Star Glitcher Loaded.")
 warn("All purpose switcher...")
