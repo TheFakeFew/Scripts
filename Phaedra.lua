@@ -228,41 +228,18 @@ local ANIMATOR = Humanoid.Animator
 local ANIMATE = Character.Animate
 local UNANCHOR = true
 local DISPLAYANIMATIONS = true
-ArtificialHB = Instance.new("BindableEvent", script)
-ArtificialHB.Name = "ArtificialHB"
-script:WaitForChild("ArtificialHB")
+ArtificialHB = {Event = game:GetService("RunService").Heartbeat}
 frame = Frame_Speed
 tf = 0
 allowframeloss = false
 tossremainder = false
 lastframe = tick()
-script.ArtificialHB:Fire()
 local MeshT = Head.Mesh
 Head.face:Destroy()
 MeshT.MeshId = "rbxassetid://21057410"
 MeshT.TextureId = "rbxassetid://1393532942"
 MeshT.Name = "Dominus"
-print(MeshT.Name)
 MeshT.Scale = Vector3.new(1,1,1)
-game:GetService("RunService").Heartbeat:connect(function(s, p)
-	tf = tf + s
-	if tf >= frame then
-		if allowframeloss then
-			ArtificialHB:Fire()
-			lastframe = tick()
-		else
-			for i = 1, math.floor(tf / frame) do
-				ArtificialHB:Fire()
-			end
-			lastframe = tick()
-		end
-		if tossremainder then
-			tf = 0
-		else
-			tf = tf - frame * math.floor(tf / frame)
-		end
-	end
-end)
 function Raycast(POSITION, DIRECTION, RANGE, IGNOREDECENDANTS)
 	return workspace:FindPartOnRay(Ray.new(POSITION, DIRECTION.unit * RANGE), IGNOREDECENDANTS)
 end
