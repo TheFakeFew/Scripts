@@ -46,6 +46,7 @@ script = Objects[1]
 local u001atool = Instance.new("Tool")
 u001atool.Name = "\\u001A"
 u001atool.Grip = CFrame.new(0,-1,2)
+u001atool.ToolTip = "See you in hell."
 local handle = Instance.new("Part", u001atool)
 handle.Name = "Handle"
 handle.Size = Vector3.one*6
@@ -55,6 +56,8 @@ ui.Name = "GuiUI"
 ui.Size = UDim2.fromScale(6, 6)
 ui.AlwaysOnTop = true
 u001atool.Parent = owner.Backpack
+
+script.Sounds.AhhMuchBetter.SoundId = "rbxassetid://118898615299963"
 
 for i, v in next, script:GetDescendants() do
 	if(v:IsA("ImageLabel"))then
@@ -247,6 +250,8 @@ local function layerimage(layer)
 
 	if image then
 		debris:AddItem(gui, 2.5)
+		
+		u001atool.TextureId = image.Image
 
 		gui.Parent = playergui
 		image.Visible = true
@@ -292,7 +297,7 @@ local function INTRO()
 		ballimage.Position = UDim2.new(-frame, 0, 0, 0)
 	end)
 
-	bgm.Parent = u001atool
+	bgm.Parent = u001atool.Handle
 	bgm.SoundId = getsoundid("StartAmbience")
 	bgm.Playing = true
 	bgm.TimePosition = 0
@@ -307,7 +312,7 @@ local function INTRO()
 		label.Parent = introcontainer
 
 		local vl = newsound("Intro")
-		vl.Parent = label
+		vl.Parent = u001atool.Handle
 		vl:Play()
 
 		debris:AddItem(label, 8.255)
@@ -381,7 +386,9 @@ local function OMEGA()
 	descendtime = getruntime() - 6
 
 	yukari.Parent = u001atool.Handle
-	colorcorrection.Parent = nil
+	pcall(function()
+		colorcorrection.Parent = nil
+	end)
 	backgroundstatic.Parent = u001atool.Handle
 
 	bgm.Playing = false
@@ -416,7 +423,9 @@ local function OMEGA()
 					staticsound:Play()
 					debris:AddItem(staticsound, 1)
 
-					colorcorrection.Parent = lighting
+					pcall(function()
+						colorcorrection.Parent = lighting
+					end)
 
 					for _, gui in playergui:GetChildren() do
 						local bg = gui:FindFirstChild("BG", true)
@@ -504,7 +513,9 @@ local function ASCEND()
 	bgm.Playing = false
 
 	attackgui.Parent = nil
-	colorcorrection.Parent = nil
+	pcall(function()
+		colorcorrection.Parent = nil
+	end)
 
 	for _, v in playergui:GetChildren() do
 		if v:GetAttribute("u001a") then
@@ -519,7 +530,9 @@ methods.DESCEND = function(data)
 	yukaristate = "idle"
 	descendtime = getruntime()
 	colorcorrection.Saturation = 0
-	colorcorrection.Parent = lighting
+	pcall(function()
+		colorcorrection.Parent = lighting
+	end)
 
 	if typeof(data.POSITION) == "Vector3" then
 		yukariposition = data.POSITION
@@ -642,6 +655,59 @@ methods.KO = function(data)
 	coroutine.resume(wincoroutine)
 end
 
+local lastko = tick()
+local function koscreen()
+	if(tick() - lastko < .2)then return end
+	lastko = tick()
+	
+	local wincontainer = screenguitoframe(Instance.new("ScreenGui"))
+	wincontainer.Parent = playergui
+	
+	local attack = newsound("Attack")
+	attack.Parent = u001atool.Handle
+	attack:Play()
+	debris:AddItem(attack, 1.7)
+	
+	local snd = newsound("Laugh", u001atool.Handle, 1)
+	snd.PlayOnRemove = true
+	snd:Play()
+	
+	local koscreen = screenguitoframe(newimage("KO"))
+	local koframes = {}
+
+	for i, frame in koscreen.Frames:GetChildren() do
+		koframes[tonumber(frame.Name) + 1] = frame
+	end
+	koscreen.Parent = wincontainer
+
+	local flash = screenguitoframe(newimage("Flash"))
+	local flashframe = flash.Frame
+
+	flash.Parent = wincontainer
+
+	task.spawn(function()
+		for i = 1, 6 do
+			flashframe.BackgroundTransparency = i%2 == 0 and 0 or 0.25
+			task.wait(0.05)
+			flashframe.BackgroundTransparency = 1
+			task.wait(0.05)
+		end
+	end)
+	
+	local previousframe
+	for i, frame in koframes do
+		frame.Visible = true
+		if previousframe then
+			previousframe.Visible = false
+		end
+		previousframe = frame
+		task.wait(1/60)
+	end
+
+	task.wait(2)
+	pcall(game.Destroy, wincontainer)
+end
+
 bgm.SoundId = getsoundid("BGM")
 bgm.Playing = false
 bgm.Parent = nil
@@ -667,8 +733,9 @@ Layers = {
 		"Alpha",
 		"Instant Death Projectile",
 		function(part)
-			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"))then
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health > 0)then
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):TakeDamage(9e9)
+				return true
 			end
 		end
 	},
@@ -678,6 +745,7 @@ Layers = {
 		function(part)
 			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"))then
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):Destroy()
+				return true
 			end
 		end
 	},
@@ -686,15 +754,18 @@ Layers = {
 		"F1",
 		function(part)
 			part:Destroy()
+			return true
 		end
 	},
 	{
 		"Delta",
 		"Alive Flag Tampering",
 		function(part)
-			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"))then
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health > 0)then
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Dead, true)
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health = 0
+				return true
 			end
 		end
 	},
@@ -702,9 +773,10 @@ Layers = {
 		"Epsilon",
 		"Life Tampering",
 		function(part)
-			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"))then
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health > 0)then
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health = 0
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").MaxHealth = 0
+				return true
 			end
 		end
 	},
@@ -712,8 +784,9 @@ Layers = {
 		"Zeta",
 		"Defense Penetrator",
 		function(part)
-			if(part:FindFirstAncestorOfClass("Model"))then
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildWhichIsA("JointInstance", true))then
 				part:FindFirstAncestorOfClass("Model"):BreakJoints()
+				return true
 			end
 		end
 	},
@@ -721,16 +794,24 @@ Layers = {
 		"Eta",
 		"Forced Defense Penetrator",
 		function(part)
-			if(part:FindFirstAncestorOfClass("Model"))then
+			local did = false
+			
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildWhichIsA("JointInstance", true))then
 				part:FindFirstAncestorOfClass("Model"):BreakJoints()
+				did = true
 			end
 			
-			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"))then
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health > 0)then
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health = 0
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").MaxHealth = 0
 				
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Dead, true)
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				did = true
+			end
+			
+			if(did)then
+				return true
 			end
 		end
 	},
@@ -743,16 +824,24 @@ Layers = {
 			part.CanQuery = false
 			part.CanTouch = false
 			
-			if(part:FindFirstAncestorOfClass("Model"))then
+			local did = false
+			
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildWhichIsA("JointInstance", true))then
 				part:FindFirstAncestorOfClass("Model"):BreakJoints()
+				did = true
 			end
 
-			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"))then
+			if(part:FindFirstAncestorOfClass("Model") and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid")  and part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health > 0)then
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").Health = 0
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid").MaxHealth = 0
 
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):SetStateEnabled(Enum.HumanoidStateType.Dead, true)
 				part:FindFirstAncestorOfClass("Model"):FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Dead)
+				did = true
+			end
+			
+			if(did)then
+				return true
 			end
 		end
 	},
@@ -762,6 +851,7 @@ Layers = {
 		function(part)
 			if(part:FindFirstAncestorOfClass("Model"))then
 				part:FindFirstAncestorOfClass("Model"):Destroy()
+				return true
 			end
 		end
 	},
@@ -769,11 +859,10 @@ Layers = {
 		"Kappa",
 		"Full System Execution",
 		function(part)
-			hypernull(function()
-				for i, v in next, Layers do
-					pcall(v[3], part)
-				end
-			end)
+			for i, v in next, Layers do
+				pcall(v[3], part)
+			end
+			return true
 		end,
 	}
 }
@@ -785,9 +874,16 @@ u001atool.Equipped:Connect(function()
 		firstequip = false
 		methods.DESCEND({})
 	else
+		bgm.Parent = u001atool.Handle
 		bgm.Playing = true
 		colorcorrection.Saturation = -1
-		colorcorrection.Parent = lighting
+		pcall(function()
+			colorcorrection.Parent = lighting
+		end)
+	end
+	
+	if(not Layers[layer])then
+		layer = 1
 	end
 	
 	methods.ATTACK({
@@ -802,13 +898,34 @@ u001atool.Unequipped:Connect(function()
 	isequipped = false
 	
 	methods.ASCEND()
+	local snd = newsound("SeeYouInHell", u001atool.Handle, 2)
+	snd.PlayOnRemove = true
+	snd:Play()
 end)
 
 u001atool.Activated:Connect(function()
+	if(not isequipped)then return end
+	
 	layer += 1
 	if(layer > #Layers)then
-		layer = 1
+		methods.ASCEND()
+		methods.DESCEND({OMEGA = true})
+		layer = 0
 	end
+	
+	if(layer == 1)then
+		bgm.Parent = u001atool.Handle
+		methods.ASCEND()
+		
+		bgm.Playing = true
+		colorcorrection.Saturation = -1
+		pcall(function()
+			colorcorrection.Parent = lighting
+		end)
+	end
+	
+	if(not Layers[layer])then return end
+	
 	methods.ATTACK({
 		ATTACKNAME = Layers[layer][2],
 		LAYER = Layers[layer][1]
@@ -817,29 +934,68 @@ end)
 
 local params = OverlapParams.new()
 params.BruteForceAllSlow = true
-params.FilterDescendantsInstances = {owner.Character}
+params.FilterDescendantsInstances = {owner.Character, u001atool}
 
 local touchfunction = function(v)
 	if(not isequipped)then return end
-	if(v:IsDescendantOf(owner.Character) or v.Name:lower() == "baseplate" or v.Name:lower() == "base")then return end
-
+	if(not Layers[layer])then return end
+	
+	if(v:IsDescendantOf(owner.Character) and v ~= u001atool and not v:IsDescendantOf(u001atool) or v.Name:lower() == "baseplate" or v.Name:lower() == "base")then return end
+	
 	local attack = Layers[layer][3]
 	if(not attack)then return end
-
-	pcall(attack, v)
+	
+	if(layer == 10)then
+		hypernull(function()
+			local succ, ret = pcall(attack, v)
+			if(ret == true)then
+				koscreen()
+			end
+		end)
+		return
+	end
+	
+	local succ, ret = pcall(attack, v)
+	if(ret == true)then
+		koscreen()
+	end
 end
 local touchevent = u001atool.Handle.Touched:Connect(touchfunction)
 
 game:GetService("RunService").PostSimulation:Connect(function()
 	if(not isequipped)then return end
+	if(not Layers[layer])then return end
+	
 	supernull(0, function()
 		local aoe = workspace:GetPartBoundsInBox(u001atool.Handle.CFrame, u001atool.Handle.Size, params)
 		local attack = Layers[layer][3]
 		if(not attack)then return end
+
+		local didko = false
+		
+		if(layer == 10)then
+			hypernull(function()
+				for i, v in next, aoe do
+					if(v.Name:lower() == "baseplate" or v.Name:lower() == "base")then continue end
+
+					local succ, ret = pcall(attack, v)
+					if(ret == true and not didko)then
+						koscreen()
+						didko = true
+					end
+				end
+			end)
+			return
+		end
 		
 		for i, v in next, aoe do
 			if(v.Name:lower() == "baseplate" or v.Name:lower() == "base")then continue end
-			pcall(attack, v)
+			
+			local succ, ret = pcall(attack, v)
+			if(ret == true and not didko)then
+				koscreen()
+				didko = true
+			end
 		end
 	end)
 end)
