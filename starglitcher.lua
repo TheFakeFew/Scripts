@@ -61,10 +61,14 @@ end)
         fakemouse.KeyUp = {}
         fakemouse.Button1Down = {}
         fakemouse.Button1Up = {}
+		local lastcamcf = CFrame.identity
         local function setfakemouseenv(data)
             fakemouse.Hit = data.Hit or CFrame.identity
             fakemouse.Target = data.Target or nil
-			Camera = {CFrame = data.CamCFrame, FieldOfView = 70}
+			if(data.CamCFrame)then
+				lastcamcf = data.CamCFrame
+			end
+			Camera = {CFrame = lastcamcf or CFrame.identity, FieldOfView = 70}
         end
         setfakemouseenv({})
         function fakemouse.KeyDown:Connect(func)
