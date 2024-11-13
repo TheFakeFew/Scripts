@@ -59,6 +59,10 @@ u001atool.Parent = owner.Backpack
 
 script.Sounds.AhhMuchBetter.SoundId = "rbxassetid://118898615299963"
 
+script.Images.BottomText.TextLabel.FontFace = Font.new("rbxassetid://12187366846", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
+script.Images.Attack.TextLabel.FontFace = Font.new("rbxassetid://12187366846", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
+
+
 for i, v in next, script:GetDescendants() do
 	if(v:IsA("ImageLabel"))then
 		v.ResampleMode = Enum.ResamplerMode.Pixelated
