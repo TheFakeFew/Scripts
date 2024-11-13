@@ -51,6 +51,7 @@ local handle = Instance.new("Part", u001atool)
 handle.Name = "Handle"
 handle.Size = Vector3.one*6
 handle.Transparency = 1
+handle.Massless = true
 local ui = Instance.new("BillboardGui", handle)
 ui.Name = "GuiUI"
 ui.Size = UDim2.fromScale(6, 6)
