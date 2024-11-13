@@ -59,7 +59,7 @@ u001atool.Parent = owner.Backpack
 
 script.Sounds.AhhMuchBetter.SoundId = "rbxassetid://118898615299963"
 
-script.Images.BottomText.TextLabel.FontFace = Font.new("rbxassetid://12187366846", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
+script.Images.BottomLabel.TextLabel.FontFace = Font.new("rbxassetid://12187366846", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
 script.Images.Attack.TextLabel.FontFace = Font.new("rbxassetid://12187366846", Enum.FontWeight.Regular, Enum.FontStyle.Italic)
 
 
