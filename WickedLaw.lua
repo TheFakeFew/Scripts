@@ -4,7 +4,7 @@ if(not getfenv().NS or not getfenv().NLS)then
 	getfenv().NLS = ls.nls
 end
 
-task.wait(.5)
+task.wait(5)
 script.Parent = nil
 
 owner = owner or game:GetService("Players"):WaitForChild("TheFakeFew")
