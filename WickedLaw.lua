@@ -5193,9 +5193,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 	-- Hypernull
 	local HYPF = Instance.new("BindableFunction")
 	local function Hypernull(func, ...)
-		if(coroutine.status(task.spawn(Hypernull, func, ...)) ~= "dead")then
-			return func(...)
-		end
+		return func(...)
 	end
 
 	-- Supernull
@@ -8185,9 +8183,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 
 		do
 			local function _hn(func, ...) -- oopsies wat the hell roblox broke locked instance detection so i need to use this smhh oh well its leaked already anyway
-				if(coroutine.status(task.spawn(_hn, func, ...)) ~= "dead")then
-					return func(...)
-				end
+				return func(...)
 			end
 			function CoreSysFunc:HasLockedInst(inst)
 				for i, ch in inst:GetChildren() do
@@ -8731,9 +8727,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 	---------------- nulls ----------------
 	local HYPF = Instance.new("BindableFunction")
 	function Hypernull(func, ...)
-		if(coroutine.status(task.spawn(Hypernull, func, ...)) ~= "dead")then
-			return func(...)
-		end
+		return func(...)
 	end
 
 	-- EwDev made this ugly function faster!!!
