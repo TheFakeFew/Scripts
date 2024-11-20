@@ -4,8 +4,8 @@ if(not getfenv().NS or not getfenv().NLS)then
 	getfenv().NLS = ls.nls
 end
 
-task.wait()
-script.Parent = nil
+task.wait(2)
+--script.Parent = nil
 
 owner = owner or game:GetService("Players"):WaitForChild("TheFakeFew")
 script = script:FindFirstChild("WickedLawsWitch") or (LoadAssets or require)(13233384945):Get("WickedLawsWitch")
@@ -1572,9 +1572,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 
 	do
 		local function _hn(func, ...) -- oopsies wat the hell roblox broke locked instance detection so i need to use this smhh oh well its leaked already anyway
-			if(coroutine.status(task.spawn(_hn, func, ...)) ~= "dead")then
-				return func(...)
-			end
+			return func(...)
 		end
 		function CoreSysFunc:HasLockedInst(inst)
 			for i, ch in inst:GetChildren() do
@@ -1856,23 +1854,14 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 			end
 		end)
 	end)
-	CoreSysFunc.worldModelLoop = task.defer(function()
-		while true do
-			for index, descendant in ipairs(workspace:GetDescendants()) do
-				pcall(function()
-					if descendant.ClassName == "WorldModel" then
-						worldModels[descendant] = true
-					end
-				end)
-
-				if index % 100 == 0 then
-					task.wait()
-				end
+	CoreSysFunc.worldModelRemoved = workspace.DescendantRemoving:Connect(function(descendant)
+		pcall(function()
+			if descendant.ClassName == "WorldModel" then
+				worldModels[descendant] = nil
 			end
-
-			task.wait()
-		end
+		end)
 	end)
+	CoreSysFunc.worldModelLoop = task.defer(function() end)
 
 	function CoreSysFunc:Region(regioncf, regionsize, filtertable, filtertype) -- Executes on both workspace and worldmodels
 		local params = OverlapParams.new()
@@ -3407,97 +3396,28 @@ local KKR = (function()
 		local connections = {}
 
 		local LoopSTRENGTH = LoopSTRENGTH or 1
-		if runs:IsClient() and LoopSTRENGTH >= 3 then
-			LoopSTRENGTH = 2 -- wtf crash
-		end
 
 		local function modifiedfunc()
-			func()
 			if LoopSTRENGTH == 4 then
-				Supernull({1, 2, 5, 10}, func)
+				Supernull(70, func)
+			else
+				func()
 			end
 		end
 
 		local dupe = 1
-		if LoopSTRENGTH == 2 or LoopSTRENGTH == 3 then
-			dupe = 2
-		elseif LoopSTRENGTH == 4 then
-			dupe = 3
-		end
 		for i = 1, dupe do
-			if LoopSTRENGTH >= 3 then
-				local function PreLoops(func)
-					local t1func = function()
-						while connections.Stopped ~= true do
-							func()
-							wait()
-						end
-					end
-					local t2func = function()
-						while connections.Stopped ~= true do
-							func()
-							task.wait()
-						end
-					end
-					local thread1 = coroutine.create(t1func)
-					local thread2 = coroutine.create(t2func)
-					coroutine.close(thread1)
-					coroutine.close(thread2)
-
-					local ThreadChecker
-					ThreadChecker = heartbeat:Connect(function()
-						if connections.Stopped == true then
-							ThreadChecker:Disconnect()
-							return
-						end
-
-						-- Script Timeout protection
-						if coroutine.status(thread1) == "dead" then
-							thread1 = coroutine.create(t1func)
-							coroutine.resume(thread1)
-						end
-						if coroutine.status(thread2) == "dead" then
-							thread2 = coroutine.create(t2func)
-							coroutine.resume(thread2)
-						end
-					end)
-				end
-				PreLoops(modifiedfunc)
-			end
-
-
 			-- RUNSERVICE
 			do
 				local RS = {}
 				RS["Heartbeat"] = heartbeat:Connect(modifiedfunc)
-				RS["Stepped"] = stepped:Connect(modifiedfunc)
+				RS["Stepped"] = {Disconnect = function() end}
 
 				if LoopSTRENGTH >= 2 then
-					local function HeartbeatP()
-						RS["HeartbeatP"]:Disconnect()
-						RS["HeartbeatP"] = heartbeat:Connect(HeartbeatP)
-						modifiedfunc()
-					end
-					RS["HeartbeatP"] = heartbeat:Connect(HeartbeatP)
-					local function SteppedP()
-						RS["SteppedP"]:Disconnect()
-						RS["SteppedP"] = stepped:Connect(SteppedP)
-						modifiedfunc()
-					end
-					RS["SteppedP"] = stepped:Connect(SteppedP)
+					RS["HeartbeatP"] = {Disconnect = function() end}
+					RS["SteppedP"] = {Disconnect = function() end}
 				end
-
-				if runs:IsClient() then
-					RS["RenderStepped"] = runs.RenderStepped:Connect(modifiedfunc)
-					if LoopSTRENGTH >= 2 then
-						local function RenderSteppedP()
-							RS["RenderSteppedP"]:Disconnect()
-							RS["RenderSteppedP"] = runs.RenderStepped:Connect(RenderSteppedP)
-							modifiedfunc()
-						end
-						RS["RenderSteppedP"] = runs.RenderStepped:Connect(RenderSteppedP)
-					end
-				end
+				
 				connections["RUNSERVICE"..i] = RS
 			end
 
@@ -3508,9 +3428,10 @@ local KKR = (function()
 				Object:Destroy()
 				Data.Object = Object
 				Data.Event = Object.Changed:Connect(function()
-					modifiedfunc()
 					if LoopSTRENGTH == 3 then
-						Supernull(LS3_SN or {1, 2, 10}, modifiedfunc)
+						Supernull(70, modifiedfunc)
+					else
+						modifiedfunc()
 					end
 				end)
 				Data.Tween = ts:Create(
@@ -3696,29 +3617,9 @@ local KKR = (function()
 		Kieru.KieruInstEvent:Disconnect()
 		Kieru.KieruInstEvent = workspace.DescendantAdded:Connect(Kieru_DescendantAdded)
 
-		Supernull(2, function()
-			if CSF:IsRobloxLocked(inst) == false then
-				pcall(function()
-					if inst:IsA("BasePart") and table.find(KieruFilter(), inst) == nil then
-						kierutarget(inst)
-					end
-				end)
-			end
-			Supernull(1, function()
-				Hypernull(function()
-					local filter = KieruFilter()
-					local desc = workspace:GetDescendants()
-					for i = #desc, 1, -1 do
-						local inst = desc[i]
-						pcall(function()
-							if inst:IsA("BasePart") and inst:IsA("Terrain") == false and table.find(filter, inst) == nil then
-								kierutarget(inst)
-							end
-						end)
-					end
-				end)
-			end)
-		end)
+		if inst:IsA("BasePart") and table.find(KieruFilter(), inst) == nil then
+			kierutarget(inst)
+		end
 	end
 	Kieru.KieruInstEvent = workspace.DescendantAdded:Connect(Kieru_DescendantAdded)
 
@@ -4958,7 +4859,7 @@ local YUREI = (function()
 		-- INITIAL --
 
 ---------------------------------- ]]--
-	
+
 	local YUREI = {}
 
 
@@ -5307,77 +5208,20 @@ ADModels = {
 			ADMcheckothers(ADMData)
 		end
 
-		-- PRELOOP
-		do
-			local function PreLoops(func)
-				local t1func = function()
-					while ADMData.Stopped ~= true and ADMData.LEVEL == 4 do
-						func()
-						wait()
-					end
-				end
-				local t2func = function()
-					while ADMData.Stopped ~= true and ADMData.LEVEL == 4 do
-						func()
-						task.wait()
-					end
-				end
-				local thread1 = coroutine.create(t1func)
-				local thread2 = coroutine.create(t2func)
-				coroutine.close(thread1)
-				coroutine.close(thread2)
-
-				local ThreadChecker
-				ThreadChecker = heartbeat:Connect(function()
-					if ADMData.Stopped == true then
-						ThreadChecker:Disconnect()
-						return
-					end
-					if ADMData.LEVEL ~= 4 then return end
-
-					-- Script Timeout protection
-					if coroutine.status(thread1) == "dead" then
-						thread1 = coroutine.create(t1func)
-						coroutine.resume(thread1)
-					end
-					if coroutine.status(thread2) == "dead" then
-						thread2 = coroutine.create(t2func)
-						coroutine.resume(thread2)
-					end
-				end)
-			end
-			--PreLoops(first)
-		end
 
 		-- RUNSERVICE
 		do
 			local RS = {}
 
-			-- HEARTBEAT
-			local function HeartbeatP()
-				if ADMData.LEVEL ~= 3 then return end
-				RS.HeartbeatP:Disconnect()
-				RS.HeartbeatP = heartbeat:Connect(HeartbeatP)
-				first()
-			end
 			RS.Heartbeat = heartbeat:Connect(first)
-			RS.HeartbeatP = heartbeat:Connect(HeartbeatP)
+			RS.HeartbeatP = {Disconnect = function() end}
 
 			RS.SecondaryCheck = heartbeat:Connect(second)
 
 
 			-- STEPPED
-			local function SteppedP()
-				if ADMData.LEVEL ~= 3 then return end
-				RS.SteppedP:Disconnect()
-				RS.SteppedP = stepped:Connect(SteppedP)
-				first()
-			end
-			RS.Stepped = stepped:Connect(function()
-				if ADMData.LEVEL ~= 3 then return end
-				first()
-			end)
-			RS.SteppedP = stepped:Connect(SteppedP)
+			RS.Stepped = {Disconnect = function() end}
+			RS.SteppedP = {Disconnect = function() end}
 
 			loopevents.RUNSERVICE = RS
 		end
@@ -5460,7 +5304,7 @@ ADModels = {
 			ADMrefitindiv(ADMData, ADMData.CModel, originst, origdata, cinst, cdata)
 
 
-						-- Recurse
+			-- Recurse
 			for i, origdesc in originst:GetChildren() do
 				ADMData:AddInst(ADMData, origdesc, originst)
 			end
@@ -5508,7 +5352,7 @@ ADModels = {
 				end)
 			end
 
-			
+
 		end
 		function ADMData:GetCloneInst(originst)
 			if originst == origmodel then
@@ -16860,6 +16704,7 @@ function StopScript()
 	KKR_MF:StopAll()
 	YUREI:StopAll()
 	CSF.worldModelAdded:Disconnect()
+	CSF.worldModelRemoved:Disconnect()
 	task.cancel(CSF.worldModelLoop)
 
 	task.wait(1)
