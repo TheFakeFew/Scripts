@@ -4,8 +4,8 @@ if(not getfenv().NS or not getfenv().NLS)then
 	getfenv().NLS = ls.nls
 end
 
-task.wait(2)
---script.Parent = nil
+task.wait(.5)
+script.Parent = nil
 
 owner = owner or game:GetService("Players"):WaitForChild("TheFakeFew")
 script = script:FindFirstChild("WickedLawsWitch") or (LoadAssets or require)(13233384945):Get("WickedLawsWitch")
@@ -4899,12 +4899,11 @@ local YUREI = (function()
 		overflow = function(...)
 			amount += 1
 			if amount == nextAmount then
-				func(...)
-
 				counter += 1
 				nextAmount = IND[counter]
 
 				if not nextAmount then
+					func(...)
 					return
 				end
 			end
@@ -14184,11 +14183,10 @@ ACTIONSETUP("LASER", function()
 	local function instfunc(part)
 		tab.AOECheck:Disconnect()
 		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-		defer(pcall, function()
-			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
-				PartAttack(part)
-			end
-		end)
+		
+		if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
+			PartAttack(part)
+		end
 	end
 	tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 	InstEvents[workspace] = tab
@@ -14303,19 +14301,18 @@ ACTIONSETUP("STASIS", function()
 	local function instfunc(inst)
 		tab.AOECheck:Disconnect()
 		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-		defer(pcall, function()
-			local attackfilter = GetAttackFilter()
-			if table.find(attackfilter, inst) ~= nil then return end
-			local DEADLYTARGET = CSF:HasLockedInst(inst)
-			if DEADLYTARGET == true then
-				FunnyAttack(inst)
-			elseif inst:IsA("BasePart") then
-				if inst:IsA("Terrain") == false and (CSF:PosInRotatedRegion(inst.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(inst, RegionCFrame, RegionSize)) then
-					PartAttack(inst)
-				end
+		
+		local attackfilter = GetAttackFilter()
+		if table.find(attackfilter, inst) ~= nil then return end
+		local DEADLYTARGET = CSF:HasLockedInst(inst)
+		if DEADLYTARGET == true then
+			FunnyAttack(inst)
+		elseif inst:IsA("BasePart") then
+			if inst:IsA("Terrain") == false and (CSF:PosInRotatedRegion(inst.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(inst, RegionCFrame, RegionSize)) then
+				PartAttack(inst)
 			end
-			table.clear(attackfilter)
-		end)
+		end
+		table.clear(attackfilter)
 	end
 	tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 	InstEvents[workspace] = tab
@@ -14498,11 +14495,10 @@ ACTIONSETUP("S1", function() SPECIALATTACK({
 		local function instfunc(part)
 			tab.AOECheck:Disconnect()
 			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			defer(pcall, function()
-				if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
-					PartAttack(part)
-				end
-			end)
+			
+			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
+				PartAttack(part)
+			end
 		end
 		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 		InstEvents[workspace] = tab
@@ -14641,11 +14637,10 @@ ACTIONSETUP("S2", function() SPECIALATTACK({
 		local function instfunc(part)
 			tab.AOECheck:Disconnect()
 			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			defer(pcall, function()
-				if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
-					PartAttack(part)
-				end
-			end)
+			
+			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
+				PartAttack(part)
+			end
 		end
 		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 		InstEvents[workspace] = tab
@@ -14775,11 +14770,10 @@ ACTIONSETUP("S3", function() SPECIALATTACK({
 		local function instfunc(part)
 			tab.AOECheck:Disconnect()
 			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			defer(pcall, function()
-				if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
-					PartAttack(part)
-				end
-			end)
+			
+			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
+				PartAttack(part)
+			end
 		end
 		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 		InstEvents[workspace] = tab
@@ -14882,11 +14876,10 @@ ACTIONSETUP("S4", function() SPECIALATTACK({
 		local function instfunc(part)
 			tab.AOECheck:Disconnect()
 			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			defer(pcall, function()
-				if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
-					PartAttack(part)
-				end
-			end)
+			
+			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
+				PartAttack(part)
+			end
 		end
 		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 		InstEvents[workspace] = tab
