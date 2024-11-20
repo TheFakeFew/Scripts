@@ -224,8 +224,6 @@ print("- [\n> [WLW] Loading instances...")
 
 MODELS = script.Models
 
-task.wait(0.5)
-
 -- LOCALSCRIPTS
 
 -- MODULES
