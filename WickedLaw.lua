@@ -17178,6 +17178,8 @@ TOGGLEMUSIC = function(ME)
 
 	deb:AddItem(uipart, 0.5)
 end
+
+local origm = CSE:CreateSound("MUSIC", {TimePosition = CurrentMusicTP, Parent = nil})
 local MusicLoop = heartbeat:Connect(function()
 	if MUSIC_Enabled == true then
 		pcall(function()
@@ -17195,6 +17197,12 @@ local MusicLoop = heartbeat:Connect(function()
 		end)
 		pcall(function()
 			CurrentMusicTP = CurrentMusic.TimePosition
+		end)
+		pcall(function()
+			CurrentMusic.Volume = origm.Volume
+		end)
+		pcall(function()
+			CurrentMusic.Pitch = origm.Pitch
 		end)
 	end
 end)
