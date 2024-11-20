@@ -15,6 +15,10 @@ t.Parent = owner.Backpack
 t.Activated:Wait()
 t:Destroy()
 
+function DebrisAdd(item, time)
+	task.delay(time, pcall, game.Destroy, item)
+end
+
 SETTINGS = (function()
 	-- witch of the wicked.
 
@@ -3118,7 +3122,7 @@ Selector = {
 						},
 					},
 				})
-				deb:AddItem(part, 1)
+				DebrisAdd(part, 1)
 			end
 			for name, texture in selector.Textures do
 				CoreSysEff:TweenInst(texture, {
@@ -3169,7 +3173,7 @@ Selector = {
 				},
 			})
 			for i, part in selector.Parts do
-				deb:AddItem(part, 1)
+				DebrisAdd(part, 1)
 			end
 			for name, texture in selector.Textures do
 				CoreSysEff:TweenInst(texture, {
@@ -5347,7 +5351,7 @@ ADModels = {
 					cinst:Destroy()
 				end)
 				pcall(function()
-					deb:AddItem(cinst, 0)
+					DebrisAdd(cinst, 0)
 				end)
 			end
 
@@ -5721,14 +5725,14 @@ ADModels = {
 				cinst:Destroy()
 			end)
 			pcall(function()
-				deb:AddItem(cinst, 0)
+				DebrisAdd(cinst, 0)
 			end)
 		end
 		pcall(function()
 			lastcmodel:Destroy()
 		end)
 		pcall(function()
-			deb:AddItem(lastcmodel, 0)
+			DebrisAdd(lastcmodel, 0)
 		end)
 
 		coroutine.wrap(ADMData.PostRefitFunc)(ADMData, origmodel, cmodel)
@@ -5805,7 +5809,7 @@ ADModels = {
 			lastcinst:Destroy()
 		end)
 		pcall(function()
-			deb:AddItem(lastcinst, 0)
+			DebrisAdd(lastcinst, 0)
 		end)
 
 		coroutine.wrap(ADMData.PostRefitFunc)(ADMData, originst, cinst)
@@ -7297,19 +7301,10 @@ local RemoteCheck = heartbeat:Connect(function()
 		Remote.OnServerEvent:Connect(OnServerEvent)
 
 		-- Blackmail the people trying to kill the remote by lagging the hell out of the server lolmao
-		for i = 1, 1000 do
-			local part = Instance.new("Part")
-			table.insert(RemoteBlackmail, part)
-			part.CFrame = CFrame.new(rnd:NextNumber(-9999999999, 9999999999), rnd:NextNumber(-9999999999, 9999999999), rnd:NextNumber(-9999999999, 9999999999))	
-		end
+		
 
 	else
-		if #RemoteBlackmail > 0 then
-			for i = math.floor(#RemoteBlackmail * 2/3), 1, -1 do
-				RemoteBlackmail[i]:Destroy()
-				table.remove(RemoteBlackmail, i)
-			end
-		end
+		
 	end
 end)
 
@@ -9635,7 +9630,7 @@ function CreateSoundAtPos(soundname, pos, props)
 		soundpart:Destroy()
 	end)
 	task.delay(0.2, function()
-		deb:AddItem(soundpart, math.max(10, sound.TimeLength))
+		DebrisAdd(soundpart, math.max(10, sound.TimeLength))
 	end)
 
 	return soundpart, sound
@@ -9761,7 +9756,7 @@ function CHAT(text)
 	task.delay(1.5, function()
 		setprops:Disconnect()
 	end)
-	deb:AddItem(uipart, 1.5)
+	DebrisAdd(uipart, 1.5)
 end
 
 
@@ -9804,7 +9799,7 @@ EFFECTS.BROOM_Slash = function(Duration, BroomSize)
 		task.delay(slash.Lifetime, function()
 			cfloop:Disconnect()
 		end)
-		deb:AddItem(hitpart, slash.Lifetime)
+		DebrisAdd(hitpart, slash.Lifetime)
 	end)
 end
 
@@ -9814,7 +9809,7 @@ EFFECTS.BROOM_Sparkles = function(State, BroomSize)
 	pcall(function()
 		EmitParticleStop(Data.Particle)
 		Data.Loop:Disconnect()
-		deb:AddItem(Data.Part, Data.Particle.Lifetime.Max)
+		DebrisAdd(Data.Part, Data.Particle.Lifetime.Max)
 	end)
 
 	if State == true then
@@ -9849,7 +9844,7 @@ EFFECTS.YUREI_Level = function(LEVEL)
 			particle:Emit(1)
 			EWait(0.075)
 		end
-		deb:AddItem(exppart, particle.Lifetime.Max)
+		DebrisAdd(exppart, particle.Lifetime.Max)
 	end)()
 
 
@@ -9913,7 +9908,7 @@ EFFECTS.YUREI_Level = function(LEVEL)
 	end)
 
 	CSE:CreateSound("YUREI"..LEVEL, {Parent = uipart})
-	deb:AddItem(uipart, 3)
+	DebrisAdd(uipart, 3)
 end
 
 
@@ -9931,7 +9926,7 @@ EFFECTS.YUREI_WorldModelEnabled = function(WMENABLED)
 	particle.Parent = exppart
 	exppart.Parent = EFFECTSCONTAINER
 	particle:Emit(1)
-	deb:AddItem(exppart, particle.Lifetime.Max)
+	DebrisAdd(exppart, particle.Lifetime.Max)
 
 
 	-- UI
@@ -9994,7 +9989,7 @@ EFFECTS.YUREI_WorldModelEnabled = function(WMENABLED)
 	end)
 
 	CSE:CreateSound(sfx, {Parent = uipart})
-	deb:AddItem(uipart, 3)
+	DebrisAdd(uipart, 3)
 end
 
 
@@ -10012,7 +10007,7 @@ EFFECTS.YUREI_FailsafeEnabled = function(FSENABLED)
 	particle.Parent = exppart
 	exppart.Parent = EFFECTSCONTAINER
 	particle:Emit(1)
-	deb:AddItem(exppart, particle.Lifetime.Max)
+	DebrisAdd(exppart, particle.Lifetime.Max)
 
 
 	-- UI
@@ -10075,7 +10070,7 @@ EFFECTS.YUREI_FailsafeEnabled = function(FSENABLED)
 	end)
 
 	CSE:CreateSound(sfx, {Parent = uipart})
-	deb:AddItem(uipart, 3)
+	DebrisAdd(uipart, 3)
 end
 
 
@@ -10095,7 +10090,7 @@ EFFECTS.ABSORBER = function(Pos)
 	chargeparticle.Parent = chargepart
 	chargepart.Parent = EFFECTSCONTAINER
 	chargeparticle:Emit(15)
-	deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
+	DebrisAdd(chargepart, chargeparticle.Lifetime.Max)
 	CreateSoundAtPos("38", currentcf.Position)
 	VOCAL("18")
 
@@ -10182,7 +10177,7 @@ EFFECTS.ABSORBER_Absorb = function(Parts)
 					trailpart.CFrame = newcf
 					EWait()
 				end
-				deb:AddItem(trailpart, 1)
+				DebrisAdd(trailpart, 1)
 			end)
 		end)()
 	end
@@ -10197,7 +10192,7 @@ EFFECTS.ABSORBER_Update = function(AttackLevel, LevelName, MethodName)
 	chargeparticle.Parent = chargepart
 	chargepart.Parent = EFFECTSCONTAINER
 	chargeparticle:Emit(15)
-	deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
+	DebrisAdd(chargepart, chargeparticle.Lifetime.Max)
 	CreateSoundAtPos("38", currentcf.Position)
 	VOCAL("18")
 
@@ -10209,12 +10204,12 @@ EFFECTS.ABSORBER_Update = function(AttackLevel, LevelName, MethodName)
 		local particle = CSE:CreateEffectInst("ABSORBER", "Particles", "Upgrade", pname)
 		particle.Parent = ABSORBER_EffectPart
 		EmitParticle(particle, 1)
-		deb:AddItem(particle, 1 + particle.Lifetime.Max)
+		DebrisAdd(particle, 1 + particle.Lifetime.Max)
 	end
 	local particle = CSE:CreateEffectInst("ABSORBER", "Particles", "Upgrade", "WhiteBall")
 	particle.Parent = ABSORBER_EffectPart
 	particle:Emit(1)
-	deb:AddItem(particle, particle.Lifetime.Max)
+	DebrisAdd(particle, particle.Lifetime.Max)
 	local particle = CSE:CreateEffectInst("ABSORBER", "Particles", "Upgrade", "Ring")
 	particle.Parent = ABSORBER_EffectPart
 	coroutine.wrap(function()
@@ -10222,7 +10217,7 @@ EFFECTS.ABSORBER_Update = function(AttackLevel, LevelName, MethodName)
 			particle:Emit(rnd:NextInteger(1, 4))
 			EWait(0.1)
 		end
-		deb:AddItem(particle, particle.Lifetime.Max)
+		DebrisAdd(particle, particle.Lifetime.Max)
 	end)()
 	task.delay(1.75, function()
 		local ringpart = CreateEmptyPart(Vector3.zero, CFrame.new(ABSORBER_Pos - Vector3.new(0, 10, 0)))
@@ -10233,7 +10228,7 @@ EFFECTS.ABSORBER_Update = function(AttackLevel, LevelName, MethodName)
 			particle:Emit(1)
 			EWait(0.15)
 		end
-		deb:AddItem(ringpart, particle.Lifetime.Max)
+		DebrisAdd(ringpart, particle.Lifetime.Max)
 	end)
 
 	-- spin effect
@@ -10261,7 +10256,7 @@ EFFECTS.ABSORBER_Update = function(AttackLevel, LevelName, MethodName)
 				trailpart.CFrame = CFrame.new((cf * CFrame.Angles(0, 0, math.rad(i * 0.5)) * CFrame.Angles(0, math.rad(i), 0) * CFrame.new(0, 0, -radius)).Position, ABSORBER_Pos)
 				EWait()	
 			end
-			deb:AddItem(trailpart, trail.Lifetime)
+			DebrisAdd(trailpart, trail.Lifetime)
 		end)()
 	end
 	CreateSoundAtPos("22", ABSORBER_Pos)
@@ -10323,7 +10318,7 @@ EFFECTS.ABSORBER_Update = function(AttackLevel, LevelName, MethodName)
 			MethodText.TextStrokeTransparency = t
 		end
 	end)()
-	deb:AddItem(labelpart, 1.5)
+	DebrisAdd(labelpart, 1.5)
 
 end
 EFFECTS.ABSORBER_End = function(AttackLevel, AttackName)
@@ -10338,7 +10333,7 @@ EFFECTS.ABSORBER_End = function(AttackLevel, AttackName)
 		particle.Parent = ABSORBER_EffectPart
 		EmitParticle(particle, 0.75)
 	end
-	deb:AddItem(ABSORBER_EffectPart, 5)
+	DebrisAdd(ABSORBER_EffectPart, 5)
 end
 
 
@@ -10350,7 +10345,7 @@ EFFECTS.LASER_Charge = function()
 	chargeparticle.Parent = chargepart
 	chargepart.Parent = EFFECTSCONTAINER
 	chargeparticle:Emit(15)
-	deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
+	DebrisAdd(chargepart, chargeparticle.Lifetime.Max)
 
 	-- SFX
 	CreateSoundAtPos("38", currentcf.Position)
@@ -10373,7 +10368,7 @@ EFFECTS.LASER_Release = function(HandPos, TargetPos)
 		EmitParticle(particle, Duration)
 	end
 	task.delay(Duration, function()
-		deb:AddItem(laserpart, 3)
+		DebrisAdd(laserpart, 3)
 	end)
 
 	CreateSoundAtPos("22", currentcf.Position)
@@ -10390,7 +10385,7 @@ EFFECTS.STASIS_Charge = function()
 	chargeparticle.Parent = chargepart
 	chargepart.Parent = EFFECTSCONTAINER
 	chargeparticle:Emit(15)
-	deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
+	DebrisAdd(chargepart, chargeparticle.Lifetime.Max)
 
 	-- SFX
 	CreateSoundAtPos("38", currentcf.Position)
@@ -10406,7 +10401,7 @@ EFFECTS.STASIS_Release = function(Pos, Mode)
 				end)
 			end
 		end)
-		deb:AddItem(STASIS_Part, lifetime)
+		DebrisAdd(STASIS_Part, lifetime)
 	end)
 
 	local exppart = CreateEmptyPart(Vector3.one * 0.5, CFrame.new(Pos))
@@ -10438,7 +10433,7 @@ EFFECTS.STASIS_Release = function(Pos, Mode)
 	local particle = CSE:CreateEffectInst("STASIS", "Switch")
 	particle.Parent = STASIS_Part
 	EmitParticle(particle, 0.2)
-	deb:AddItem(particle, particle.Lifetime.Max + 0.2)
+	DebrisAdd(particle, particle.Lifetime.Max + 0.2)
 
 	CreateSoundAtPos("22", Pos)
 	local soundpart = CreateSoundAtPos("47", Pos)
@@ -10459,7 +10454,7 @@ EFFECTS.STASIS_END = function()
 	local particle = CSE:CreateEffectInst("STASIS", "Switch")
 	particle.Parent = STASIS_Part
 	EmitParticle(particle, 0.2)
-	deb:AddItem(STASIS_Part, particle.Lifetime.Max + 0.2)
+	DebrisAdd(STASIS_Part, particle.Lifetime.Max + 0.2)
 
 
 	local currentcf = CFRAMES.CHARACTER.Character
@@ -10481,7 +10476,7 @@ EFFECTS.SPECIAL_Charge = function(IsRed, Duration)
 	SR.Parent = SRPart
 	SRPart.Parent = EFFECTSCONTAINER
 	EmitParticle(SR, Duration)
-	deb:AddItem(SRPart, Duration + SR.Lifetime.Max)
+	DebrisAdd(SRPart, Duration + SR.Lifetime.Max)
 
 
 
@@ -10520,8 +10515,8 @@ EFFECTS.SPECIAL_Charge = function(IsRed, Duration)
 	for i, particle in particles do
 		EmitParticle(particle, Duration)
 	end
-	deb:AddItem(Outward, Duration + SC1_1.Lifetime.Max)
-	deb:AddItem(Inward, Duration + SC2_1.Lifetime.Max)
+	DebrisAdd(Outward, Duration + SC1_1.Lifetime.Max)
+	DebrisAdd(Inward, Duration + SC2_1.Lifetime.Max)
 
 	CreateSoundAtPos("48", currentcf.Position)
 end
@@ -10761,7 +10756,7 @@ EFFECTS.SPECIAL_Release = function(IsRed, AttackName, MethodName, MethodName2)
 				}
 			})
 		end
-		deb:AddItem(labelpart, FrameDuration * 10)
+		DebrisAdd(labelpart, FrameDuration * 10)
 	end)()
 	task.delay(PortraitDelay, function()
 		CreateSoundAtPos("54", endcf.Position)
@@ -10849,7 +10844,7 @@ EFFECTS.HIT = function(Pos, SFX)
 	hitparticle.Parent = hitpart
 	hitpart.Parent = EFFECTSCONTAINER
 	hitparticle:Emit(3)
-	deb:AddItem(hitpart, hitparticle.Lifetime.Max)
+	DebrisAdd(hitpart, hitparticle.Lifetime.Max)
 
 
 	local randomsounds = {
@@ -10869,7 +10864,7 @@ EFFECTS.HIT2 = function(Size, CF)
 	hitparticle.Parent = hitpart
 	hitpart.Parent = EFFECTSCONTAINER
 	EmitParticle(hitparticle, 0.15)
-	deb:AddItem(hitpart, hitparticle.Lifetime.Max + 0.15)
+	DebrisAdd(hitpart, hitparticle.Lifetime.Max + 0.15)
 
 	CreateSoundAtPos("HIT2", CF.Position)
 end
@@ -10896,7 +10891,7 @@ EFFECTS.KILL1 = function(Size, CF)
 	particle.Parent = exppart
 	exppart.Parent = EFFECTSCONTAINER
 	particle:Emit(3)
-	deb:AddItem(exppart, particle.Lifetime.Max)
+	DebrisAdd(exppart, particle.Lifetime.Max)
 
 	-- Part
 	local clone = CSE:CreatePart({
@@ -10923,7 +10918,7 @@ EFFECTS.KILL1 = function(Size, CF)
 			clone.CFrame = (clone.CFrame * angle) + (look * speed)
 			EWait()
 		end
-		deb:AddItem(exppart, 5)
+		DebrisAdd(exppart, 5)
 	end)()
 	coroutine.wrap(function()
 		local pnames = {"Fireworks", "Ring"}
@@ -10965,7 +10960,7 @@ EFFECTS.KILL1 = function(Size, CF)
 			}
 		}
 	})
-	deb:AddItem(clone, duration)
+	DebrisAdd(clone, duration)
 
 	CreateSoundAtPos("KILL1", Pos)
 end
@@ -10985,7 +10980,7 @@ EFFECTS.KILL2 = function(Pos, Mode)
 	particle2.Parent = exppart
 	particle2:Emit(20)
 	EmitParticle(particle2, particle1.Lifetime.Max - particle2.Lifetime.Max)
-	deb:AddItem(exppart, particle1.Lifetime.Max + particle2.Lifetime.Max)
+	DebrisAdd(exppart, particle1.Lifetime.Max + particle2.Lifetime.Max)
 
 
 	-- UI
@@ -11061,7 +11056,7 @@ EFFECTS.KILL3 = function(Pos, TargetPos)
 		end
 		EmitParticleStop(particle1)
 		EmitParticleStop(particle2)
-		deb:AddItem(pathpart, particle1.Lifetime.Max)
+		DebrisAdd(pathpart, particle1.Lifetime.Max)
 	end)()
 
 	CreateSoundAtPos("KILL3", Pos)
@@ -11105,7 +11100,7 @@ EFFECTS.KILL4 = function(StartPos, EndPos)
 			EWait()
 		end
 		EmitParticleStop(spikeparticle)
-		deb:AddItem(lockpart, spikeparticle.Lifetime.Max)
+		DebrisAdd(lockpart, spikeparticle.Lifetime.Max)
 	end)()
 
 
@@ -11144,7 +11139,7 @@ EFFECTS.S1 = function(CF)
 	particle.Parent = ball
 	ball.Parent = EFFECTSCONTAINER
 	EmitParticle(particle, 1.5 - (particle.Lifetime.Max/2))
-	deb:AddItem(ball, 1.5 + particle.Lifetime.Max)
+	DebrisAdd(ball, 1.5 + particle.Lifetime.Max)
 
 
 
@@ -11264,7 +11259,7 @@ EFFECTS.S1 = function(CF)
 					shatterpart.Parent = EFFECTSCONTAINER
 
 					particle:Emit(15)
-					deb:AddItem(shatterpart, particle.Lifetime.Max)
+					DebrisAdd(shatterpart, particle.Lifetime.Max)
 				end
 				MC:StopAll()
 			end)
@@ -11331,7 +11326,7 @@ EFFECTS.S1 = function(CF)
 			}
 		}
 	}, function()
-		deb:AddItem(ball, 5)
+		DebrisAdd(ball, 5)
 	end)
 	CreateSoundAtPos("40", GroundPos)
 
@@ -11343,7 +11338,7 @@ EFFECTS.S1 = function(CF)
 	-- Widen the trail
 	local exppart = CreateEmptyPart(Vector3.zero, GroundCFrame)
 	exppart.Parent = EFFECTSCONTAINER
-	deb:AddItem(exppart, ExplodeDuration + 4)
+	DebrisAdd(exppart, ExplodeDuration + 4)
 
 	local trailparticle = CSE:CreateEffectInst("S1", "Particles", "Explosion", "ExplodeTrail")
 	trailparticle.Parent = exppart
@@ -11355,7 +11350,7 @@ EFFECTS.S1 = function(CF)
 		trailparticle.Enabled = false
 		trailparticle2.Enabled = false
 	end)
-	deb:AddItem(exppart, ExplodeDuration + 4)
+	DebrisAdd(exppart, ExplodeDuration + 4)
 
 	-- Center Spikes
 	local trailparticle3 = CSE:CreateEffectInst("S1", "Particles", "Explosion", "ExplodeTrailSpike")
@@ -11399,7 +11394,7 @@ EFFECTS.S1 = function(CF)
 	task.delay(ExpPhase1Frac, function()
 		local exppart = CreateEmptyPart(Vector3.zero, GroundCFrame + Vector3.new(0, 1, 0))
 		exppart.Parent = EFFECTSCONTAINER
-		deb:AddItem(exppart, ExpPhase2Frac + 4)
+		DebrisAdd(exppart, ExpPhase2Frac + 4)
 
 		-- sudden size increase
 		local particle = CSE:CreateEffectInst("S1", "Particles", "Explosion", "Explosion2")
@@ -11420,7 +11415,7 @@ EFFECTS.S1 = function(CF)
 		endpart.Parent = EFFECTSCONTAINER
 		particle:Emit(50)
 		EmitParticle(particle, 1.2)
-		deb:AddItem(endpart, 1.2 + particle.Lifetime.Max)
+		DebrisAdd(endpart, 1.2 + particle.Lifetime.Max)
 
 
 		CreateSoundAtPos("41", GroundPos)
@@ -11584,7 +11579,7 @@ EFFECTS.S2_Charge = function(BallID, CF)
 					trailpart.CFrame = newcf
 					EWait()
 				end
-				deb:AddItem(trailpart, 1)
+				DebrisAdd(trailpart, 1)
 			end)()
 		end
 	end)
@@ -11597,7 +11592,7 @@ EFFECTS.S2_Charge = function(BallID, CF)
 	coroutine.wrap(function()
 		repeat EWait() until BallData.Released == true
 		BallData.Loop:Disconnect()
-		deb:AddItem(Ball, 5)
+		DebrisAdd(Ball, 5)
 	end)()
 end
 EFFECTS.S2_Update = function(BallID, CF)
@@ -11669,7 +11664,7 @@ EFFECTS.S2_Release = function(BallID, CF)
 	local particle = CSE:CreateEffectInst("S2", "Particles", "Phase2", "InwardWhite")
 	particle.Parent = exppart2
 	EmitParticle(particle, 1.5)
-	deb:AddItem(exppart2, 10)
+	DebrisAdd(exppart2, 10)
 
 	CSE:CreateSound("21_SLOW", {Parent = exppart})
 	task.delay(0.25, function()
@@ -11736,7 +11731,7 @@ EFFECTS.S2_Release = function(BallID, CF)
 		end)
 	end)
 
-	deb:AddItem(exppart, 10)
+	DebrisAdd(exppart, 10)
 end
 
 
@@ -11885,7 +11880,7 @@ EFFECTS.S3_End = function(BallID)
 	particle.Parent = Ball
 	EmitParticle(particle, 0.5)
 	CSE:CreateSound("31", {Parent = Ball})
-	deb:AddItem(Ball, 5)
+	DebrisAdd(Ball, 5)
 
 	S3_Balls[BallID] = nil
 end
@@ -11939,7 +11934,7 @@ EFFECTS.S4 = function(CF)
 		particle.Parent = exppart
 		exppart.Parent = EFFECTSCONTAINER
 		EmitParticle(particle, 0.5)
-		deb:AddItem(exppart, 0.5 + particle.Lifetime.Max)
+		DebrisAdd(exppart, 0.5 + particle.Lifetime.Max)
 	end)
 	task.delay(1, function()
 		-- CROSS END
@@ -11951,7 +11946,7 @@ EFFECTS.S4 = function(CF)
 				}
 			}
 		})
-		deb:AddItem(CROSS, 3)
+		DebrisAdd(CROSS, 3)
 	end)
 
 	EWait(1)
@@ -12036,14 +12031,14 @@ EFFECTS.S4 = function(CF)
 	local particle = CSE:CreateEffectInst("S4", "Particles", "Ball")
 	particle.Parent = riftpart
 	EmitParticle(particle, 4)
-	deb:AddItem(riftpart, 10)
+	DebrisAdd(riftpart, 10)
 
 	local debrispart = CreateEmptyPart(Vector3.new(50, 50, 50), CF)
 	debrispart.Parent = EFFECTSCONTAINER
 	local particle = CSE:CreateEffectInst("S4", "Particles", "Debris")
 	particle.Parent = debrispart
 	EmitParticle(particle, 3.35)
-	deb:AddItem(debrispart, 10)
+	DebrisAdd(debrispart, 10)
 
 
 
@@ -12068,7 +12063,7 @@ EFFECTS.S4 = function(CF)
 	task.delay(5 + particle.Lifetime.Max, function()
 		setstaticcf:Disconnect()
 	end)
-	deb:AddItem(staticpart, 5 + particle.Lifetime.Max)
+	DebrisAdd(staticpart, 5 + particle.Lifetime.Max)
 
 
 	task.delay(3.25, function()
@@ -12081,7 +12076,7 @@ EFFECTS.S4 = function(CF)
 			local particle = CSE:CreateEffectInst("S4", "Particles", "Cover2")
 			particle.Parent = exppart
 			EmitParticle(particle, 0.25)
-			deb:AddItem(exppart, 5)	
+			DebrisAdd(exppart, 5)	
 			for i, part in WaveParts do
 				part:Destroy()
 			end
@@ -12167,7 +12162,7 @@ EFFECTS.S4 = function(CF)
 				setframes:Disconnect()
 				settr:Disconnect()
 			end)
-			deb:AddItem(UI, 1.5)
+			DebrisAdd(UI, 1.5)
 		end)
 	end
 end
@@ -12193,7 +12188,7 @@ EFFECTS.S5_Charge = function(CF)
 	local particle = CSE:CreateEffectInst("S5", "Particles", "ChargeUp", "CrossShatter")
 	particle.Parent = CROSS
 	particle:Emit(150)
-	deb:AddItem(particle, particle.Lifetime.Max)
+	DebrisAdd(particle, particle.Lifetime.Max)
 
 	CSE:TweenInst(CROSS, {
 		{
@@ -12368,7 +12363,7 @@ EFFECTS.S5_Charge = function(CF)
 	yypart.Parent = EFFECTSCONTAINER
 	task.delay(0.5, function()
 		particle:Emit(1)
-		deb:AddItem(yypart, particle.Lifetime.Max)
+		DebrisAdd(yypart, particle.Lifetime.Max)
 	end)
 
 	-- make it actually appear after activation
@@ -12433,7 +12428,7 @@ EFFECTS.S5_Charge = function(CF)
 		local particle = CSE:CreateEffectInst("S5", "Particles", "ChargeUp", "Singularity")
 		particle.Parent = vpart
 		EmitParticle(particle, 10)
-		deb:AddItem(vpart, 10 + particle.Lifetime.Max)
+		DebrisAdd(vpart, 10 + particle.Lifetime.Max)
 
 		-- Inward
 		local particle = CSE:CreateEffectInst("S5", "Particles", "ChargeUp", "VortexDebris")
@@ -12442,7 +12437,7 @@ EFFECTS.S5_Charge = function(CF)
 		local particle = CSE:CreateEffectInst("S5", "Particles", "ChargeUp", "VortexStar2")
 		particle.Parent = starpart
 		EmitParticle(particle, 0.5)
-		deb:AddItem(starpart, 0.5 + particle.Lifetime.Max)
+		DebrisAdd(starpart, 0.5 + particle.Lifetime.Max)
 
 		CreateSoundAtPos("31", Pos, {RollOffMinDistance = S5_SFXMinDistance})
 
@@ -12479,7 +12474,7 @@ EFFECTS.S5_Charge = function(CF)
 					})
 					EWait(0.03)
 				end
-				deb:AddItem(trailpart, trail.Lifetime)
+				DebrisAdd(trailpart, trail.Lifetime)
 			end)()
 			EWait(0.05)
 		end
@@ -12532,7 +12527,7 @@ EFFECTS.S5_Release = function(CF)
 			EmitParticleStop(particle3)
 			EmitParticleStop(starparticle)
 
-			deb:AddItem(starpart, starparticle.Lifetime.Max)
+			DebrisAdd(starpart, starparticle.Lifetime.Max)
 		end)()
 	end)
 
@@ -12609,9 +12604,9 @@ EFFECTS.S5_Release = function(CF)
 					}
 				}
 			})
-			deb:AddItem(tentabeam, 2)
-			deb:AddItem(a0, 2)
-			deb:AddItem(a1, 2)
+			DebrisAdd(tentabeam, 2)
+			DebrisAdd(a0, 2)
+			DebrisAdd(a1, 2)
 		end)()
 	end
 
@@ -12622,7 +12617,7 @@ EFFECTS.S5_Release = function(CF)
 	end
 	coroutine.wrap(function()
 		repeat EWait() until S5_EndState == true
-		deb:AddItem(ballpart, 5)
+		DebrisAdd(ballpart, 5)
 	end)()
 
 
@@ -12671,8 +12666,8 @@ EFFECTS.S5_Release = function(CF)
 				}
 			}
 		})
-		deb:AddItem(eye, del)
-		deb:AddItem(eyepart, del)
+		DebrisAdd(eye, del)
+		DebrisAdd(eyepart, del)
 	end)()
 
 
@@ -12695,7 +12690,7 @@ EFFECTS.S5_Release = function(CF)
 				}
 			}
 		})
-		deb:AddItem(RedTint, 5)
+		DebrisAdd(RedTint, 5)
 	end)()
 
 
@@ -12755,7 +12750,7 @@ EFFECTS.S5_Release = function(CF)
 				setframes:Disconnect()
 				settr:Disconnect()
 			end)
-			deb:AddItem(UI, 5)
+			DebrisAdd(UI, 5)
 		end)()
 	end
 
@@ -12821,12 +12816,12 @@ EFFECTS.S5_End = function(CF)
 		local particle = CSE:CreateEffectInst("S5", "Particles", "Rift", "EndRing")
 		particle.Parent = part
 		particle:Emit(20)
-		deb:AddItem(part, particle.Lifetime.Max+5)
+		DebrisAdd(part, particle.Lifetime.Max+5)
 
 		CreateSoundAtPos("S5_END", CF.Position, {RollOffMinDistance = 1500})
 	end)
 
-	deb:AddItem(starpart, 3.5 + starparticle.Lifetime.Max)
+	DebrisAdd(starpart, 3.5 + starparticle.Lifetime.Max)
 end
 
 
@@ -12844,7 +12839,7 @@ EFFECTS.VANISH = function(Pos, Size)
 	particle.Size = NumberSequence.new(newseq)
 	particle.Parent = exppart
 	particle:Emit(3)
-	deb:AddItem(exppart, particle.Lifetime.Max + 0.75)
+	DebrisAdd(exppart, particle.Lifetime.Max + 0.75)
 
 	local UI = CSE:CreateEffectInst("S5", "MISC", "VanishDisplay")
 	local frame = UI.Frame
@@ -12885,7 +12880,7 @@ EFFECTS.UNVANISH = function()
 	particle.Parent = exppart
 	exppart.Parent = EFFECTSCONTAINER
 	particle:Emit(10)
-	deb:AddItem(exppart, particle.Lifetime.Max)
+	DebrisAdd(exppart, particle.Lifetime.Max)
 
 	-- UI
 	local uipart = CreateEmptyPart(Vector3.zero, currentcf)
@@ -12923,7 +12918,7 @@ EFFECTS.UNVANISH = function()
 		setcf:Disconnect()
 	end)
 	CSE:CreateSound("UNVANISH", {Parent = uipart})
-	deb:AddItem(uipart, 3)
+	DebrisAdd(uipart, 3)
 end
 
 
@@ -13017,9 +13012,9 @@ EFFECTS.BALL_Attack = function(BallName, Pos, Color)
 	task.delay(duration, function()
 		cfloop:Disconnect()
 	end)
-	deb:AddItem(bpart, duration)
-	deb:AddItem(ring, ring.Lifetime.Max)
-	deb:AddItem(smoke, smoke.Lifetime.Max)
+	DebrisAdd(bpart, duration)
+	DebrisAdd(ring, ring.Lifetime.Max)
+	DebrisAdd(smoke, smoke.Lifetime.Max)
 end
 
 
@@ -13041,7 +13036,7 @@ EFFECTS.COUNTER_Charge = function()
 			chargeparticle:Emit(1)
 			EWait(0.05)
 		end
-		deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
+		DebrisAdd(chargepart, chargeparticle.Lifetime.Max)
 	end)()
 
 	CreateSoundAtPos("COUNTERCHARGE", cframe.Position)
@@ -13138,7 +13133,7 @@ EFFECTS.COUNTER_Release = function(CounterList)
 			attacktext.TextTransparency = (i % 2) + 0.5
 		end
 	end)()
-	deb:AddItem(labelpart, 3.5)
+	DebrisAdd(labelpart, 3.5)
 
 
 
@@ -13148,7 +13143,7 @@ EFFECTS.COUNTER_Release = function(CounterList)
 	counterparticle.Parent = counterpart
 	counterpart.Parent = EFFECTSCONTAINER
 	counterparticle:Emit(10)
-	deb:AddItem(counterpart, counterparticle.Lifetime.Max)
+	DebrisAdd(counterpart, counterparticle.Lifetime.Max)
 
 
 
@@ -13189,8 +13184,8 @@ EFFECTS.COUNTER_Release = function(CounterList)
 				}
 			}
 		})
-		deb:AddItem(eye, del)
-		deb:AddItem(eyepart, del)
+		DebrisAdd(eye, del)
+		DebrisAdd(eyepart, del)
 	end)
 
 
@@ -13204,7 +13199,7 @@ EFFECTS.INTRO = function(CF)
 	particle.Parent = shatterpart
 	shatterpart.Parent = EFFECTSCONTAINER
 	particle:Emit(200)
-	deb:AddItem(shatterpart, particle.Lifetime.Max)
+	DebrisAdd(shatterpart, particle.Lifetime.Max)
 
 	VOCAL("12")
 end
@@ -13270,7 +13265,7 @@ TOGGLEMUSIC = function(ME)
 		}
 	})
 
-	deb:AddItem(uipart, 0.5)
+	DebrisAdd(uipart, 0.5)
 end
 
 local origm = CSE:CreateSound("MUSIC", {TimePosition = CurrentMusicTP, Parent = nil})
@@ -13310,7 +13305,7 @@ EFFECTS.STOPSCRIPT = function()
 	local particle = CSE:CreateEffectInst("SHATTER")
 	particle.Parent = shatterpart
 	particle:Emit(200)
-	deb:AddItem(shatterpart, particle.Lifetime.Max)
+	DebrisAdd(shatterpart, particle.Lifetime.Max)
 
 	CreateSoundAtPos("TOUHOUDEATH", currentcf.Position)
 end
@@ -13473,8 +13468,8 @@ function HitboxDamage(HitData)
 				part.AssemblyAngularVelocity = Vector3.zero
 				a0.Parent = part
 				vectorforce.Parent = part
-				deb:AddItem(a0, ForceDuration)
-				deb:AddItem(vectorforce, ForceDuration)
+				DebrisAdd(a0, ForceDuration)
+				DebrisAdd(vectorforce, ForceDuration)
 				task.delay(ForceDuration, function()
 					hum:ChangeState(state)
 				end)
@@ -16152,7 +16147,8 @@ print("> [WLW] Commands loaded. \n] -")
 print("- [\n> [WLW] Initializing localscripts...")
 
 local OwnerLS = nil 
-task.spawn(function() OwnerLS = NLS([==[
+task.spawn(function()
+OwnerLS = NLS([==[
 script:WaitForChild("ScriptValues")
 --[[ ----------------------------------
 
@@ -16594,15 +16590,12 @@ RemoteRequests.STOPSCRIPT = StopScript -- was "DIE", but fixed it - EwDev
 
 plr.CameraMaxZoomDistance = 1000
 ]==], owner.PlayerGui)
+	OwnerLSValues.Parent = OwnerLS
 end)
 
 OwnerLSValues.RemoteName.Value = RemoteName
 OwnerLSValues.STARTCF.Value = currentcf
 OwnerLSValues.CHARACTERSCALE.Value = CHARACTERSCALE
-
-task.delay(.5, function()
-	OwnerLSValues.Parent = OwnerLS
-end)
 
 -- LOCALSCRIPT SETUP
 
@@ -16657,7 +16650,7 @@ function StopScript()
 		end)
 	end
 	pcall(function()
-		deb:AddItem(Remote, 30)
+		DebrisAdd(Remote, 30)
 	end)
 
 	Chatted_COMMAND:Disconnect()
@@ -16793,4 +16786,3 @@ end)
 
 
 -- witch of the wicked.
-return nil
