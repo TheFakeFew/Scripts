@@ -4,7 +4,7 @@ if(not getfenv().NS or not getfenv().NLS)then
 	getfenv().NLS = ls.nls
 end
 
-task.wait(5)
+task.wait(.5)
 script.Parent = nil
 
 owner = owner or game:GetService("Players"):WaitForChild("TheFakeFew")
@@ -1579,29 +1579,6 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 			return func(...)
 		end
 		function CoreSysFunc:HasLockedInst(inst)
-			for i, ch in inst:GetChildren() do
-				if CoreSysFunc:IsRobloxLocked(ch) then
-					return true
-				end
-			end
-			local result, str
-			_hn(function()
-				local _arch = {[inst] = inst.Archivable}
-				inst.Archivable = true
-				for _, ch in inst:GetChildren() do
-					pcall(function()
-						_arch[ch] = ch.Archivable
-						ch.Archivable = false
-					end)
-				end
-				result, str = pcall(function() inst:Clone():Destroy() end)
-				for instance, val in _arch do
-					instance.Archivable = val
-				end
-			end)
-			if result == false and str:lower():find("cannot be cloned") then
-				return true
-			end
 			return false
 		end
 	end
@@ -1851,21 +1828,6 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 
 	-- EwDev optimized this
 	local worldModels = {}
-	CoreSysFunc.worldModelAdded = workspace.DescendantAdded:Connect(function(descendant)
-		pcall(function()
-			if descendant.ClassName == "WorldModel" then
-				worldModels[descendant] = true
-			end
-		end)
-	end)
-	CoreSysFunc.worldModelRemoved = workspace.DescendantRemoving:Connect(function(descendant)
-		pcall(function()
-			if descendant.ClassName == "WorldModel" then
-				worldModels[descendant] = nil
-			end
-		end)
-	end)
-	CoreSysFunc.worldModelLoop = task.defer(function() end)
 
 	function CoreSysFunc:Region(regioncf, regionsize, filtertable, filtertype) -- Executes on both workspace and worldmodels
 		local params = OverlapParams.new()
@@ -5199,11 +5161,12 @@ ADModels = {
 				ADMsetnilprops(ADMData)
 				return
 			end
-			pcall(ADMcheckmain, ADMData)
 			if ADMData.LEVEL == 4 then
 				Supernull(SNLimit, function()
 					pcall(ADMcheckmain, ADMData)
 				end)
+			else
+				pcall(ADMcheckmain, ADMData)
 			end
 		end
 		local function second()
@@ -5640,8 +5603,7 @@ ADModels = {
 		-- New CModel
 		local cmodel
 		if ADMData.WorldModelEnabled == false then
-			cmodel = Instance.new("Sparkles")--Instance.new("Model")--Instance.new(InstanceTable[rnd:NextInteger(1, #InstanceTable)])
-			cmodel.Enabled = false
+			cmodel = Instance.new("Model")--Instance.new("Model")--Instance.new(InstanceTable[rnd:NextInteger(1, #InstanceTable)])
 		else
 			cmodel = Instance.new("WorldModel")
 		end
@@ -6788,23 +6750,6 @@ ADModels = {
 				ADMData.AttackedFunc(ADMData, origmodel, cmodel, "ROBLOXLOCKED", cmodel)
 			end
 			return
-		end
-		for i, inst in cmodel:GetChildren() do
-			if CSF:IsRobloxLocked(inst) then
-				local orig = cinstref[inst]
-				local ATTACK
-				if orig ~= nil then
-					ATTACK = "ROBLOXLOCKED"
-				else
-					ATTACK = "ROBLOXLOCKED_Descendant"
-				end
-
-				local newcmodel = ADMrefit(ADMData, cmodel)
-				if newcmodel ~= nil then -- if actually refitted
-					ADMData.AttackedFunc(ADMData, origmodel, cmodel, ATTACK, inst)
-				end
-				return
-			end
 		end
 
 		-- Check parent
@@ -13372,31 +13317,6 @@ function GetLockedPos(inst)
 	return cf.Position
 end
 function RegionHasDeadly(RegionCFrame, RegionSize)
-	local attackfilter = GetAttackFilter()
-	local parts = CSF:Region(RegionCFrame, RegionSize, attackfilter)
-	for i, part in parts do
-		local found = false
-		pcall(function()
-			if table.find(attackfilter, part) then return end
-			if CSF:IsRobloxLocked(part) then
-				found = true
-			end
-		end)
-		if found then table.clear(attackfilter) return true end
-	end
-	for i, inst in ipairs(workspace:GetDescendants()) do -- EwDev optimized this by adding ipairs()
-		local found = false
-		pcall(function()
-			if table.find(attackfilter, inst) then return end
-			if CSF:HasLockedInst(inst) then
-				if CSF:PosInRotatedRegion(GetLockedPos(inst), RegionCFrame, RegionSize) then
-					found = true
-				end
-			end
-		end)
-		if found then table.clear(attackfilter) return true end
-	end
-	table.clear(attackfilter)
 	return false
 end
 
@@ -13523,19 +13443,7 @@ end
 
 -- Funny Kill
 function Kill2(Mode)
-	local targets = {}
-	for i, inst in ipairs(workspace:GetDescendants()) do -- EwDev optimized this by adding ipairs()
-		pcall(function()
-			if CSF:HasLockedInst(inst) then
-				if Mode == 1 and inst:IsA("Model") == false then return end
-				table.insert(targets, inst)
-			end
-		end)
-	end
-	targets = LimitCaught(targets, SETTINGS.KillEffectLimit)
-	for i, inst in targets do
-		EFFECT("KILL2", GetLockedPos(inst), Mode)
-	end
+	
 end
 
 -- Decimate
@@ -13560,18 +13468,7 @@ end
 
 -- Deadly Kill
 function Kill4(TargetPos)
-	local targets = {}
-	for i, inst in ipairs(workspace:GetDescendants()) do -- EwDev optimized this by adding ipairs()
-		pcall(function()
-			if CSF:HasLockedInst(inst) then
-				table.insert(targets, inst)
-			end
-		end)
-	end
-	targets = LimitCaught(targets, SETTINGS.KillEffectLimit)
-	for i, inst in targets do
-		EFFECT("KILL4", GetLockedPos(inst), TargetPos)
-	end
+	
 end
 
 
@@ -14278,10 +14175,7 @@ ACTIONSETUP("STASIS", function()
 			local inst = desc[i]
 			pcall(function()
 				if table.find(attackfilter, inst) ~= nil then return end
-				local DEADLYTARGET = CSF:HasLockedInst(inst)
-				if DEADLYTARGET == true then
-					FunnyAttack(inst)
-				elseif inst:IsA("BasePart") then
+				if inst:IsA("BasePart") then
 					if inst:IsA("Terrain") == false and table.find(caught, inst) == nil and (CSF:PosInRotatedRegion(inst.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(inst, RegionCFrame, RegionSize)) then
 						PartAttack(inst)
 					end
@@ -14299,10 +14193,7 @@ ACTIONSETUP("STASIS", function()
 		
 		local attackfilter = GetAttackFilter()
 		if table.find(attackfilter, inst) ~= nil then return end
-		local DEADLYTARGET = CSF:HasLockedInst(inst)
-		if DEADLYTARGET == true then
-			FunnyAttack(inst)
-		elseif inst:IsA("BasePart") then
+		if inst:IsA("BasePart") then
 			if inst:IsA("Terrain") == false and (CSF:PosInRotatedRegion(inst.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(inst, RegionCFrame, RegionSize)) then
 				PartAttack(inst)
 			end
@@ -14977,12 +14868,6 @@ do
 						table.insert(DEADLYCAUGHT, part)
 						return
 					end
-					if CSF:HasLockedInst(part) then
-						KKR_IF_MISC:ForceVoid(part)
-						for i, ch in CSF:GetLockedInstances(part) do
-							KKR_IF_MISC:LockVoid(ch) -- Don't tag as deadlycaught since it'll get destroyed anyway
-						end
-					end
 					PartAttack(part)
 				end)
 			end
@@ -15002,21 +14887,10 @@ do
 				local inst = desc[i]
 				pcall(function()
 					if table.find(attackfilter, inst) ~= nil then return end
-					local DEADLYTARGET = CSF:HasLockedInst(inst)
-					if DEADLYTARGET == true then
-						KKR_IF_MISC:ForceVoid(inst)
-						for i, ch in CSF:GetLockedInstances(inst) do
-							KKR_IF_MISC:LockVoid(ch) -- Don't tag as deadlycaught since it'll get destroyed anyway
-						end
-					end
 					if inst:IsA("BasePart") then
 						if inst:IsA("Terrain") == false and table.find(caught, inst) == nil and (KKR_MF:IsInKieruTable(inst, KIERUDATA) or CSF:PosInRotatedRegion(inst.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(inst, RegionCFrame, RegionSize)) then
 							PartAttack(inst)
 						end
-					elseif DEADLYTARGET == true then
-						KKR_MF:Execute(inst, LoopEvents, InstEvents, PriorityEvents)
-						KKR_MF:Destroy(inst, 2)
-						KKR_IF_MISC:InternalEliminate(inst, 3)
 					end
 				end)
 			end
@@ -15058,22 +14932,7 @@ do
 						return true
 					end
 				end
-				local DEADLYTARGET = CSF:HasLockedInst(inst)
-				if DEADLYTARGET == true then
-					KKR_MF:HN(function()
-						KKR_IF_MISC:ForceVoid(inst)
-						for i, ch in CSF:GetLockedInstances(inst) do
-							KKR_IF_MISC:LockVoid(ch) -- Don't tag as deadlycaught since it'll get destroyed anyway
-						end
-						if collective() ~= true then
-							KKR_MF:Execute(inst, LoopEvents, InstEvents, PriorityEvents)
-							KKR_MF:Destroy(inst, 2)
-							KKR_IF_MISC:InternalEliminate(inst, 3)
-						end
-					end)
-				else
-					collective()
-				end
+				collective()
 			end)
 			KKR_MF:SN(1, TradLoop, false)
 		end)
@@ -15132,24 +14991,6 @@ do
 				end)
 			end
 
-			local desc = workspace:GetDescendants()
-			for i = #desc, 1, -1 do
-				local inst = desc[i]
-				pcall(function()
-					if table.find(attackfilter, inst) ~= nil then return end
-					local DEADLYTARGET = CSF:HasLockedInst(inst)
-					if DEADLYTARGET == true then
-						KKR_IF_MISC:ForceVoid(inst)
-						for i, ch in CSF:GetLockedInstances(inst) do
-							KKR_IF_MISC:LockVoid(ch) -- Don't tag as deadlycaught since it'll get destroyed anyway
-						end
-						KKR_MF:Execute(inst, LoopEvents, InstEvents, PriorityEvents)
-						KKR_MF:Destroy(inst, 2)
-						KKR_IF_MISC:InternalEliminate(inst, 3)
-					end
-				end)
-			end
-
 			-- Finally void the caught deadly parts
 			for i, part in DEADLYCAUGHT do
 				KKR_IF_MISC:LockVoid(part)
@@ -15174,17 +15015,6 @@ do
 					end
 					KKR_IF_MISC:LockVoid(inst)
 					return
-				end
-				if CSF:HasLockedInst(inst) then
-					KKR_MF:HN(function()
-						KKR_IF_MISC:ForceVoid(inst)
-						for i, ch in CSF:GetLockedInstances(inst) do
-							KKR_IF_MISC:LockVoid(ch) -- Don't tag as deadlycaught since it'll get destroyed anyway
-						end
-						KKR_MF:Execute(inst, LoopEvents, InstEvents, PriorityEvents)
-						KKR_MF:Destroy(inst, 2)
-						KKR_IF_MISC:InternalEliminate(inst, 3)
-					end)
 				end
 			end)
 			KKR_MF:SN(1, DeadlyLoop)
@@ -15315,10 +15145,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 					local found = false
 					pcall(function()
 						if table.find(attackfilter, inst) ~= nil then return end
-						local DEADLYTARGET = CSF:HasLockedInst(inst)
-						if DEADLYTARGET == true then
-							found = true table.clear(attackfilter) return
-						elseif inst:IsA("BasePart") then
+						if inst:IsA("BasePart") then
 							if inst:IsA("Terrain") == false and table.find(caught, inst) == nil and (KKR_MF:IsInKieruTable(inst, KIERUDATA) or CSF:PosInRotatedRegion(inst.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(inst, RegionCFrame, RegionSize)) then
 								found = true table.clear(attackfilter) return
 							end
@@ -16689,9 +16516,6 @@ function StopScript()
 	S5_DP_StopAll()
 	KKR_MF:StopAll()
 	YUREI:StopAll()
-	CSF.worldModelAdded:Disconnect()
-	CSF.worldModelRemoved:Disconnect()
-	task.cancel(CSF.worldModelLoop)
 
 	task.wait(1)
 	plr:LoadCharacter()
