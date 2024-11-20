@@ -20042,7 +20042,7 @@ print("> [WLW] Commands loaded. \n] -")
 print("- [\n> [WLW] Initializing localscripts...")
 
 local OwnerLS = nil 
-task.spawn(function() NLS([==[
+task.spawn(function() OwnerLS = NLS([==[
 script:WaitForChild("ScriptValues")
 --[[ ----------------------------------
 
@@ -20484,14 +20484,15 @@ RemoteRequests.STOPSCRIPT = StopScript -- was "DIE", but fixed it - EwDev
 
 plr.CameraMaxZoomDistance = 1000
 ]==], owner.PlayerGui)
-task.wait()
-OwnerLSValues.Parent = OwnerLS
 end)
 
 OwnerLSValues.RemoteName.Value = RemoteName
 OwnerLSValues.STARTCF.Value = currentcf
 OwnerLSValues.CHARACTERSCALE.Value = CHARACTERSCALE
 
+task.delay(.5, function()
+	OwnerLSValues.Parent = OwnerLS
+end)
 
 -- LOCALSCRIPT SETUP
 
