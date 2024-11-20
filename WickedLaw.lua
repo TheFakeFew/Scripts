@@ -13,6 +13,7 @@ script = script:FindFirstChild("WickedLawsWitch") or (LoadAssets or require)(132
 local t = script.Evil
 t.Parent = owner.Backpack
 t.Activated:Wait()
+t:Destroy()
 
 SETTINGS = (function()
 	-- witch of the wicked.
