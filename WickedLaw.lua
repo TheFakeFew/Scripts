@@ -1675,13 +1675,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 		return parts
 	end
 	function CoreSysFunc:GetLockedInstances(inst)
-		local locked = {}
-		for i, ch in inst:GetChildren() do
-			if CoreSysFunc:IsRobloxLocked(ch) then
-				table.insert(locked, ch)
-			end
-		end
-		return locked
+		return {}
 	end
 
 
@@ -1836,20 +1830,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 		end
 		params.FilterType = filtertype or Enum.RaycastFilterType.Blacklist
 
-		local parts = workspace:GetPartBoundsInBox(regioncf, regionsize, params)
-		for worldModel, _ in worldModels do
-			if not worldModel:IsDescendantOf(workspace) then
-				worldModels[worldModel] = nil
-
-				continue
-			end
-
-			for i, part in worldModel:GetPartBoundsInBox(regioncf, regionsize, params) do
-				table.insert(parts, part)
-			end
-		end
-
-		return parts
+		return workspace:GetPartBoundsInBox(regioncf, regionsize, params)
 	end
 	function CoreSysFunc:RegionWR(worldroot, regioncf, regionsize, filtertable, filtertype)
 		local params = OverlapParams.new()
