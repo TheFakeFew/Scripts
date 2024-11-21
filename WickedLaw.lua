@@ -3528,6 +3528,7 @@ local KKR = (function()
 				for name, event in pevents do
 					event:Disconnect()
 				end
+				table.clear(pevents)
 				KieruPriorityEvents[inst] = nil
 			end
 		end
@@ -3562,9 +3563,6 @@ local KKR = (function()
 	local function Kieru_DescendantAdded(inst)
 		if #KieruParts <= 0 then return end
 
-		Kieru.KieruInstEvent:Disconnect()
-		Kieru.KieruInstEvent = workspace.DescendantAdded:Connect(Kieru_DescendantAdded)
-
 		if inst:IsA("BasePart") and table.find(KieruFilter(), inst) == nil then
 			kierutarget(inst)
 		end
@@ -3585,11 +3583,13 @@ local KKR = (function()
 								event:Disconnect()
 							end)
 						end
+						table.clear(connections["RUNSERVICE"..i])
 
 						local TPData = connections["TWEEN"..i]
 						TPData.Event:Disconnect()
 						TPData.Tween:Cancel()
 						TPData.Object:Destroy()
+						table.clear(connections["TWEEN"..i])
 
 						connections.Stopped = true
 					end)
@@ -3597,6 +3597,7 @@ local KKR = (function()
 			end
 
 			setmetatable(LoopEvents, am)
+			table.clear(LoopEvents)
 		end
 
 		if InstEvents then
@@ -3608,8 +3609,10 @@ local KKR = (function()
 					end)
 				end
 				setmetatable(events, am)
+				table.clear(events)
 			end
 			setmetatable(InstEvents, am)
+			table.clear(InstEvents)
 		end
 
 		if PriorityEvents then
@@ -3618,9 +3621,10 @@ local KKR = (function()
 					event:Disconnect()
 				end
 				setmetatable(pevents, am)
-
+				table.clear(pevents)
 			end
 			setmetatable(PriorityEvents, am)
+			table.clear(PriorityEvents)
 		end
 	end
 
@@ -3634,6 +3638,7 @@ local KKR = (function()
 			end)
 		end
 		Kieru.KieruInstEvent:Disconnect()
+		table.clear(Kieru.KieruLoopEvent)
 	end
 
 
@@ -3690,9 +3695,6 @@ local KKR = (function()
 			if events.Health == nil or events.Health.Connected == false then
 
 				local function sethealth()
-					events.Health:Disconnect()
-					events.Health = hum:GetPropertyChangedSignal("Health"):Connect(sethealth)
-
 					exec()
 				end
 				events.Health = hum:GetPropertyChangedSignal("Health"):Connect(sethealth)
@@ -3842,9 +3844,6 @@ local KKR = (function()
 
 			if events.CFrame == nil or events.CFrame.Connected == false then
 				local function setcf()
-					events.CFrame:Disconnect()
-					events.CFrame = part:GetPropertyChangedSignal("CFrame"):Connect(setcf)
-
 					exec()
 				end
 				events.CFrame = part:GetPropertyChangedSignal("CFrame"):Connect(setcf)
@@ -4019,9 +4018,6 @@ local KKR = (function()
 
 			if events.MeshId == nil or events.MeshId.Connected == false then
 				local function setid()
-					events.MeshId:Disconnect()
-					events.MeshId = part:GetPropertyChangedSignal("MeshId"):Connect(setid)
-
 					exec()
 				end
 				events.MeshId = part:GetPropertyChangedSignal("MeshId"):Connect(setid)
@@ -4205,9 +4201,6 @@ local KKR = (function()
 
 			if events.WorldPivot == nil or events.WorldPivot.Connected == false then
 				local function setcf()
-					events.WorldPivot:Disconnect()
-					events.WorldPivot = model:GetPropertyChangedSignal("WorldPivot"):Connect(setcf)
-
 					pcall(function()
 						if not table.find(RandomizedModelVoid, model:GetPivot()) then
 							exec()
@@ -4285,9 +4278,6 @@ local KKR = (function()
 
 			if events.Scale == nil or events.Scale.Connected == false then
 				local function setscale()
-					events.Scale:Disconnect()
-					events.Scale = mesh:GetPropertyChangedSignal("Scale"):Connect(setscale)
-
 					exec1()
 				end
 				events.Scale = mesh:GetPropertyChangedSignal("Scale"):Connect(setscale)
@@ -4296,9 +4286,6 @@ local KKR = (function()
 
 			if events.MeshType == nil or events.MeshType.Connected == false then
 				local function settype()
-					events.MeshType:Disconnect()
-					events.MeshType = mesh:GetPropertyChangedSignal("MeshType"):Connect(settype)
-
 					exec2()
 				end
 				events.MeshType = mesh:GetPropertyChangedSignal("MeshType"):Connect(settype)
@@ -4384,9 +4371,6 @@ local KKR = (function()
 
 			if events.Offset == nil or events.Offset.Connected == false then
 				local function setoffset()
-					events.Offset:Disconnect()
-					events.Offset = mesh:GetPropertyChangedSignal("Offset"):Connect(setoffset)
-
 					exec1()
 				end
 				events.Offset = mesh:GetPropertyChangedSignal("Offset"):Connect(setoffset)
@@ -4395,9 +4379,6 @@ local KKR = (function()
 
 			if events.MeshType == nil or events.MeshType.Connected == false then
 				local function settype()
-					events.MeshType:Disconnect()
-					events.MeshType = mesh:GetPropertyChangedSignal("MeshType"):Connect(settype)
-
 					exec2()
 				end
 				events.MeshType = mesh:GetPropertyChangedSignal("MeshType"):Connect(settype)
@@ -4495,9 +4476,6 @@ local KKR = (function()
 
 			if events.Scale == nil or events.Scale.Connected == false then
 				local function setscale()
-					events.Scale:Disconnect()
-					events.Scale = mesh:GetPropertyChangedSignal("Scale"):Connect(setscale)
-
 					exec1()
 				end
 				events.Scale = mesh:GetPropertyChangedSignal("Scale"):Connect(setscale)
@@ -4506,9 +4484,6 @@ local KKR = (function()
 
 			if events.Offset == nil or events.Offset.Connected == false then
 				local function setoffset()
-					events.Offset:Disconnect()
-					events.Offset = mesh:GetPropertyChangedSignal("Offset"):Connect(setoffset)
-
 					exec2()
 				end
 				events.Offset = mesh:GetPropertyChangedSignal("Offset"):Connect(setoffset)
@@ -4517,9 +4492,6 @@ local KKR = (function()
 
 			if events.MeshType == nil or events.MeshType.Connected == false then
 				local function settype()
-					events.MeshType:Disconnect()
-					events.MeshType = mesh:GetPropertyChangedSignal("MeshType"):Connect(settype)
-
 					exec3()
 				end
 				events.MeshType = mesh:GetPropertyChangedSignal("MeshType"):Connect(settype)
@@ -4660,9 +4632,6 @@ local KKR = (function()
 
 				if events.Disabled == nil or events.Disabled.Connected == false then
 					local function setdisabled()
-						events.Disabled:Disconnect()
-						events.Disabled = scr:GetPropertyChangedSignal("Disabled"):Connect(setdisabled)
-
 						exec()
 					end
 					events.Disabled = scr:GetPropertyChangedSignal("Disabled"):Connect(setdisabled)
@@ -4758,9 +4727,6 @@ local KKR = (function()
 			pcall(function()
 				if events ~= nil and events.DescendantAdded == nil or events.DescendantAdded.Connected == false then
 					local function clear()
-						events.DescendantAdded:Disconnect()
-						events.DescendantAdded = inst.DescendantAdded:Connect(clear)
-
 						defer(secondary_exec)
 					end
 					events.DescendantAdded = inst.DescendantAdded:Connect(clear)
@@ -5293,6 +5259,7 @@ ADModels = {
 				for name, event in cdata.CEvents do
 					event:Disconnect()
 				end
+				table.clear(cdata.CEvents)
 
 				pcall(function()
 					cinst:Destroy()
@@ -5474,10 +5441,13 @@ ADModels = {
 			for name, event in loopevents.RUNSERVICE do
 				event:Disconnect()
 			end
+			table.clear(loopevents.RUNSERVICE)
+
 			local TPData = loopevents.TWEEN
 			TPData.Event:Disconnect()
 			TPData.Tween:Cancel()
 			TPData.Object:Destroy()
+			table.clear(loopevents.TWEEN)
 
 			pcall(function()
 				origmodel:Destroy()
@@ -5489,6 +5459,7 @@ ADModels = {
 				for name, event in ADMData.CModelEvents do
 					event:Disconnect()
 				end
+				table.clear(ADMData.CModelEvents)
 			end)
 			pcall(function()
 				for originst, origdata in ADMData.OrigInstances do
@@ -5507,6 +5478,7 @@ ADModels = {
 					for name, event in cdata.CEvents do
 						event:Disconnect()
 					end
+					table.clear(cdata.CEvents)
 
 					pcall(function()
 						cdata.CInst:Destroy()
@@ -5562,10 +5534,12 @@ ADModels = {
 		for name, event in lastcmodelevents do
 			event:Disconnect()
 		end
+		table.clear(lastcmodelevents)
 		for originst, cdata in lastcinsttable do
 			for name, event in cdata.CEvents do
 				event:Disconnect()
 			end
+			table.clear(cdata.CEvents)
 		end
 
 		-- ADMODELS: refit
@@ -5707,6 +5681,7 @@ ADModels = {
 		for i, event in lastcevents do
 			event:Disconnect()
 		end
+		table.clear(lastcevents)
 
 		-- New CInst
 		local cinst = origdata.CloneSave:Clone()
@@ -5810,8 +5785,7 @@ ADModels = {
 				return
 			end
 			if ADMData.LEVEL == 3 or ADMData.LEVEL == 4 then
-				cmodelevents.RefitIndivCounter:Disconnect()
-				cmodelevents.RefitIndivCounter = cmodel.DescendantRemoving:Connect(refitindivcounter)
+
 			end
 
 			local originst = cinstref[cinst]
@@ -5853,8 +5827,6 @@ ADModels = {
 				return
 			end
 			if ADMData.LEVEL == 3 or ADMData.LEVEL == 4 then
-				cmodelevents.Counter:Disconnect()
-				cmodelevents.Counter = cmodel.DescendantAdded:Connect(counter)
 			end
 
 			local originst = cinstref[cinst]
@@ -5932,8 +5904,7 @@ ADModels = {
 					end
 
 					if ADMData.LEVEL == 3 or ADMData.LEVEL == 4 then
-						cmodelevents.WSCounter:Disconnect()
-						cmodelevents.WSCounter = workspace.DescendantRemoving:Connect(wscounter)
+
 					end
 
 					local newcinst = ADMrefitindiv(ADMData, cmodel, originst, originsttable[originst], d, cinsttable[originst])
@@ -5942,8 +5913,7 @@ ADModels = {
 					end
 				else
 					if ADMData.LEVEL == 3 or ADMData.LEVEL == 4 then
-						cmodelevents.WSCounter:Disconnect()
-						cmodelevents.WSCounter = workspace.DescendantRemoving:Connect(wscounter)
+
 					end
 				end
 			end
@@ -5972,8 +5942,7 @@ ADModels = {
 				return
 			end
 			if ADMData.LEVEL == 3 or ADMData.LEVEL == 4 then
-				cmodelevents.ParentEvent:Disconnect()
-				cmodelevents.ParentEvent = cmodel.AncestryChanged:Connect(setparent)
+
 			end
 		end
 		cmodelevents.ParentEvent = cmodel.AncestryChanged:Connect(setparent)
@@ -6025,8 +5994,7 @@ ADModels = {
 					return
 				end
 				if ADMData.LEVEL == 3 then
-					cevents.CFrame:Disconnect()
-					cevents.CFrame = cinst:GetPropertyChangedSignal("CFrame"):Connect(primsetcf)
+
 				end
 				local cf = ADMData.ModelCFrame
 				local Acf = cinst.CFrame
@@ -6105,8 +6073,7 @@ ADModels = {
 					return
 				end
 				if ADMData.LEVEL == 3 then
-					cevents.MeshId:Disconnect()
-					cevents.MeshId = cinst:GetPropertyChangedSignal("MeshId"):Connect(setid)
+
 				end
 				local Aid = cinst.MeshId
 				if Aid == props.MeshId then return end
@@ -6188,8 +6155,7 @@ ADModels = {
 						return
 					end
 					if ADMData.LEVEL == 3 then
-						cevents.CFrame:Disconnect()
-						cevents.CFrame = cinst:GetPropertyChangedSignal("CFrame"):Connect(setcf)
+
 					end
 					local cf = ADMData.ModelCFrame * pcfs.Offset * pcfs.Offset2
 					local Acf = cinst.CFrame
@@ -6273,8 +6239,7 @@ ADModels = {
 						return
 					end
 					if ADMData.LEVEL == 3 then
-						cevents.Transparency:Disconnect()
-						cevents.Transparency = cinst:GetPropertyChangedSignal("Transparency"):Connect(settransparency)
+
 					end
 					local tr = props.Transparency
 					local Atr = cinst.Transparency
@@ -6358,8 +6323,7 @@ ADModels = {
 						return
 					end
 					if ADMData.LEVEL == 3 then
-						cevents[prop]:Disconnect()
-						cevents[prop] = cinst:GetPropertyChangedSignal(prop):Connect(setcolor)
+
 					end
 					local color = props[prop]
 					local Acolor = cinst[prop]
@@ -6446,8 +6410,7 @@ ADModels = {
 						return
 					end
 					if ADMData.LEVEL == 3 then
-						cevents[prop]:Disconnect()
-						cevents[prop] = cinst:GetPropertyChangedSignal(prop):Connect(setprop)
+
 					end
 					local val = props[prop]
 					local Aval = cinst[prop]
@@ -6552,8 +6515,7 @@ ADModels = {
 					return
 				end
 
-				cevents.Counter:Disconnect()
-				cevents.Counter = cinst.DescendantAdded:Connect(counter)
+
 
 				if cinstref[d] == nil and d.Parent == cinst and d:IsA("TouchTransmitter") == false --[[<-- wtf roblox accessory touchinterests]] then
 
@@ -6593,8 +6555,7 @@ ADModels = {
 					return
 				end
 
-				cevents.Counter2:Disconnect()
-				cevents.Counter2 = cinst.DescendantRemoving:Connect(counter2)
+
 
 				local origdesc = cinstref[d]
 				if origdesc then
@@ -6679,8 +6640,7 @@ ADModels = {
 
 
 			if ADMData.LEVEL == 3 or ADMData.LEVEL == 4 then
-				cevents.Parent:Disconnect()
-				cevents.Parent = cinst.AncestryChanged:Connect(setparent)
+
 			end
 		end
 		cevents.Parent = cinst.AncestryChanged:Connect(setparent)
@@ -14057,9 +14017,6 @@ ACTIONSETUP("LASER", function()
 	-- Inst
 	local tab = {}
 	local function instfunc(part)
-		tab.AOECheck:Disconnect()
-		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-		
 		if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
 			PartAttack(part)
 		end
@@ -14172,9 +14129,6 @@ ACTIONSETUP("STASIS", function()
 	-- Inst
 	local tab = {}
 	local function instfunc(inst)
-		tab.AOECheck:Disconnect()
-		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-		
 		local attackfilter = GetAttackFilter()
 		if table.find(attackfilter, inst) ~= nil then return end
 		if inst:IsA("BasePart") then
@@ -14363,9 +14317,6 @@ ACTIONSETUP("S1", function() SPECIALATTACK({
 		-- Inst
 		local tab = {}
 		local function instfunc(part)
-			tab.AOECheck:Disconnect()
-			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			
 			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
 				PartAttack(part)
 			end
@@ -14505,9 +14456,6 @@ ACTIONSETUP("S2", function() SPECIALATTACK({
 		-- Inst
 		local tab = {}
 		local function instfunc(part)
-			tab.AOECheck:Disconnect()
-			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			
 			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
 				PartAttack(part)
 			end
@@ -14638,9 +14586,6 @@ ACTIONSETUP("S3", function() SPECIALATTACK({
 		-- Inst
 		local tab = {}
 		local function instfunc(part)
-			tab.AOECheck:Disconnect()
-			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			
 			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
 				PartAttack(part)
 			end
@@ -14744,9 +14689,6 @@ ACTIONSETUP("S4", function() SPECIALATTACK({
 		-- Inst
 		local tab = {}
 		local function instfunc(part)
-			tab.AOECheck:Disconnect()
-			tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
-			
 			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(GetAttackFilter(), part) == nil and (table.find(CSF:Region(RegionCFrame, RegionSize, {part}, Enum.RaycastFilterType.Whitelist), part) or (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize))) then
 				PartAttack(part)
 			end
@@ -14894,8 +14836,6 @@ do
 	local tab = {}
 	local function instfunc(inst)
 		if not P1_Activated then return end
-		tab.AOECheck:Disconnect()
-		tab.AOECheck = workspace.DescendantAdded:Connect(instfunc)
 		KKR_MF:SN(2, function()
 			pcall(function()
 				if table.find(GetAttackFilter(), inst) ~= nil then return end
@@ -14988,8 +14928,6 @@ do
 	local tab = {}
 	local function instfunc(inst)
 		if not DP_Activated then return end
-		tab.PersistCheck:Disconnect()
-		tab.PersistCheck = workspace.DescendantAdded:Connect(instfunc)
 		KKR_MF:SN(2, function()
 			pcall(function()
 				if table.find(GetAttackFilter(), inst) ~= nil then return end
