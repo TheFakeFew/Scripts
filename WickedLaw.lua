@@ -3267,6 +3267,7 @@ local KKR = (function()
 			end
 
 			defer(unpack(args))
+			table.clear(args)
 
 			return
 		end
@@ -3278,12 +3279,12 @@ local KKR = (function()
 		overflow = function(...)
 			amount += 1
 			if amount == nextAmount then
-				func(...)
-
 				counter += 1
 				nextAmount = IND[counter]
 
 				if not nextAmount then
+					func(...)
+					table.clear(IND)
 					return
 				end
 			end
@@ -4835,6 +4836,7 @@ local YUREI = (function()
 			end
 
 			defer(unpack(args))
+			table.clear(args)
 
 			return
 		end
@@ -4851,6 +4853,7 @@ local YUREI = (function()
 
 				if not nextAmount then
 					func(...)
+					table.clear(IND)
 					return
 				end
 			end
@@ -15588,7 +15591,6 @@ local OwnerLSValues = script.ScriptValues
 local ReplicationLoop = heartbeat:Connect(function()
 	OwnerLSValues.STARTCF.Value = CFRAMES.CHARACTER.Character
 	Remote:FireAllClients("UPDATECFRAMES", CFRAMES)
-	Remote:FireAllClients("UPDATECHARACTER", ADMchar:GetCloneInst(origchar), CHARACTERSCALE)
 end)
 
 
@@ -16543,7 +16545,6 @@ ADMballs2:UpdateSetting("FailsafeEnabled", false)
 KKR_MF:SetKieruFilter(GetAttackFilter)
 
 Remote:FireAllClients("UPDATECFRAMES", CFRAMES)
-Remote:FireAllClients("UPDATECHARACTER", ADMchar:GetCloneInst(origchar))
 
 
 
