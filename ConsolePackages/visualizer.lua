@@ -60,6 +60,8 @@ return {
         local datat = addText(`[^Z] Volume Up  [^X] Volume Down  [^V] Pitch Up  [^B] Pitch Down\n[^N] Sensitivity Up  [^M] Sensitivity Down  [^C] Exit`)
         local origtex = datat.Text
         datat.TextXAlignment = "Center"
+
+        local lastspec = {}
         
         r.OnServerEvent:Connect(function(p, compress)
             if(p ~= owner)then return end
@@ -82,6 +84,11 @@ return {
             
             local maxHeight = 20
             local str = ""
+
+            for i, v in next, spec do
+                spec[i] = lerp(lastspec[i] or 0, spec[i], .2)
+            end
+            lastspec = spec
 
             local heights = {}
             for i = 1, 64 do
@@ -146,7 +153,7 @@ return averaged
 end
 
 local function lerp(a, b, t)
-return a + (b - a) * t
+    return a + (b - a) * t
 end
 
 local send = 0
@@ -154,7 +161,6 @@ local lastspectrum = nil
 local lastframe = os.clock()
 local delta = 0
 
-local num = .1
 
 while game:GetService("RunService").Heartbeat:Wait() do
 delta = delta + (os.clock() - lastframe)
@@ -192,11 +198,6 @@ if(should)then
     for i, v in next, spectrum do spectrum[i] = v*8000 end
     spectrum = hanning(spectrum)
     if(spectrum ~= lastspectrum)then
-        if(lastspectrum)then
-            for i, v in next, spectrum do
-                spectrum[i] = lerp(lastspectrum[i] or 0, spectrum[i], num)
-            end
-        end
         lastspectrum = spectrum
         
         if(send%5 == 0)then
