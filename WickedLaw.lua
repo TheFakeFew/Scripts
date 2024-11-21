@@ -3208,28 +3208,6 @@ local KKR = (function()
 	---------------------------------------------------------------------
 
 	-- Anima Metatable
-	local am = { -- Shuts down all DescendantAdded/all Priorities from reconnecting because it's too god damn fast wtf
-		__index = function(tab, i)
-			pcall(function()
-				rawget(tab, i):Disconnect()
-			end)
-			pcall(function()
-				for name, event in rawget(tab, i) do
-					event:Disconnect()
-				end
-			end)
-		end,
-		__newindex = function(tab, i, value)
-			pcall(function()
-				value:Disconnect()
-			end)
-			pcall(function()
-				for name, event in value do
-					event:Disconnect()
-				end
-			end)
-		end,
-	}
 
 
 	---------------------------------------------------------------------
@@ -3596,7 +3574,6 @@ local KKR = (function()
 				end
 			end
 
-			setmetatable(LoopEvents, am)
 			table.clear(LoopEvents)
 		end
 
@@ -3608,10 +3585,8 @@ local KKR = (function()
 						event:Disconnect()
 					end)
 				end
-				setmetatable(events, am)
 				table.clear(events)
 			end
-			setmetatable(InstEvents, am)
 			table.clear(InstEvents)
 		end
 
@@ -3620,10 +3595,8 @@ local KKR = (function()
 				for name, event in pevents do
 					event:Disconnect()
 				end
-				setmetatable(pevents, am)
 				table.clear(pevents)
 			end
-			setmetatable(PriorityEvents, am)
 			table.clear(PriorityEvents)
 		end
 	end
