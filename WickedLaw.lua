@@ -5617,15 +5617,10 @@ ADModels = {
 			pcall(function()
 				cinst:Destroy()
 			end)
-			pcall(function()
-				DebrisAdd(cinst, 0)
-			end)
 		end
+		table.clear(lastcinsttable)
 		pcall(function()
 			lastcmodel:Destroy()
-		end)
-		pcall(function()
-			DebrisAdd(lastcmodel, 0)
 		end)
 
 		coroutine.wrap(ADMData.PostRefitFunc)(ADMData, origmodel, cmodel)
@@ -5701,9 +5696,6 @@ ADModels = {
 		-- Previous Instance
 		pcall(function()
 			lastcinst:Destroy()
-		end)
-		pcall(function()
-			DebrisAdd(lastcinst, 0)
 		end)
 
 		coroutine.wrap(ADMData.PostRefitFunc)(ADMData, originst, cinst)
