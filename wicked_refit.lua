@@ -472,6 +472,7 @@ function newsoundat(cframe, id, vol, pit)
 		end
 		game:GetService("Debris"):AddItem(p, s.TimeLength/s.Pitch)
 	end)
+	return s
 end
 
 function charclone()
@@ -626,7 +627,13 @@ function counter(counterlist)
 			end
 			deb:AddItem(chargepart, chargeparticle.Lifetime.Max)
 		end)
-		newsoundat(cframe, 1085317309, 1, math.random(90, 110)/100)
+		local s = newsoundat(cframe, 13081812417, 2, 1)
+		local e = Instance.new("EchoSoundEffect", s)
+		e.Delay = 0.15
+		e.DryLevel = 1
+		e.Feedback = .5
+		e.Priority = 0
+		e.WetLevel = 0
 	end)
 
 	EWait(.2)
@@ -670,6 +677,7 @@ function counter(counterlist)
 		local cindex = 1
 		local i = 0
 		while labelpart.Parent ~= nil do
+			EWait(rnd:NextNumber(0.13, 0.3))
 			i = i + 1
 
 			local showattack = i % 2 == 1
@@ -692,7 +700,6 @@ function counter(counterlist)
 
 			countertext.Visible = not showattack
 			attacktext.Visible = showattack
-			EWait(rnd:NextNumber(0.25, 0.4))
 		end
 	end)
 
@@ -749,8 +756,9 @@ function counter(counterlist)
 		end)
 	end)
 
-	newsoundat(cframe, 1085317309, 2, math.random(90, 110)/100)
-	newsoundat(cframe, 2370794297, 4, math.random(90, 110)/100)
+	local s = newsoundat(cframe, 8186892542, 2, 1)
+	local p = Instance.new("PitchShiftEffect", s)
+	p.Octave = 1.85
 end
 
 function clearall()
