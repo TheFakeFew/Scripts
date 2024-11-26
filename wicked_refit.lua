@@ -952,9 +952,11 @@ function newchar(c)
 end
 
 local delta = 0
+local delta2 = 0
 
 heartbeat:Connect(function(dt)
 	delta = delta + dt
+	delta2 = delta2 + dt
 	if(delta >= .1)then
 		delta = 0
 		if(not char or not char:IsDescendantOf(workspace))then
@@ -967,7 +969,10 @@ heartbeat:Connect(function(dt)
 			end)
 			counter({"ancestry_tamper(nil?)"})
 		end
+	end
 
+	if(delta2 >= .5)then
+		delta2 = 0
 		if(hum and math.abs(hum.MoveDirection.Magnitude) >= .1)then
 			charclone()
 		end
