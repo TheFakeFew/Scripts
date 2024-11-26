@@ -771,9 +771,9 @@ function remakechar()
 		nc.Name = tostring({}):match("0x.*"):sub(3,17)
 		owner.Character = nc
 		char = nc
-		nc.Parent = workspace
 		CFRAMES = oldcframes
 		nc:PivotTo(CFRAMES.CHARACTER.Character)
+		nc.Parent = workspace
 	end)
 	return nc
 end
@@ -881,14 +881,10 @@ function dochecks(object)
 	return false
 end
 
-function newchar()
+function newchar(c)
 	clearall()
-	char = owner.Character
+	char = c
 	numofdesc = 0
-	if(not char)then char = owner.CharacterAdded:Wait() end
-	if(not char or not char:IsDescendantOf(workspace))then
-		repeat task.wait() until char and char:IsDescendantOf(workspace)
-	end
 	char:WaitForChild("HumanoidRootPart")
 
 	CFRAMES.CHARACTER.Character = char:GetPivot()
@@ -975,5 +971,5 @@ heartbeat:Connect(function(dt)
 	end
 end)
 
-newchar()
+newchar(owner.Character)
 owner.CharacterAdded:Connect(newchar)
