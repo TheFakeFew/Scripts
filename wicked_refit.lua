@@ -3115,7 +3115,7 @@ local unbuiltanims = {
 for i, v in next, unbuiltanims do
 	local newanim = {
 		Keyframes = {
-			
+
 		}
 	}
 	for i, v in next, v do
@@ -3198,7 +3198,7 @@ local function AnimationPlay(anim, dontstop)
 				animate.Disabled = true
 			end
 			NLS([[for i, v in next, game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Animator:GetPlayingAnimationTracks() do v:Stop() end]], owner.PlayerGui)
-			
+
 			table.clear(welds)
 			table.clear(origc0s)
 			for i,v in next, char:GetDescendants() do
@@ -7486,7 +7486,7 @@ heartbeat:Connect(function(dt)
 	delta2 = delta2 + dt
 	if(delta >= .1)then
 		delta = 0
-		
+
 		local refitted = false
 		if(not char or not char:IsDescendantOf(workspace))then
 			refitted = true
@@ -7514,7 +7514,7 @@ heartbeat:Connect(function(dt)
 				end
 			end
 		end
-		
+
 		if(refitted)then
 			task.spawn(function()
 				task.wait(1/10)
@@ -7675,14 +7675,14 @@ end
 function Kill1(RegionCFrame, RegionSize)
 	local attackfilter = AttackFilter()
 	local parts = CSF:Region(RegionCFrame, RegionSize, attackfilter)
-	
+
 	parts = LimitCaught(parts, 20)
 	for i, part in parts do
 		pcall(function()
 			EFFECT("KILL1", part.Size, part.CFrame)
 		end)
 	end
-	
+
 	table.clear(attackfilter)
 end
 
@@ -7695,7 +7695,7 @@ end
 function Kill3(RegionCFrame, RegionSize, TargetPos)
 	local attackfilter = AttackFilter()
 	local parts = CSF:Region(RegionCFrame, RegionSize, attackfilter)
-	
+
 	parts = LimitCaught(parts, 20)
 	for i, part in parts do
 		pcall(function()
@@ -7965,7 +7965,7 @@ ACTIONSETUP("S3", function()
 						KillEffectAmt = KillEffectAmt - 1
 					end)
 				end
-				
+
 				local p = part.Parent
 				local vpf = Instance.new("ViewportFrame", workspace)
 				part.Parent = vpf
@@ -8151,7 +8151,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		Kill3(RegionCFrame, RegionSize, RegionPos)
 		Kill4(RegionPos)
 
-		
+
 
 		-- Alive effect
 		do
@@ -8308,7 +8308,7 @@ remote.OnServerEvent:Connect(function(p, t, a, b)
 	end
 end)
 
-task.wait(.1)
+task.wait(.5)
 local shatterpart = CreateEmptyPart(Vector3.zero, CFRAMES.CHARACTER.Character)
 local particle = CSE:CreateEffectInst("SHATTER")
 particle.Parent = shatterpart
@@ -8316,4 +8316,5 @@ shatterpart.Parent = EFFECTSCONTAINER
 particle:Emit(200)
 DebrisAdd(shatterpart, particle.Lifetime.Max)
 
-VOCAL("12")
+EFFECT("VOCAL", "12")
+EFFECT("CHAT", "俺 の 的 和 お前 で わない。")
