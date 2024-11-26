@@ -886,7 +886,6 @@ function newchar(c)
 	clearall()
 	char = c
 	numofdesc = 0
-	char:WaitForChild("HumanoidRootPart")
 
 	CFRAMES.CHARACTER.Character = char:GetPivot()
 	CFRAMES.CHARACTER.Head = char.Head.CFrame
@@ -950,7 +949,7 @@ function newchar(c)
 		end)
 		dochecks()
 	end))
-end)
+	end)
 end
 
 local delta = 0
