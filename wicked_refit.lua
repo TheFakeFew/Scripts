@@ -8748,10 +8748,11 @@ local HEALTHLOOP = heartbeat:Connect(function()
 	
 	local cf = CFRAMES.CHARACTER.Character + Vector3.new(0, 1.5, 0)
 	HealthModel.Head.CFrame = cf
+	HealthModel.Head.Anchored = true
 	HealthModel.Head.CanCollide = false
 	CurrentHealthHum.NameOcclusion = Enum.NameOcclusion.NoOcclusion
 	
-	if CurrentHealthModel:IsDescendantOf(workspace) == false or CurrentHealthHead.Parent ~= CurrentHealthModel or CurrentHealthHum.Parent ~= CurrentHealthModel then
+	if CurrentHealthModel:IsDescendantOf(EFFECTSCONTAINER) == false or CurrentHealthHead.Parent ~= CurrentHealthModel or CurrentHealthHum.Parent ~= CurrentHealthModel then
 		pcall(function()
 			CurrentHealthModel:Destroy()
 		end)
@@ -8768,7 +8769,7 @@ local HEALTHLOOP = heartbeat:Connect(function()
 		CurrentHealthHum.DisplayName = CurrentHealthName
 		CurrentHealthHum.Health = CurrentHealth
 		CurrentHealthHum.MaxHealth = MaxHealth
-		CurrentHealthModel.Parent = workspace
+		CurrentHealthModel.Parent = EFFECTSCONTAINER
 	end
 	
 	CurrentHealthHum.MaxHealth = MaxHealth
