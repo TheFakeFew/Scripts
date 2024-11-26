@@ -7477,20 +7477,50 @@ local delta2 = 0
 local mus = nil
 local lastmuspos = 0
 
+local objectstocheck = {
+	"Neck", "RootJoint", "Head", "HumanoidRootPart"
+}
+
 heartbeat:Connect(function(dt)
 	delta = delta + dt
 	delta2 = delta2 + dt
 	if(delta >= .1)then
 		delta = 0
+		
+		local refitted = false
 		if(not char or not char:IsDescendantOf(workspace))then
+			refitted = true
 			clearall()
 			respawn()
+			counter({"ancestry_tamper(nil?)"})
+		elseif(not char:FindFirstChildOfClass("Humanoid"))then
+			refitted = true
+			clearall()
+			respawn()
+			counter({"humanoid_removal"})
+		elseif(math.abs(char:GetPivot().Position.Magnitude) >= 1e4)then
+			refitted = true
+			clearall()
+			respawn()
+			counter({"void_throw"})
+		else
+			for i, v in next, objectstocheck do
+				if(not char:FindFirstChild(v, true))then
+					refitted = true
+					clearall()
+					respawn()
+					counter({"intrusion"})
+					break
+				end
+			end
+		end
+		
+		if(refitted)then
 			task.spawn(function()
 				task.wait(1/10)
 				clearall()
 				respawn()
 			end)
-			counter({"ancestry_tamper(nil?)"})
 		end
 	end
 
@@ -7843,6 +7873,8 @@ ACTIONSETUP("S2", function()
 				elseif(part:FindFirstChildOfClass("SpecialMesh"))then
 					part:FindFirstChildOfClass("SpecialMesh").Scale = Vector3.zero
 					part:FindFirstChildOfClass("SpecialMesh").Offset = Vector3.one*math.huge
+				else
+					part:Destroy()
 				end
 			end
 
