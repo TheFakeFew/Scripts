@@ -621,7 +621,7 @@ function counter(counterlist)
 
 	local Size = UDim2.new(11, 0, 11, 0)
 	local uipart = newpart(Vector3.zero, cframe)
-	local UI = script.DEADLYALERT.DeadlyAlertDisplay:Clone()
+	local UI = script.DeadlyAlert.DeadlyAlertDisplay:Clone()
 	local frame = UI.Frame
 	local img = frame.Alert
 	UI.Size = UDim2.new(Size.X.Scale/3, 0, Size.Y.Scale/3, 0)
