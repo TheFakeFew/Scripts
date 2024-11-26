@@ -625,7 +625,7 @@ function counter(counterlist)
 	local frame = UI.Frame
 	local img = frame.Alert
 	UI.Size = UDim2.new(Size.X.Scale/3, 0, Size.Y.Scale/3, 0)
-	UI.StudsOffset = Vector3.new(rnd:NextNumber(6, 7.5) * CSF:RandomSign(), rnd:NextNumber(6.5, 9), rnd:NextNumber(6, 7.5) * CSF:RandomSign())
+	UI.StudsOffset = Vector3.new(rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)], rnd:NextNumber(6.5, 9), rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)])
 	UI.Parent = uipart
 	uipart.Parent = EFFECTSCONTAINER
 
