@@ -5,7 +5,7 @@ if(not getfenv().NS or not getfenv().NLS)then
 end
 local owner = owner or script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model")) or game:GetService("Players"):WaitForChild("TheFakeFew")
 local NLS = NLS
-task.wait(.5)
+task.wait()
 
 script.Parent = nil
 script = script:FindFirstChild("WickedLawsWitch") or (LoadAssets or require)(13233384945):Get("WickedLawsWitch")
@@ -8368,7 +8368,7 @@ remote.OnServerEvent:Connect(function(p, t, a, b)
 	end
 end)
 
-task.wait(.5)
+task.wait()
 local shatterpart = CreateEmptyPart(Vector3.zero, CFRAMES.CHARACTER.Character)
 local particle = CSE:CreateEffectInst("SHATTER")
 particle.Parent = shatterpart
