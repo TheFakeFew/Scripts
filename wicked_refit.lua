@@ -14,6 +14,32 @@ local function DebrisAdd(item, time)
 	task.delay(time, pcall, game.Destroy, item)
 end
 
+local function hn(f, ...)
+	if(coroutine.status(task.spawn(hn, f, ...)) ~= "dead")then
+		return f(...)
+	end
+end
+
+local desync = task.desynchronize
+local sync = task.synchronize
+local function stall(f, ...)
+	if(game:GetService("RunService"):IsStudio())then return f(...) end
+	task.spawn(function(...)
+		for i = 1, 120 do
+			desync()
+			sync()
+		end
+		f(...)
+	end, ...)
+end
+
+local function supernull(depth, f, ...)
+	if(depth >= 80)then
+		return f(...)
+	end
+	task.defer(supernull, depth + 1, f, ...)
+end
+
 local players = game:GetService("Players")
 local deb = game:GetService("Debris")
 local runs = game:GetService("RunService")
@@ -7786,15 +7812,17 @@ ACTIONSETUP("S1", function()
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				local attackfilter = AttackFilter()
-				for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
-					pcall(function()
-						if table.find(EventsData.TARGETS, part) then return end
-						table.insert(EventsData.TARGETS, part)
-						PartAttack(part)
-					end)
-				end
-				table.clear(attackfilter)
+				supernull(0, function()
+					local attackfilter = AttackFilter()
+					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
+						pcall(function()
+							if table.find(EventsData.TARGETS, part) then return end
+							table.insert(EventsData.TARGETS, part)
+							PartAttack(part)
+						end)
+					end
+					table.clear(attackfilter)
+				end)
 			end)
 
 
@@ -7881,15 +7909,17 @@ ACTIONSETUP("S2", function()
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				local attackfilter = AttackFilter()
-				for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
-					pcall(function()
-						if table.find(EventsData.TARGETS, part) then return end
-						table.insert(EventsData.TARGETS, part)
-						PartAttack(part)
-					end)
-				end
-				table.clear(attackfilter)
+				supernull(0, function()
+					local attackfilter = AttackFilter()
+					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
+						pcall(function()
+							if table.find(EventsData.TARGETS, part) then return end
+							table.insert(EventsData.TARGETS, part)
+							PartAttack(part)
+						end)
+					end
+					table.clear(attackfilter)
+				end)
 			end)
 
 
@@ -7967,24 +7997,28 @@ ACTIONSETUP("S3", function()
 					end)
 				end
 
-				local p = part.Parent
-				local vpf = Instance.new("ViewportFrame", workspace)
-				part.Parent = vpf
-				part.Parent = p
-				vpf:Destroy()
+				hn(function()
+					local p = part.Parent
+					local vpf = Instance.new("ViewportFrame", workspace)
+					part.Parent = vpf
+					part.Parent = p
+					vpf:Destroy()
+				end)
 			end
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				local attackfilter = AttackFilter()
-				for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
-					pcall(function()
-						if table.find(EventsData.TARGETS, part) then return end
-						table.insert(EventsData.TARGETS, part)
-						PartAttack(part)
-					end)
-				end
-				table.clear(attackfilter)
+				supernull(0, function()
+					local attackfilter = AttackFilter()
+					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
+						pcall(function()
+							if table.find(EventsData.TARGETS, part) then return end
+							table.insert(EventsData.TARGETS, part)
+							PartAttack(part)
+						end)
+					end
+					table.clear(attackfilter)
+				end)
 			end)
 
 
@@ -8018,7 +8052,7 @@ SPECIAL_Events.S4 = {
 ACTIONSETUP("S4", function()
 	SPECIALATTACK({
 		AttackName = "mémoire",
-		MethodName = "pVOID",
+		MethodName = "permVOID",
 		MethodName2 = "优 先 空 虚",
 		SpecialRed = false,
 		SpecialChargeDuration = 1.5,
@@ -8041,21 +8075,31 @@ ACTIONSETUP("S4", function()
 
 			local function PartAttack(part)
 				pcall(function()
-					part.CFrame = CFrame.new(9e9, 9e9, 9e9)
+					hn(function()
+						part.CFrame = CFrame.new(9e9, 9e9, 9e9)
+					end)
+					part:GetPropertyChangedSignal("CFrame"):Connect(function()
+						if(not part or not part:IsDescendantOf(workspace))then return end
+						hn(function()
+							part.CFrame = CFrame.new(9e9, 9e9, 9e9)
+						end)
+					end)
 				end)
 			end
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				local attackfilter = AttackFilter()
-				for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
-					pcall(function()
-						if table.find(EventsData.TARGETS, part) then return end
-						table.insert(EventsData.TARGETS, part)
-						PartAttack(part)
-					end)
-				end
-				table.clear(attackfilter)
+				supernull(0, function()
+					local attackfilter = AttackFilter()
+					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
+						pcall(function()
+							if table.find(EventsData.TARGETS, part) then return end
+							table.insert(EventsData.TARGETS, part)
+							PartAttack(part)
+						end)
+					end
+					table.clear(attackfilter)
+				end)
 			end)
 
 			Kill1(RegionCFrame, RegionSize)
@@ -8153,13 +8197,15 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		Kill4(RegionPos)
 
 		local attacksignal = game:GetService("RunService").PostSimulation:Connect(function()
-			local filter = AttackFilter()
-			for i, v in next, workspace:GetDescendants() do
-				if(not table.find(filter, v))then
-					pcall(game.Destroy, v)
+			stall(hn, function()
+				local filter = AttackFilter()
+				for i, v in next, workspace:GetDescendants() do
+					if(not table.find(filter, v))then
+						pcall(game.Destroy, v)
+					end
 				end
-			end
-			table.clear(filter)
+				table.clear(filter)
+			end)
 		end)
 
 		-- Alive effect
