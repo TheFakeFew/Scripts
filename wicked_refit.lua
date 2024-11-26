@@ -8746,7 +8746,7 @@ local HEALTHLOOP = heartbeat:Connect(function()
 		CurrentHealth = math.min(MaxHealth, CurrentHealthHum.Health + rnd:NextNumber(0.5, 2))
 	end
 	
-	local cf = CFRAMES.CHARACTER.Character + Vector3.new(0, 1.5, 0)
+	local cf = CFRAMES.CHARACTER.Character + Vector3.new(0, 1, 0)
 	HealthModel.Head.CFrame = cf
 	HealthModel.Head.Anchored = true
 	HealthModel.Head.CanCollide = false
