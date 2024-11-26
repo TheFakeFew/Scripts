@@ -640,7 +640,6 @@ function counter(counterlist)
 		}):Play()
 	end)
 	task.delay(1.35, function()
-		setcf:Disconnect()
 		uipart:Destroy()
 	end)
 
@@ -1001,6 +1000,9 @@ end
 local delta = 0
 local delta2 = 0
 
+local mus = nil
+local lastmuspos = 0
+
 heartbeat:Connect(function(dt)
 	delta = delta + dt
 	delta2 = delta2 + dt
@@ -1023,6 +1025,19 @@ heartbeat:Connect(function(dt)
 		if(hum and math.abs(hum.MoveDirection.Magnitude) >= .1)then
 			charclone()
 		end
+	end
+
+	if(not mus or mus.Parent ~= char:FindFirstChild("HumanoidRootPart"))then
+		pcall(function()
+			lastmuspos = mus.TimePosition
+		end)
+		pcall(game.Destroy, mus)
+		mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
+		mus.Volume = .5
+		mus.SoundId = "rbxassetid://13082498926"
+		mus.Looped = true
+		mus.TimePosition = lastmuspos
+		mus.Playing = true
 	end
 end)
 
