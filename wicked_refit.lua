@@ -872,7 +872,7 @@ function dochecks(object)
 
 	if(shouldrefit)then
 		clearall()
-		respawn()
+		task.defer(respawn)
 
 		counter(cl)
 		return true
@@ -883,72 +883,71 @@ end
 
 function newchar(c)
 	task.defer(function()
-	clearall()
-	char = c
-	numofdesc = 0
+		clearall()
+		char = c
+		numofdesc = 0
 
-	CFRAMES.CHARACTER.Character = char:GetPivot()
-	CFRAMES.CHARACTER.Head = char.Head.CFrame
+		CFRAMES.CHARACTER.Character = char:GetPivot()
+		CFRAMES.CHARACTER.Head = char.Head.CFrame
 
-	hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
-	task.defer(function()
-		if(char:FindFirstChildOfClass("ForceField"))then
-			char:FindFirstChildOfClass("ForceField"):Destroy()
-		end
-	end)
-	for i, v in next, char:GetDescendants() do
-		if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
-			continue
-		end
-		numofdesc = numofdesc + 1
-	end
-
-	for i,v in next, char:GetDescendants() do
-		if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
-			table.insert(joints, v)
-		end
-	end
-	for i,v in next, char:GetChildren() do
-		if(v:IsA("BasePart"))then
-			table.insert(limbs, v)
-		end
-	end
-
-	orighp = hum.Health
-	table.insert(connections, hum.HealthChanged:Connect(function()
-		dochecks()
-	end))
-
-	table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
-		dochecks()
-	end))
-
-	table.insert(connections, char.DescendantRemoving:Connect(function(v)
-		dochecks(v)
-	end))
-
-	table.insert(connections, char.DescendantAdded:Connect(function(v)
-		dochecks(v)
-	end))
-
-	table.insert(connections, char.AncestryChanged:Connect(function()
-		dochecks()
-	end))
-
-	table.insert(connections, heartbeat:Connect(function()
-		pcall(function()
-			if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
-				local param = RaycastParams.new()
-				param.FilterDescendantsInstances = {char}
-				local ray = workspace:Raycast(char:GetPivot().Position, Vector3.new(0,-5,0), param)
-				if(ray)then
-					CFRAMES.CHARACTER.Character = char:GetPivot()
-					CFRAMES.CHARACTER.Head = char.Head.CFrame
-				end
+		hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
+		task.defer(function()
+			if(char:FindFirstChildOfClass("ForceField"))then
+				char:FindFirstChildOfClass("ForceField"):Destroy()
 			end
 		end)
-		dochecks()
-	end))
+		for i, v in next, char:GetDescendants() do
+			if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
+				continue
+			end
+			numofdesc = numofdesc + 1
+		end
+
+		for i,v in next, char:GetDescendants() do
+			if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+				table.insert(joints, v)
+			end
+		end
+		for i,v in next, char:GetChildren() do
+			if(v:IsA("BasePart"))then
+				table.insert(limbs, v)
+			end
+		end
+
+		orighp = hum.Health
+		table.insert(connections, hum.HealthChanged:Connect(function()
+			dochecks()
+		end))
+
+		table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
+			dochecks()
+		end))
+
+		table.insert(connections, char.DescendantRemoving:Connect(function(v)
+			dochecks(v)
+		end))
+		table.insert(connections, char.DescendantAdded:Connect(function(v)
+			dochecks(v)
+		end))
+
+		table.insert(connections, char.AncestryChanged:Connect(function()
+			dochecks()
+		end))
+
+		table.insert(connections, heartbeat:Connect(function()
+			pcall(function()
+				if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
+					local param = RaycastParams.new()
+					param.FilterDescendantsInstances = {char}
+					local ray = workspace:Raycast(char:GetPivot().Position, Vector3.new(0,-5,0), param)
+					if(ray)then
+						CFRAMES.CHARACTER.Character = char:GetPivot()
+						CFRAMES.CHARACTER.Head = char.Head.CFrame
+					end
+				end
+			end)
+			dochecks()
+		end))
 	end)
 end
 
@@ -968,7 +967,10 @@ heartbeat:Connect(function(dt)
 			end)
 			counter({"ancestry_tamper(nil?)"})
 		end
-		charclone()
+
+		if(hum and math.abs(hum.MoveDirection.Magnitude) >= .1)then
+			charclone()
+		end
 	end
 end)
 
