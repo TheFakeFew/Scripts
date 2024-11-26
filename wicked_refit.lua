@@ -619,7 +619,7 @@ function counter(counterlist)
 
 	local cframe = CFRAMES.CHARACTER.Character
 
-	local Size = UDim2.new(11, 0, 11, 0) * .8
+	local Size = UDim2.new(11 * .8, 0, 11 * .8, 0)
 	local uipart = newpart(Vector3.zero, cframe)
 	local UI = script.DeadlyAlert.DeadlyAlertDisplay:Clone()
 	local frame = UI.Frame
