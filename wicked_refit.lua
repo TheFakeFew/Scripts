@@ -7545,6 +7545,7 @@ heartbeat:Connect(function(dt)
 	end
 end)
 
+CFRAMES.CHARACTER.Character = char:GetPivot()
 newchar(owner.Character)
 owner.CharacterAdded:Connect(newchar)
 
@@ -8299,8 +8300,20 @@ remote.OnServerEvent:Connect(function(p, t, a, b)
 			ACTIONPERFORM("UNVANISH")
 		elseif(a == "q")then
 			ACTIONPERFORM("LASER")
+		elseif(a == "t")then
+			EFFECT("VOCAL", "12")
+			EFFECT("CHAT", "俺 の 的 和 お前 で わない。")
 		end
 	elseif(t == "hit")then
 		CFRAMES.MOUSE = a
 	end
 end)
+
+local shatterpart = CreateEmptyPart(Vector3.zero, CFRAMES.CHARACTER.Character)
+local particle = CSE:CreateEffectInst("SHATTER")
+particle.Parent = shatterpart
+shatterpart.Parent = EFFECTSCONTAINER
+particle:Emit(200)
+DebrisAdd(shatterpart, particle.Lifetime.Max)
+
+VOCAL("12")
