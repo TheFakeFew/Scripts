@@ -757,7 +757,7 @@ function counter(counterlist)
 	end)
 
 	local s = newsoundat(cframe, 8186892542, 2, 1)
-	local p = Instance.new("PitchShiftEffect", s)
+	local p = Instance.new("PitchShiftSoundEffect", s)
 	p.Octave = 1.85
 end
 
@@ -979,7 +979,7 @@ heartbeat:Connect(function(dt)
 		end
 	end
 
-	if(delta2 >= .5)then
+	if(delta2 >= .05)then
 		delta2 = 0
 		if(hum and math.abs(hum.MoveDirection.Magnitude) >= .1)then
 			charclone()
