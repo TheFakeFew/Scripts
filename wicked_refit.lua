@@ -627,12 +627,9 @@ function counter(counterlist)
 	UI.Size = UDim2.new(Size.X.Scale/3, 0, Size.Y.Scale/3, 0)
 	UI.StudsOffset = Vector3.new(rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)], rnd:NextNumber(6.5, 9), rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)])
 	UI.Parent = uipart
-	uipart.Parent = EFFECTSCONTAINER
+	uipart.Parent = workspace
 
 	newsoundat(cframe, 13081965892, 5, 1)
-	local setcf = game:GetService("RunService").Heartbeat:Connect(function()
-		uipart.CFrame = CFRAMES.CHARACTER.Character
-	end)
 	game:GetService("TweenService"):Create(UI, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {
 		Size = Size
 	}):Play()
