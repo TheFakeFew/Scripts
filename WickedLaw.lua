@@ -9456,7 +9456,7 @@ function EFFECT(EffectName, ...)
 	if(not EFFECTSCONTAINER or EFFECTSCONTAINER.Parent ~= workspace.Terrain)then
 		EFFECTSCONTAINER = Instance.new("Folder", workspace.Terrain)
 	end
-	EFFECTS[EffectName](...)
+	task.spawn(EFFECTS[EffectName], ...)
 end
 
 function CreateEmptyPart(size, cf)

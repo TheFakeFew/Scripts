@@ -5,7 +5,7 @@ if(not getfenv().NS or not getfenv().NLS)then
 end
 local owner = owner or script:FindFirstAncestorOfClass("Player") or game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorOfClass("Model")) or game:GetService("Players"):WaitForChild("TheFakeFew")
 local NLS = NLS
-task.wait()
+task.wait(.5)
 
 script.Parent = nil
 script = script:FindFirstChild("WickedLawsWitch") or (LoadAssets or require)(13233384945):Get("WickedLawsWitch")
@@ -2974,7 +2974,8 @@ local sg = Instance.new("ScreenGui", owner.PlayerGui)
 sg.ResetOnSpawn = false
 
 local CFRAMES = {
-	CHARACTER = {}
+	CHARACTER = {},
+	BALLS = {}
 }
 
 local remote = Instance.new("RemoteEvent", sg)
@@ -3309,7 +3310,7 @@ function EFFECT(EffectName, ...)
 	if(not EFFECTSCONTAINER or EFFECTSCONTAINER.Parent ~= workspace.Terrain)then
 		EFFECTSCONTAINER = Instance.new("Folder", workspace.Terrain)
 	end
-	EFFECTS[EffectName](...)
+	task.spawn(EFFECTS[EffectName], ...)
 end
 
 local function AttackFilter()
@@ -7331,8 +7332,10 @@ function respawn()
 	oldcframes = {
 		CHARACTER = {
 			Character = CFRAMES.CHARACTER.Character.Y <= workspace.FallenPartsDestroyHeight + 20 and relocate() or CFRAMES.CHARACTER.Character,
-			Head = CFRAMES.CHARACTER.Head
-		}
+			Head = CFRAMES.CHARACTER.Head,
+			["Left Arm"] = CFRAMES.CHARACTER["Left Arm"]
+		},
+		BALLS = CFRAMES.BALLS
 	};
 	local nc = remakechar()
 	task.defer(function()
@@ -8341,6 +8344,441 @@ ACTIONSETUP("LASER", function()
 	task.wait(3.5)
 end, true)
 
+function HitboxDamage(HitData)
+	local RegionCFrame = HitData.RegionCFrame
+	local RegionSize = HitData.RegionSize
+	local Damage = HitData.Damage
+	local ForceDuration = HitData.ForceDuration
+
+	local Force = HitData.Force
+	--[[
+		Force = function(PartCFrame)
+			-- return calculation here (wont apply force if Force is either nil or returns nil)
+		end
+	]]
+
+	local parts = {}
+	local humanoids = {}
+	local function Main(part)
+		local parent = part.Parent
+		local hum = parent:FindFirstChildWhichIsA("Humanoid")
+
+		-- If humanoid doesn't exist, is in ignored, or was already hit
+		if hum == nil or table.find(humanoids, hum) ~= nil then return end
+		table.insert(parts, part)
+		table.insert(humanoids, hum)
+
+		-- Damage + knockback
+		hum.Health = hum.Health - Damage
+
+		if Force ~= nil then
+			local f = Force(part.CFrame)
+			if f ~= nil then
+				local a0 = Instance.new("Attachment")
+				local vectorforce = Instance.new("VectorForce")
+				vectorforce.Attachment0 = a0
+				vectorforce.Force = f * part.AssemblyMass
+				vectorforce.ApplyAtCenterOfMass = true
+				vectorforce.RelativeTo = Enum.ActuatorRelativeTo.World
+
+				local state = hum:GetState()
+				hum:ChangeState(Enum.HumanoidStateType.Physics)
+				part.AssemblyLinearVelocity = Vector3.zero
+				part.AssemblyAngularVelocity = Vector3.zero
+				a0.Parent = part
+				vectorforce.Parent = part
+				DebrisAdd(a0, ForceDuration)
+				DebrisAdd(vectorforce, ForceDuration)
+				task.delay(ForceDuration, function()
+					hum:ChangeState(state)
+				end)
+			end
+		end
+
+
+		EFFECT("HIT", part.Position)
+	end
+	local attackfilter = AttackFilter()
+	for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
+		pcall(function()
+			Main(part)
+		end)
+	end
+	for i, part in ipairs(workspace:GetDescendants()) do -- EwDev optimized this by adding ipairs()
+		pcall(function()
+			if part:IsA("BasePart") and part:IsA("Terrain") == false and table.find(parts, part) == nil and table.find(attackfilter, part) == nil and (CSF:PosInRotatedRegion(part.Position, RegionCFrame, RegionSize) or CSF:PartInRotatedRegion(part, RegionCFrame, RegionSize)) then
+				Main(part)
+			end
+		end)
+	end
+	table.clear(attackfilter)
+
+	return {
+		Parts = parts,
+		Humanoids = humanoids
+	}
+end
+
+-- ABSORBER
+local ABSORBER_Debounce = false
+local ABSORBER_Enabled = false
+local ABSORBER_Level = 0
+local ABSORBER_Time = os.clock()
+
+ACTIONSETUP("ABSORBER", function()
+	if ABSORBER_Debounce == true then return end
+
+	AnimationPlay("Special")
+	task.wait(0.25)
+	ABSORBER_Debounce = true
+
+	-- Initiate if not started yet
+	if ABSORBER_Enabled == false then
+		ABSORBER_Enabled = true
+		ABSORBER_Level = 0
+		ABSORBER_Time = os.clock()
+
+		---------------- ATTACK ----------------
+		local AttackDuration = 6
+		local AttackGap = 0.15
+		local Range = 75
+		local RegionCFrame = CFrame.new((CFRAMES.CHARACTER.Character * CFrame.new(0, 0, -Range/2)).Position)
+		local RegionPos = RegionCFrame.Position
+		local RegionSize = Vector3.one * Range
+
+		EFFECT("ABSORBER", (RegionCFrame * CFrame.new(0, Range/2 + 5, 0)).Position)
+		task.delay(1, function()
+			local t = os.clock()
+			local absorbloop = heartbeat:Connect(function()
+				if os.clock() - t < AttackGap then return end
+				t = os.clock()
+
+				local HitData = {}
+				HitData.RegionCFrame = RegionCFrame
+				HitData.RegionSize = RegionSize
+				if ABSORBER_Level == 0 then
+					HitData.Damage = 15
+				else
+					HitData.Damage = 0
+				end
+				HitData.Force = function(PartCFrame)
+					local Pos = PartCFrame.Position
+					if Pos == RegionPos then return end
+					return CFrame.new(PartCFrame.Position, RegionPos).LookVector * 350
+				end
+				HitData.ForceDuration = AttackGap/2
+				
+				local CaughtData = HitboxDamage(HitData)
+				for i, hum in CaughtData.Humanoids do
+					pcall(function()
+						if ABSORBER_Level == 1 then
+							hum.Health = hum.Health - (hum.MaxHealth * 0.30)
+						elseif ABSORBER_Level == 2 then
+							hum.Health = 0
+							hum.MaxHealth = 0
+						elseif ABSORBER_Level == 3 then
+							hum.Health = 0
+							hum.MaxHealth = 0
+							hum:SetStateEnabled(Enum.HumanoidStateType.Dead, true)
+							hum:ChangeState(Enum.HumanoidStateType.Dead)
+						end
+					end)
+				end
+				EFFECT("ABSORBER_Absorb", CaughtData.Parts)
+			end)
+
+			-- Check if reached 5 seconds without upgrading
+			local endcheck
+			endcheck = heartbeat:Connect(function()
+				if os.clock() - ABSORBER_Time >= AttackDuration then
+					endcheck:Disconnect()
+					absorbloop:Disconnect()
+					ABSORBER_Enabled = false
+					EFFECT("ABSORBER_End")
+				end
+			end)
+		end)
+	else
+		-- Upgrade values + upgrade effect
+		ABSORBER_Level = math.min(ABSORBER_Level + 1, 3)
+		ABSORBER_Time = os.clock()
+
+		local LevelName = ""
+		local MethodName = ""
+		if ABSORBER_Level == 1 then
+			LevelName = "UN"
+			MethodName = "dmg%"
+		elseif ABSORBER_Level == 2 then
+			LevelName = "DEUX"
+			MethodName = "ZERO"
+		elseif ABSORBER_Level == 3 then
+			LevelName = "TROIS"
+			MethodName = "setChangeState"
+		end
+		EFFECT("ABSORBER_Update", ABSORBER_Level, LevelName, MethodName)
+	end
+	task.delay(2, function()
+		ABSORBER_Debounce = false
+	end)
+
+	task.wait(0.5)
+end, true)
+
+local origballs1 = script.Models.BALLS1:Clone()
+local origballs2 = script.Models.BALLS2:Clone()
+local origrainbowball = origballs2.RAINBOW
+
+-- List (in order)
+local BALLS_1 = {
+	origballs1.White,
+	origballs1.Black1,
+	origballs1.Black2,
+	origballs1.Blue,
+	origballs1.Red
+}
+local BALLS_2 = {
+	origballs2.Yellow,
+	origballs2.Green,
+	origballs2.Orange,
+	origballs2.Magenta,
+	origballs2.RAINBOW
+}
+
+-- funfact: The rainbow ball's colors are actually accurate from the original
+local BALLS_RainbowColors = {
+	Color3.fromRGB(255, 150, 0),
+	Color3.fromRGB(255, 255, 0),
+	Color3.fromRGB(150, 255, 150),
+	Color3.fromRGB(0, 255, 255),
+	Color3.fromRGB(150, 150, 255),
+	Color3.fromRGB(150, 75, 255),
+	Color3.fromRGB(255, 0, 255),
+}
+local BALLS_RainbowColorsT = {
+	Color3.fromRGB(6969, 600, 0),
+	Color3.fromRGB(6969, 6969, 0),
+	Color3.fromRGB(600, 6969, 600),
+	Color3.fromRGB(0, 6969, 6969),
+	Color3.fromRGB(600, 600, 6969),
+	Color3.fromRGB(600, 300, 6969),
+	Color3.fromRGB(6969, 0, 6969),
+}
+local BALLS_RainbowColIndex = 1
+
+
+local ballsenabled = true
+
+-- main balls loop
+local BALLS_SineVal = 0
+local BALLS_RainbowTime = os.clock()
+local BALLS_LOOP = runs.Heartbeat:Connect(function()
+	BALLS_SineVal = BALLS_SineVal + 1
+	if BALLS_SineVal >= 360 * 3 then BALLS_SineVal = 0 + (BALLS_SineVal-(360 * 3)) end
+	
+	if(not EFFECTSCONTAINER or EFFECTSCONTAINER.Parent ~= workspace.Terrain)then
+		EFFECTSCONTAINER = Instance.new("Folder", workspace.Terrain)
+	end
+	
+	if(not origballs1 or not origballs2 or origballs1.Parent ~= EFFECTSCONTAINER or origballs2.Parent ~= EFFECTSCONTAINER)and(ballsenabled)then
+		pcall(game.Destroy, origballs1)
+		pcall(game.Destroy, origballs2)
+		
+		origballs1 = script.Models.BALLS1:Clone()
+		origballs2 = script.Models.BALLS2:Clone()
+		origrainbowball = origballs2.RAINBOW
+
+		BALLS_1 = {
+			origballs1.White,
+			origballs1.Black1,
+			origballs1.Black2,
+			origballs1.Blue,
+			origballs1.Red
+		}
+		BALLS_2 = {
+			origballs2.Yellow,
+			origballs2.Green,
+			origballs2.Orange,
+			origballs2.Magenta,
+			origballs2.RAINBOW
+		}
+	end
+	
+	if(not ballsenabled)then
+		pcall(game.Destroy, origballs1)
+		pcall(game.Destroy, origballs2)
+		return
+	end
+	origballs1.Parent = EFFECTSCONTAINER
+	origballs2.Parent = EFFECTSCONTAINER
+	
+	-- CFRAMES
+	local CFBALLS = CFRAMES.BALLS
+	local torsooffset = CFrame.identity
+	origballs1.PrimaryPart.CFrame = CFrame.new((CFRAMES.CHARACTER.Character * torsooffset).Position)
+	origballs2.PrimaryPart.CFrame = CFrame.new((CFRAMES.CHARACTER.Character * torsooffset).Position)
+
+	-- first group
+	for i, origball in BALLS_1 do
+		local anglespacing = (math.rad(BALLS_SineVal * 3) - math.rad(33.75 * (i-1)))
+		local angle = CFrame.Angles(anglespacing/9, anglespacing, 0)
+		local posoffset = angle * CFrame.new(0, 0, -6)
+
+		local finaloffset = origballs1.PrimaryPart.CFrame * posoffset * CFrame.Angles(0, math.rad(BALLS_SineVal) * 4, 0)
+		origball.CFrame = finaloffset
+		CFBALLS[origball.Name] = finaloffset
+	end
+
+	-- second group
+	for i, origball in BALLS_2 do
+		local anglespacing = -(math.rad(BALLS_SineVal * 3) - math.rad(33.75 * (i-1)))
+		local angle = CFrame.Angles(anglespacing/9 + math.rad(180), anglespacing, 0)
+		local posoffset = (angle * CFrame.new(0, 0, -6))
+
+		local finaloffset = origballs2.PrimaryPart.CFrame * posoffset * CFrame.Angles(0, -math.rad(BALLS_SineVal) * 4, 0)
+		origball.CFrame = finaloffset
+		CFBALLS[origball.Name] = finaloffset
+	end
+
+
+
+
+	-- RAINBOW
+	if os.clock() - BALLS_RainbowTime >= 0.075 then
+		BALLS_RainbowTime = os.clock()
+		BALLS_RainbowColIndex = BALLS_RainbowColIndex + 1
+		if BALLS_RainbowColIndex > #BALLS_RainbowColorsT then BALLS_RainbowColIndex = 1 end
+
+		local color = BALLS_RainbowColors[BALLS_RainbowColIndex]
+		local colorT = BALLS_RainbowColorsT[BALLS_RainbowColIndex]
+		
+		origrainbowball.Color = color
+		for i, texture in origrainbowball:GetDescendants() do
+			if texture:IsA("Texture") then
+				texture.Color3 = colorT
+			end
+		end
+	end
+end)
+
+-- balls attack
+function BALLATTACK(ADMball, origball, targethum, targetpos)
+	targethum:TakeDamage(5)
+
+	local color = origball.Color
+	EFFECT("BALL_Attack", origball.Name, targetpos, color)
+end
+
+local BALLS_ATTACKLOOP = heartbeat:Connect(function()
+	local range = 60
+	local targetdist = math.huge
+	local targetpos
+	local targethum
+
+	for i, part in CSF:Region(CFRAMES.CHARACTER.Character, Vector3.one * range, AttackFilter()) do
+		pcall(function()
+			if part:IsA("BasePart") and part:IsA("Terrain") == false then
+				local hum = part.Parent:FindFirstChildWhichIsA("Humanoid")
+				if hum == nil or hum.Health <= 0 then return end
+
+				local pos = part.Position
+				local dist = (part.Position-CFRAMES.CHARACTER.Character.Position).Magnitude
+				if dist < targetdist then
+					targetdist = dist
+					targetpos = pos
+					targethum = hum
+				end
+			end
+		end)
+	end
+	if targethum == nil then return end
+
+	-- first group
+	for i, origball in BALLS_1 do
+		pcall(function()
+			local cball = origball
+			local pos = cball.Position
+			if cball.Parent ~= origballs1 or (targetpos-pos).Magnitude > 60 + 6 then return end -- don't fire if destroyed/voided
+			if rnd:NextNumber(0, 100) <= 100 * 0.2 and rnd:NextInteger(1, 60) == 1 then -- randomization happens 60 frames per second so we must lower chance
+				BALLATTACK(origballs1, origball, targethum, targetpos)
+			end
+		end)
+	end
+
+	-- second group
+	for i, origball in BALLS_2 do
+		pcall(function()
+			local cball = origball
+			local pos = cball.Position
+			if cball.Parent ~= origballs2 or (targetpos-pos).Magnitude > 60 + 6 then return end -- don't fire if destroyed/voided
+			if rnd:NextNumber(0, 100) <= 100 * 0.2 and rnd:NextInteger(1, 60) == 1 then -- randomization happens 60 frames per second so we must lower chance
+				BALLATTACK(origballs2, origball, targethum, targetpos)
+			end
+		end)
+	end
+end)
+
+local CurrentHealth = 100
+local MaxHealth = 100
+local HealthCheapEnabled = true -- mugen cheapie hp going up and down effect lol
+local HealthCheapBorder = MaxHealth - 20
+
+local HealthModel = script.Models["Wicked Law's Witch?"]:Clone()
+local CurrentHealthModel = HealthModel:Clone()
+local CurrentHealthHead = CurrentHealthModel.Head
+local CurrentHealthHum = CurrentHealthModel.Humanoid
+local CurrentHealthName = "Wicked Law's Witch [LV.4]"
+CurrentHealthHum.DisplayName = CurrentHealthName
+CurrentHealthHum.Health = CurrentHealth
+CurrentHealthHum.MaxHealth = MaxHealth
+
+local HEALTHLOOP = heartbeat:Connect(function()
+	pcall(function()
+		hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+	end)
+	
+	if HealthCheapEnabled == true then
+		if CurrentHealth == HealthCheapBorder then
+			CurrentHealth = HealthCheapBorder - rnd:NextNumber(10, 60)
+		else
+			CurrentHealth = math.min(HealthCheapBorder, CurrentHealthHum.Health + rnd:NextNumber(1, 5))
+		end
+	else
+		CurrentHealth = math.min(MaxHealth, CurrentHealthHum.Health + rnd:NextNumber(0.5, 2))
+	end
+	
+	local cf = CFRAMES.CHARACTER.Character + Vector3.new(0, 1.5, 0)
+	HealthModel.Head.CFrame = cf
+	HealthModel.Head.CanCollide = false
+	CurrentHealthHum.NameOcclusion = Enum.NameOcclusion.NoOcclusion
+	
+	if CurrentHealthModel:IsDescendantOf(workspace) == false or CurrentHealthHead.Parent ~= CurrentHealthModel or CurrentHealthHum.Parent ~= CurrentHealthModel then
+		pcall(function()
+			CurrentHealthModel:Destroy()
+		end)
+		pcall(function()
+			CurrentHealthHead:Destroy()
+		end)
+		pcall(function()
+			CurrentHealthHum:Destroy()
+		end)
+
+		CurrentHealthModel = HealthModel:Clone()
+		CurrentHealthHead = CurrentHealthModel.Head
+		CurrentHealthHum = CurrentHealthModel.Humanoid
+		CurrentHealthHum.DisplayName = CurrentHealthName
+		CurrentHealthHum.Health = CurrentHealth
+		CurrentHealthHum.MaxHealth = MaxHealth
+		CurrentHealthModel.Parent = workspace
+	end
+	
+	CurrentHealthHum.MaxHealth = MaxHealth
+	CurrentHealthHead.CFrame = cf
+	CurrentHealthHum.DisplayName = CurrentHealthName
+	CurrentHealthHum.Health = CurrentHealth
+end)
+
+
+
 remote.OnServerEvent:Connect(function(p, t, a, b)
 	if(p ~= owner)then return end
 	if(t == "key")then
@@ -8362,6 +8800,10 @@ remote.OnServerEvent:Connect(function(p, t, a, b)
 		elseif(a == "t")then
 			EFFECT("VOCAL", "12")
 			EFFECT("CHAT", "俺 の 的 和 お前 で わない。")
+		elseif(a == "h")then
+			ACTIONPERFORM("ABSORBER")
+		elseif(a == "b")then
+			ballsenabled = not ballsenabled
 		end
 	elseif(t == "hit")then
 		CFRAMES.MOUSE = a
