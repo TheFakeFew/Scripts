@@ -7269,12 +7269,6 @@ function counter(counterlist)
 		eye.Anchored = false
 		eye.CanCollide = false
 
-		local newseq = {}
-		for i, Keypoint in eyeparticle.Size.Keypoints do
-			table.insert(newseq, NumberSequenceKeypoint.new(Keypoint.Time, Keypoint.Value * CHARACTERSCALE, Keypoint.Envelope))
-		end
-		eyeparticle.Size = NumberSequence.new(newseq)
-
 		local att = Instance.new("Attachment", eye)
 		eyeparticle.Parent = att
 		eye.CFrame = CFRAMES.CHARACTER.Head*EyeOffset
