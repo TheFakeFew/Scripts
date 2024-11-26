@@ -8310,6 +8310,7 @@ remote.OnServerEvent:Connect(function(p, t, a, b)
 	end
 end)
 
+task.wait(.1)
 local shatterpart = CreateEmptyPart(Vector3.zero, CFRAMES.CHARACTER.Character)
 local particle = CSE:CreateEffectInst("SHATTER")
 particle.Parent = shatterpart
