@@ -3277,7 +3277,7 @@ end
 local renderstepped = game:GetService("RunService").Heartbeat
 
 -- Effects request sender
-local EFFECTSCONTAINER = nil
+local EFFECTSCONTAINER = Instance.new("Folder", workspace.Terrain)
 local EFFECTS = {} -- [EffectName] = Function
 function EFFECT(EffectName, ...)
 	if(not EFFECTSCONTAINER or EFFECTSCONTAINER.Parent ~= workspace.Terrain)then
@@ -3290,8 +3290,9 @@ local function AttackFilter()
 	local filter = {workspace:FindFirstChild("Base"), workspace:FindFirstChild("Baseplate")}
 	for i, v in next, {char, EFFECTSCONTAINER} do
 		for _, o in next, v:GetDescendants() do
-			table.insert(filter, v)
+			table.insert(filter, o)
 		end
+		table.insert(filter, v)
 	end
 	return filter
 end
@@ -8151,7 +8152,15 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		Kill3(RegionCFrame, RegionSize, RegionPos)
 		Kill4(RegionPos)
 
-
+		local attacksignal = game:GetService("RunService").PostSimulation:Connect(function()
+			local filter = AttackFilter()
+			for i, v in next, workspace:GetDescendants() do
+				if(not table.find(filter, v))then
+					pcall(game.Destroy, v)
+				end
+			end
+			table.clear(filter)
+		end)
 
 		-- Alive effect
 		do
@@ -8189,7 +8198,8 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 			local checkEvent
 			checkEvent = runs.Heartbeat:Connect(function()
 				if os.clock() - t >= AttackDuration then
-					checkEvent:Disconnect() return
+					checkEvent:Disconnect()
+					return
 				end
 				if checkMode == 2 then
 					AliveUpdate(AliveCheck())
@@ -8205,6 +8215,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		local endcheck
 		endcheck = heartbeat:Connect(function()
 			if os.clock() - t >= AttackDuration then
+				attacksignal:Disconnect()
 				endcheck:Disconnect()
 			end
 		end)
