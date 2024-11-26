@@ -7508,6 +7508,8 @@ local objectstocheck = {
 	"Neck", "RootJoint", "Head", "HumanoidRootPart"
 }
 
+local lastcharcf = CFrame.identity
+
 heartbeat:Connect(function(dt)
 	delta = delta + dt
 	delta2 = delta2 + dt
@@ -7553,7 +7555,8 @@ heartbeat:Connect(function(dt)
 
 	if(delta2 >= .05)then
 		delta2 = 0
-		if(hum and math.abs(hum.MoveDirection.Magnitude) >= .1)then
+		if(CFRAMES.CHARACTER.Character ~= lastcharcf)then
+			lastcharcf = CFRAMES.CHARACTER.Character
 			charclone()
 		end
 	end
