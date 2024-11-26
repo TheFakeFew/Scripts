@@ -8,10 +8,10 @@ end
 script.Parent = game:GetService("ServerScriptService")
 
 -- Converted using Mokiros's Model to Script Version 3
--- Converted string size: 3100 characters
+-- Converted string size: 3364 characters
 local function Decode(str)
 	local StringLength = #str
-
+	
 	-- Base64 decoding
 	do
 		local decoder = {}
@@ -38,14 +38,14 @@ local function Decode(str)
 		end
 		str = table.concat(t)
 	end
-
+	
 	local Position = 1
 	local function Parse(fmt)
 		local Values = {string.unpack(fmt,str,Position)}
 		Position = table.remove(Values)
 		return table.unpack(Values)
 	end
-
+	
 	local Settings = Parse('B')
 	local Flags = Parse('B')
 	Flags = {
@@ -55,16 +55,16 @@ local function Decode(str)
 		--[[MaxPropertiesLengthByteLength]] bit32.extract(Flags,0,2)+1,
 		--[[Use Double instead of Float]] bit32.band(Settings,0b1) > 0
 	}
-
+	
 	local ValueFMT = ('I'..Flags[1])
 	local InstanceFMT = ('I'..Flags[2])
 	local ConnectionFMT = ('I'..Flags[3])
 	local PropertyLengthFMT = ('I'..Flags[4])
-
+	
 	local ValuesLength = Parse(ValueFMT)
 	local Values = table.create(ValuesLength)
 	local CFrameIndexes = {}
-
+	
 	local ValueDecoders = {
 		--!!Start
 		[1] = function(Modifier)
@@ -150,7 +150,7 @@ local function Decode(str)
 		end
 		--!!End
 	}
-
+	
 	for i = 1,ValuesLength do
 		local TypeAndModifier = Parse('B')
 		local Type = bit32.band(TypeAndModifier,0b11111)
@@ -162,15 +162,15 @@ local function Decode(str)
 			Values[i] = Decoder[1](Parse(Decoder[2]))
 		end
 	end
-
+	
 	for i,t in pairs(CFrameIndexes) do
 		Values[t[1]] = CFrame.fromMatrix(Values[t[2]],Values[t[3]],Values[t[4]])
 	end
-
+	
 	local InstancesLength = Parse(InstanceFMT)
 	local Instances = {}
 	local NoParent = {}
-
+	
 	for i = 1,InstancesLength do
 		local ClassName = Values[Parse(ValueFMT)]
 		local obj
@@ -195,15 +195,16 @@ local function Decode(str)
 		Instances[i] = obj
 		for i = 1,PropertiesLength do
 			local Prop,Value = Values[Parse(ValueFMT)],Values[Parse(ValueFMT)]
-
+			
+			local dont = false
 			-- ok this looks awful
 			if MeshPartMesh then
 				if Prop == "MeshId" then
 					MeshPartMesh.MeshId = Value
-					continue
+					dont = true
 				elseif Prop == "TextureID" then
 					MeshPartMesh.TextureId = Value
-					continue
+					dont = true
 				elseif Prop == "Size" then
 					if not MeshPartScale then
 						MeshPartScale = Value
@@ -217,11 +218,13 @@ local function Decode(str)
 					else
 						MeshPartMesh.Scale = MeshPartScale / Value
 					end
-					continue
+					dont = true
 				end
 			end
-
-			obj[Prop] = Value
+			
+			if(not dont)then
+				obj[Prop] = Value
+			end
 		end
 		if MeshPartMesh then
 			if MeshPartMesh.MeshId=='' then
@@ -240,33 +243,34 @@ local function Decode(str)
 			obj.Parent = Parent
 		end
 	end
-
+	
 	local ConnectionsLength = Parse(ConnectionFMT)
 	for i = 1,ConnectionsLength do
 		local a,b,c = Parse(InstanceFMT),Parse(ValueFMT),Parse(InstanceFMT)
 		Instances[a][Values[b]] = Instances[c]
 	end
-
+	
 	return NoParent
 end
 
 
-local Objects = Decode('AACXIQZGb2xkZXIhBE5hbWUhB0NPVU5URVIhCVBhcnRpY2xlcyEPUGFydGljbGVFbWl0dGVyIQ1Db3VudGVyQ2hhcmdlIQVDb2xvcigCAAAAAP8AAAAAgD//AAAhB0VuYWJsZWQCIQhMaWZldGltZREzM7M+MzOzPiENTGlnaHRFbWlzc2lvbgMAAABgZmbWPyEMTG9j'
-	..'a2VkVG9QYXJ0IiEEUmF0ZQMAAAAAAAAUQCEIUm90YXRpb24RAAAAAAAAtEMhBFNpemUpAgAAAAAAACBBAAAAAAAAgD8AAAAAAAAAACEFU3BlZWQRAAAAAAAAAAAhB1RleHR1cmUhKWh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9NTU0NzcwOTcwIQxUcmFu'
-	..'c3BhcmVuY3kpAgAAAAAAAIA/AAAAAAAAgD8AAAAAAAAAACELQ291bnRlclJpbmcRAACAPgAAAD8DAAAAABJFJUEDAAAAAAAACEApAgAAAAAAAAAAAAAAAAAAgD8AAMhBAAAAACEqaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD03NzU5MDcwOTk0KQIAAAAA'
-	..'AAAAAAAAAAAAAIA/AACAPwAAAAAhCUVZRV9HbGFyZSERRW1pc3Npb25EaXJlY3Rpb24RAAAAPwAAgD8hC09yaWVudGF0aW9uAwAAAAAAAAxAKQMAAAAAAAAAAAAAAAAAAAA/AABgQAAAAAAAAIA/AAAAAAAAAAARCtejOwrXozshKmh0dHA6Ly93d3cucm9ibG94LmNv'
-	..'bS9hc3NldC8/aWQ9NzczOTIzOTExOCkCAAAAAAAAAD8AAAAAAACAPwAAAD8AAAAAIQJVSSEMQmlsbGJvYXJkR3VpIQ5Db3VudGVyRGlzcGxheSEOWkluZGV4QmVoYXZpb3IDAAAAAAAA8D8hBkFjdGl2ZSELQWx3YXlzT25Ub3AMAAAgQQAAAAAgQQAAIQVGcmFtZSEQ'
-	..'QmFja2dyb3VuZENvbG9yMwb///8hFkJhY2tncm91bmRUcmFuc3BhcmVuY3khD0JvcmRlclNpemVQaXhlbAMAAAAAAAAAAAwAAIA/AAAAAIA/AAAhCVRleHRMYWJlbCELQ291bnRlclRleHQhCFBvc2l0aW9uDAAAAD4AAAAAgL4AAAwAAEA/AAAAAEA/AAAhBEZvbnQD'
-	..'AAAAAAAAQ0AhBFRleHQhClRleHRDb2xvcjMG/0tLIQpUZXh0U2NhbGVkIQhUZXh0U2l6ZQMAAAAAAABJQCEQVGV4dFN0cm9rZUNvbG9yMwZkAAAhFlRleHRTdHJva2VUcmFuc3BhcmVuY3kDAAAAAAAA6D8hEFRleHRUcmFuc3BhcmVuY3khC1RleHRXcmFwcGVkIQpJ'
-	..'bWFnZUxhYmVsDAAAgD4AAAAAgD4AAAwAAAA/AAApXB8/AAAhBlpJbmRleCEFSW1hZ2UhKmh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9OTU3NDMxMzU4NiELSW1hZ2VDb2xvcjMG/5aWIRFJbWFnZVRyYW5zcGFyZW5jeQMAAAAAAADgPyEKQXR0YWNrVGV4'
-	..'dAMAAAAAAEBRQAMAAAAAAAA5QCEGYXR0YWNrBngAACEEUGFydCEFQnJvb20hDUJvdHRvbVN1cmZhY2UhCkJyaWNrQ29sb3IH6QMhBkNGcmFtZQRplJUhCkNhbkNvbGxpZGUhCE1hc3NsZXNzIQhNYXRlcmlhbAMAAAAAAAByQAoINmpBAAAAQFBDST8KAABAPwAAQD8A'
-	..'AChBIQpUb3BTdXJmYWNlIQtTcGVjaWFsTWVzaCEFU2NhbGUKAAAQQAAAEEAAABBAIQtWZXJ0ZXhDb2xvcgoAAHpEAAB6RAAAekQhBk1lc2hJZCEoaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD0zNjM2NTgzMCEITWVzaFR5cGUhB01vdG9yNkQhAkMxBJaU'
-	..'lSEFUGFydDEhBEV2aWwhCEFuY2hvcmVkB+sDBH2UlQYAAAAKaB86Qy3JmEU1pwlFCgAAAEDNzMw9AAAAQCEKU3VyZmFjZUd1aSEERmFjZQMAAAAAAAAQQCEOTGlnaHRJbmZsdWVuY2UhClNpemluZ01vZGUhBkJvcmRlcgMAAAAAAIBWwCEqaHR0cDovL3d3dy5yb2Js'
-	..'b3guY29tL2Fzc2V0Lz9pZD02NTU2MDY2MTc3IQpTbGljZVNjYWxlIQZXSUNLRUQMKVyPPQAATTTRPQAADAAAgD8AAO2ySz8AACEqaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD05OTAwMDc1ODM5BsGRkSEDRXllB+wDBJKXlQb/AAAKAAAAAAAAtMIAAAAA'
-	..'Co+aecSF65lAZLsWwgoAAAA+mpmZPgAAAD4KAACAPwAAAAAAAAAACgAAAAAAAIA/AAAAAAoAAAAAAACAPwAAQEAKLr07swAAAAAAAIA/GQEAAQACAwEBAQACBAUCDAACBgcICQoLDA0ODxAREhMUFRYXGBkaGxwFAgsAAh0HCAkKCx4NHw8QESAVIRcYGSIbIwUCDAAC'
-	..'JCUSCQoLJg0fDxAnIBEoFSkXKhkrGywBAQEAAi0uBgUAAi8wMTIQMxAVNDUHBAA2NzgxOToVOzwIDgACPTY3ODE+PxVAQUJDA0RFRhBHSElKS0xNTE4QTwgJADY3ODE5Oj5QFVFSOlNUVVZXWDwIDQACWTY3ODE+PxVAUlpBW0NcRF1GEEdISV1OEF4ACwACX2A6YWJj'
-	..'ZGUKBzdmEGdoPmkVams6bAwEAG1ub3BxcnMSdAwBAHV2XgALAAJ4eRBgOmF6Y3sHfGdoPn0Vfms6GzF/DwQAMDGAgYIxgzE1EAMANjc4MRU7TxEJAAKENjc4MROFFTtSWlOGVXyHWk8RCAACiDY3ODE+iROFFYpTi1WMfw8EADAxgDGCMYMxNRQDADY3ODEVO08VCQAC'
-	..'hDY3ODEThRU7UlpThlV8h1pPFQgAAog2NzgxPokThRWKU4tVjF4ACwACjWA6YY5jjweQZ2gnkT6SE5EVk2s6bBgBAHMgAQ53DA==')
+local Objects = Decode('AACgIQZGb2xkZXIhBE5hbWUhC0RlYWRseUFsZXJ0IQxCaWxsYm9hcmRHdWkhEkRlYWRseUFsZXJ0RGlzcGxheSEOWkluZGV4QmVoYXZpb3IDAAAAAAAA8D8hBkFjdGl2ZSIhC0Fsd2F5c09uVG9wIQRTaXplDAAAMEEAAAAAMEEAACEFRnJhbWUhEEJhY2tncm91bmRD'
+..'b2xvcjMG////IRZCYWNrZ3JvdW5kVHJhbnNwYXJlbmN5IQxCb3JkZXJDb2xvcjMGGyo1IQ9Cb3JkZXJTaXplUGl4ZWwDAAAAAAAAAAAMAACAPwAAAACAPwAAIQpJbWFnZUxhYmVsIQVBbGVydCEIUG9zaXRpb24MAACAPgAAAAAAAAAADAAAAD8AAOQUXT8AACEGWklu'
+..'ZGV4IQVJbWFnZSEraHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD0xMDcxMDU5OTAwMiEEUGFydCEFQnJvb20hDUJvdHRvbVN1cmZhY2UhCkJyaWNrQ29sb3IH6QMhBkNGcmFtZQQrnZ4hCkNhbkNvbGxpZGUCIQVDb2xvciEITWFzc2xlc3MhCE1hdGVyaWFs'
+..'AwAAAAAAAHJACgg2akEAAABAUENJPwoAAEA/AABAPwAAKEEhClRvcFN1cmZhY2UhC1NwZWNpYWxNZXNoIQVTY2FsZQoAABBAAAAQQAAAEEAhC1ZlcnRleENvbG9yCgAAekQAAHpEAAB6RCEGTWVzaElkIShodHRwOi8vd3d3LnJvYmxveC5jb20vYXNzZXQvP2lkPTM2'
+..'MzY1ODMwIQhNZXNoVHlwZQMAAAAAAAAUQCEHTW90b3I2RCECQzEEn52eIQVQYXJ0MSEERXZpbCEIQW5jaG9yZWQH6wMEQJ2eBgAAAApoHzpDLcmYRTWnCUUKAAAAQM3MzD0AAABAIQxUcmFuc3BhcmVuY3khClN1cmZhY2VHdWkhBEZhY2UDAAAAAAAAEEAhDkxpZ2h0'
+..'SW5mbHVlbmNlIQpTaXppbmdNb2RlIQZCb3JkZXIhCFJvdGF0aW9uAwAAAAAAgFbAAwAAAAAAQFFAISpodHRwOi8vd3d3LnJvYmxveC5jb20vYXNzZXQvP2lkPTY1NTYwNjYxNzchC0ltYWdlQ29sb3IzIQpTbGljZVNjYWxlIQZXSUNLRUQMKVyPPQAATTTRPQAADAAA'
+..'gD8AAO2ySz8AACEqaHR0cDovL3d3dy5yb2Jsb3guY29tL2Fzc2V0Lz9pZD05OTAwMDc1ODM5BsGRkSEDRXllB+wDBFqgngb/AAAhC09yaWVudGF0aW9uCgAAAAAAALTCAAAAAAqPmnnEheuZQGS7FsIKAAAAPpqZmT4AAAA+AwAAAAAAAAhAIQdDT1VOVEVSIQlQYXJ0'
+..'aWNsZXMhD1BhcnRpY2xlRW1pdHRlciENQ291bnRlckNoYXJnZSgCAAAAAP8AAAAAgD//AAAhB0VuYWJsZWQhCExpZmV0aW1lETMzsz4zM7M+IQ1MaWdodEVtaXNzaW9uAwAAAGBmZtY/IQxMb2NrZWRUb1BhcnQhBFJhdGURAAAAAAAAtEMpAgAAAAAAACBBAAAAAAAA'
+..'gD8AAAAAAAAAACEFU3BlZWQRAAAAAAAAAAAhB1RleHR1cmUhKWh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9NTU0NzcwOTcwKQIAAAAAAACAPwAAAAAAAIA/AAAAAAAAAAAhC0NvdW50ZXJSaW5nEQAAgD4AAAA/AwAAAAASRSVBKQIAAAAAAAAAAAAAAAAA'
+..'AIA/AADIQQAAAAAhKmh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9Nzc1OTA3MDk5NCkCAAAAAAAAAAAAAAAAAACAPwAAgD8AAAAAIQlFWUVfR2xhcmUhEUVtaXNzaW9uRGlyZWN0aW9uEQAAAD8AAIA/AwAAAAAAAAxAKQMAAAAAAAAAAAAAAAAAAAA/AABg'
+..'QAAAAAAAAIA/AAAAAAAAAAARCtejOwrXozshKmh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9NzczOTIzOTExOCkCAAAAAAAAAD8AAAAAAACAPwAAAD8AAAAAIQJVSSEOQ291bnRlckRpc3BsYXkMAAAgQQAAAAAgQQAAIQlUZXh0TGFiZWwhC0NvdW50ZXJU'
+..'ZXh0DAAAAD4AAAAAgL4AAAwAAEA/AAAAAEA/AAAhBEZvbnQDAAAAAAAAQ0AhBFRleHQhClRleHRDb2xvcjMG/0tLIQpUZXh0U2NhbGVkIQhUZXh0U2l6ZQMAAAAAAABJQCEQVGV4dFN0cm9rZUNvbG9yMwZkAAAhFlRleHRTdHJva2VUcmFuc3BhcmVuY3kDAAAAAAAA'
+..'6D8hEFRleHRUcmFuc3BhcmVuY3khC1RleHRXcmFwcGVkDAAAgD4AAAAAgD4AAAwAAAA/AAApXB8/AAAhKmh0dHA6Ly93d3cucm9ibG94LmNvbS9hc3NldC8/aWQ9OTU3NDMxMzU4Ngb/lpYhEUltYWdlVHJhbnNwYXJlbmN5AwAAAAAAAOA/IQpBdHRhY2tUZXh0AwAA'
+..'AAAAADlAIQZhdHRhY2sGeAAACgAAgD8AAAAAAAAAAAoAAAAAAACAPwAAAAAKAAAAAAAAgD8AAEBACi69O7MAAAAAAACAPx0BAAEAAgMEAQUAAgUGBwgJCgkLDA0CBQAODxAHERITFAsVFgMJAAIXDg8QBxESExQYGQsaGxQcHR4ACwACHyAUISIjJCUmJw8oCSkqGCsL'
+..'LC0ULgUEAC8wMTIzNDU2NwUBADg5HgALAAI7PAkgFCE9Iz4nPykqGEALQS0UQgdDCAQABgdERUYHRwcNCQMADg8QBwsVFgoJAAJIDg8QB0lKCxUbSxxMTT9OSxYKCAACTw4PEAcYUElKC1EcUk1TQwgEAAYHRAdGB0cHDQ0DAA4PEAcLFRYOCQACSA4PEAdJSgsVG0sc'
+..'TE0/TksWDggAAk8ODxAHGFBJSgtRHFJNUx4ACwACVCAUIVUjVidXKSpYWRhaSVkLWy0ULhEBADVcAQABAAJdARMBAAJeXxQMAAJgJ2FiJmNkZWZnCWg2SWkLamtsbW5Cb18UCwACcCdhYiZjcWVyZwloXAtza2xtdEJ1XxQMAAJ2dzZiJmN4ZXJnCVhcaHkLemt7bXxC'
+..'fQETAQACfgQYBQACfwYHCAkKCQuADRkEAA4PEAcTFAsVgRoOAAKCDg8QBxiDC4SFhoddiImKCYuMjY6PkJGQkgkWGgkADg8QBxMUGJMLlBsUHJVNlpeYgRoNAAKZDg8QBxiDC4QbS4Wah5uInIoJi4yNnJIJAQc6BQ==')
 
 local heartbeat = game:GetService("RunService").PostSimulation
 local deb = game:GetService("Debris")
@@ -614,6 +618,34 @@ function counter(counterlist)
 	end)
 
 	local cframe = CFRAMES.CHARACTER.Character
+
+	local Size = UDim2.new(11, 0, 11, 0)
+	local uipart = newpart(Vector3.zero, cframe)
+	local UI = script.DEADLYALERT.DeadlyAlertDisplay:Clone()
+	local frame = UI.Frame
+	local img = frame.Alert
+	UI.Size = UDim2.new(Size.X.Scale/3, 0, Size.Y.Scale/3, 0)
+	UI.StudsOffset = Vector3.new(rnd:NextNumber(6, 7.5) * CSF:RandomSign(), rnd:NextNumber(6.5, 9), rnd:NextNumber(6, 7.5) * CSF:RandomSign())
+	UI.Parent = uipart
+	uipart.Parent = EFFECTSCONTAINER
+
+	newsoundat(cframe, 13081965892, 5, 1)
+	local setcf = game:GetService("RunService").Heartbeat:Connect(function()
+		uipart.CFrame = CFRAMES.CHARACTER.Character
+	end)
+	game:GetService("TweenService"):Create(UI, TweenInfo.new(0.2, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {
+		Size = Size
+	}):Play()
+
+	task.delay(1, function()
+		game:GetService("TweenService"):Create(img, TweenInfo.new(0.35, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut), {
+			ImageTransparency = 1
+		}):Play()
+	end)
+	task.delay(1.35, function()
+		setcf:Disconnect()
+		uipart:Destroy()
+	end)
 
 	task.delay(1/30, function()
 		local chargepart = newpart(Vector3.zero, cframe)
