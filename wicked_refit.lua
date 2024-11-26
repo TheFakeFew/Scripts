@@ -7545,8 +7545,6 @@ heartbeat:Connect(function(dt)
 	end
 end)
 
-char = owner.Character
-CFRAMES.CHARACTER.Character = char:GetPivot()
 newchar(owner.Character)
 owner.CharacterAdded:Connect(newchar)
 
