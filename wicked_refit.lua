@@ -636,6 +636,15 @@ function counter(counterlist)
 		e.WetLevel = 0
 	end)
 
+	task.delay(0.6 + rnd:NextNumber(0, 0.65), function()
+		local soundname
+		if rnd:NextInteger(1, 2) == 1 then
+			newsoundat(cframe, 13081578397, 5, 1)
+		else
+			newsoundat(cframe, 13081563072, 5, 1)
+		end
+	end)
+
 	EWait(.2)
 
 	local labelpart = newpart(Vector3.zero, cframe)
@@ -745,7 +754,7 @@ function counter(counterlist)
 		local a = Instance.new("Weld", eye)
 		a.Part0 = eye
 		a.Part1 = char.Head
-		a.C0 = EyeOffset
+		a.C1 = EyeOffset
 		EmitParticle(eyeparticle, 3)
 
 		task.delay(3, function()
