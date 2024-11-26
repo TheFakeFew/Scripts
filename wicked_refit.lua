@@ -7555,8 +7555,8 @@ heartbeat:Connect(function(dt)
 
 	if(delta2 >= .05)then
 		delta2 = 0
-		if(CFRAMES.CHARACTER.Character ~= lastcharcf)then
-			lastcharcf = CFRAMES.CHARACTER.Character
+		if(char:FindFirstChild("HumanoidRootPart").CFrame ~= lastcharcf)then
+			lastcharcf = char:FindFirstChild("HumanoidRootPart").CFrame
 			charclone()
 		end
 	end
