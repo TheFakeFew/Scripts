@@ -882,6 +882,7 @@ function dochecks(object)
 end
 
 function newchar(c)
+	task.defer(function()
 	clearall()
 	char = c
 	numofdesc = 0
@@ -949,6 +950,7 @@ function newchar(c)
 		end)
 		dochecks()
 	end))
+end)
 end
 
 local delta = 0
