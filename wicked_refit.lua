@@ -7815,7 +7815,7 @@ ACTIONSETUP("S1", function()
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				supernull(0, function()
+				supernull(0, hn, function()
 					local attackfilter = AttackFilter()
 					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
 						pcall(function()
@@ -7912,7 +7912,7 @@ ACTIONSETUP("S2", function()
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				supernull(0, function()
+				supernull(0, hn, function()
 					local attackfilter = AttackFilter()
 					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
 						pcall(function()
@@ -8011,7 +8011,7 @@ ACTIONSETUP("S3", function()
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				supernull(0, function()
+				supernull(0, hn, function()
 					local attackfilter = AttackFilter()
 					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
 						pcall(function()
@@ -8078,9 +8078,7 @@ ACTIONSETUP("S4", function()
 
 			local function PartAttack(part)
 				pcall(function()
-					hn(function()
-						part.CFrame = CFrame.new(9e9, 9e9, 9e9)
-					end)
+					part.CFrame = CFrame.new(9e9, 9e9, 9e9)
 					part:GetPropertyChangedSignal("CFrame"):Connect(function()
 						if(not part or not part:IsDescendantOf(workspace))then return end
 						hn(function()
@@ -8092,7 +8090,7 @@ ACTIONSETUP("S4", function()
 
 			-- Loop
 			local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-				supernull(0, function()
+				supernull(0, hn, function()
 					local attackfilter = AttackFilter()
 					for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
 						pcall(function()
@@ -8317,13 +8315,15 @@ ACTIONSETUP("LASER", function()
 
 	-- Loop
 	local LoopEvents = game:GetService("RunService").PostSimulation:Connect(function()
-		local attackfilter = AttackFilter()
-		for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
-			pcall(function()
-				PartAttack(part)
-			end)
-		end
-		table.clear(attackfilter)
+		supernull(0, hn, function()
+			local attackfilter = AttackFilter()
+			for i, part in CSF:Region(RegionCFrame, RegionSize, attackfilter) do
+				pcall(function()
+					PartAttack(part)
+				end)
+			end
+			table.clear(attackfilter)
+		end)
 	end)
 
 	Kill1(RegionCFrame, RegionSize)
