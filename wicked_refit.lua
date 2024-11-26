@@ -619,13 +619,13 @@ function counter(counterlist)
 
 	local cframe = CFRAMES.CHARACTER.Character
 
-	local Size = UDim2.new(11 * .8, 0, 11 * .8, 0)
+	local Size = UDim2.new(11 * .5, 0, 11 * .5, 0)
 	local uipart = newpart(Vector3.zero, cframe)
 	local UI = script.DeadlyAlert.DeadlyAlertDisplay:Clone()
 	local frame = UI.Frame
 	local img = frame.Alert
 	UI.Size = UDim2.new(Size.X.Scale/3, 0, Size.Y.Scale/3, 0)
-	UI.StudsOffset = Vector3.new(rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)], rnd:NextNumber(6.5, 9), rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)]) * .8
+	UI.StudsOffset = Vector3.new(rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)], rnd:NextNumber(6.5, 9), rnd:NextNumber(6, 7.5) * ({-1, 1})[rnd:NextInteger(1, 2)]) * .5
 	UI.Parent = uipart
 	uipart.Parent = workspace
 
