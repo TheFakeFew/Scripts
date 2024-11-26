@@ -511,7 +511,7 @@ end
 
 function counter(counterlist)
 	task.wait()
-	if(tick() - counterdeb) < 5 then
+	if(tick() - counterdeb) < 3 then
 		return
 	end
 	counterdeb = tick()
