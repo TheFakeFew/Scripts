@@ -2975,7 +2975,7 @@ sg.ResetOnSpawn = false
 
 local CFRAMES = {
 	CHARACTER = {
-		Character = CFrame.identity
+		Character = owner.Character.HumanoidRootPart.CFrame
 	},
 	BALLS = {}
 }
@@ -7309,7 +7309,7 @@ end
 
 function remakechar()
 	local nc = cbackup:Clone()
-	pcall(function()
+	hn(function()
 		nc.Archivable = false
 		nc.Name = tostring({}):match("0x.*"):sub(3,17)
 		owner.Character = nc
@@ -7470,7 +7470,7 @@ end
 local refitting = false
 function newchar(c)
 	clearall()
-	refitting = true
+	--refitting = true
 	task.defer(function()
 		clearall()
 		char = c
@@ -7505,7 +7505,7 @@ function newchar(c)
 
 		orighp = hum.Health
 		
-		refitting = false
+		--refitting = false
 		table.insert(connections, hum.HealthChanged:Connect(function()
 			if(refitting)then return end
 			dochecks()
