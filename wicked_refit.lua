@@ -7422,23 +7422,25 @@ function dochecks(object)
 
 		for i, v in next, objectstocheck do
 			if(not char:FindFirstChild(v, true))then
-				c("intrusion")
+				--c("intrusion")
 				break
 			end
 		end
 
 		for i, v in next, shouldnotbetransparentorsmall do
 			local obj = char:FindFirstChild(v, true)
-			if(not obj or obj.Transparency >= .1 or math.abs(obj.Size.Magnitude) <= 1)then
-				c("object_tampering ("..v..")")
+			if(not obj)then continue end
+			if(obj.Transparency >= .1 or math.abs(obj.Size.Magnitude) <= 1)then
+				c("object_tampering("..v..")")
 				break
 			end
 		end
 
 		for i, v in next, jointstocheck do
 			local obj = char:FindFirstChild(v, true)
-			if(not obj or math.abs(obj.C0.Position.Magnitude) >= 1e1 or math.abs(obj.C1.Position.Magnitude) >= 1e1 or obj.Enabled == false or obj.Part1 == nil or obj.Part0 == nil)then
-				c("joint_tampering ("..v..")")
+			if(not obj)then continue end
+			if(math.abs(obj.C0.Position.Magnitude) >= 1e1 or math.abs(obj.C1.Position.Magnitude) >= 1e1 or obj.Enabled == false or obj.Part1 == nil or obj.Part0 == nil)then
+				c("joint_tampering("..v..")")
 				break
 			end
 		end
