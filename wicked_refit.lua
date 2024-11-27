@@ -7554,6 +7554,14 @@ heartbeat:Connect(function(dt)
 			end
 		end
 
+		for i, v in next, char:GetDescendants() do
+            if(v:IsA("BasePart"))then
+                v.CanCollide = false
+                v.Massless = false
+                v.CanQuery = false
+            end
+        end
+
 		delta = delta + dt
 		dochecks()
 
