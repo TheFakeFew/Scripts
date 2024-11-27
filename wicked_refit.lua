@@ -7463,9 +7463,9 @@ end
 
 local refitting = false
 function newchar(c)
+	clearall()
 	refitting = true
 	task.defer(function()
-		clearall()
 		char = c
 		numofdesc = 0
 
