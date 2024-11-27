@@ -7479,7 +7479,7 @@ function newchar(c)
 		CFRAMES.CHARACTER.Character = char:GetPivot()
 		CFRAMES.CHARACTER.Head = char.Head.CFrame
 
-		hum = char:FindFirstChildOfClass("Humanoid") or char:WaitForChild("Humanoid")
+		hum = char:FindFirstChildOfClass("Humanoid")
 		task.defer(function()
 			if(char:FindFirstChildOfClass("ForceField"))then
 				char:FindFirstChildOfClass("ForceField"):Destroy()
@@ -7587,8 +7587,8 @@ heartbeat:Connect(function(dt)
 	end)
 end)
 
-task.wait()
 respawn()
+owner.CharacterAdded:Connect(respawn)
 
 local AliveUIs = {}
 function AliveCreate()
