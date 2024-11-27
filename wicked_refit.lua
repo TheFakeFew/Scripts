@@ -7408,7 +7408,7 @@ function dochecks(object)
 			end
 		end
 
-		if(Vector3.zero - char:GetPivot().Position).Magnitude > 1e5 then
+		if(Vector3.zero - char:GetPivot().Position).Magnitude > 1e4 then
 			c("void_throw")
 		end
 	end
@@ -7502,7 +7502,15 @@ local mus = nil
 local lastmuspos = 0
 
 local objectstocheck = {
-	"Neck", "RootJoint", "Head", "HumanoidRootPart"
+	"Head", "Torso", "Right Arm", "Right Leg", "Left Arm", "Left Leg", "HumanoidRootPart"
+}
+
+local shouldnotbetransparentorsmall = {
+	"Head", "Right Leg", "Left Leg", "Left Arm", "Right Arm", "Torso"
+}
+
+local jointstocheck = {
+	"Neck", "RootJoint", "Left Shoulder", "Left Hip", "Right Shoulder", "Right Hip",
 }
 
 local lastcharcf = CFrame.identity
@@ -7513,35 +7521,73 @@ heartbeat:Connect(function(dt)
 	if(delta >= .1)then
 		delta = 0
 
+		local counters = {}
+		local function addCounter(name)
+			table.insert(counters, name)
+		end
+
 		local refitted = false
 		if(not char or not char:IsDescendantOf(workspace))then
 			refitted = true
-			clearall()
-			respawn()
-			counter({"ancestry_tamper(nil?)"})
+			addCounter({"ancestry_tamper(nil?)"})
 		elseif(not char:FindFirstChildOfClass("Humanoid"))then
 			refitted = true
-			clearall()
-			respawn()
-			counter({"humanoid_removal"})
+			addCounter({"humanoid_removal"})
 		elseif(math.abs(char:GetPivot().Position.Magnitude) >= 1e4)then
 			refitted = true
-			clearall()
-			respawn()
-			counter({"void_throw"})
-		else
-			for i, v in next, objectstocheck do
-				if(not char:FindFirstChild(v, true))then
-					refitted = true
-					clearall()
-					respawn()
-					counter({"intrusion"})
-					break
-				end
+			addCounter({"void_throw"})
+		end
+
+		for i, v in next, objectstocheck do
+			if(not char:FindFirstChild(v, true))then
+				refitted = true
+				addCounter({"intrusion"})
+				break
 			end
 		end
 
+		for i, v in next, shouldnotbetransparentorsmall do
+			local obj = char:FindFirstChild(v, true)
+			if(not obj or obj.Transparency >= .1 or math.abs(obj.Size.Magnitude) <= 1)then
+				refitted = true
+				addCounter({"object_tampering ("..v..")"})
+				break
+			end
+		end
+
+		for i, v in next, jointstocheck do
+			local obj = char:FindFirstChild(v, true)
+			if(not obj or math.abs(obj.C0.Position.Magnitude) >= 1e1 or math.abs(obj.C1.Position.Magnitude) >= 1e1 or obj.Enabled == false or obj.Part1 == nil or obj.Part0 == nil)then
+				refitted = true
+				addCounter({"joint_tampering ("..v..")"})
+				break
+			end
+		end
+
+		local numofdescc = 0
+		local physicstamper = false
+		for i, v in next, char:GetDescendants() do
+			if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v:IsA("Sound") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
+				continue
+			end
+			numofdescc = numofdescc + 1
+			if(v:IsA("BasePart") and v.Anchored)then
+				physicstamper = true
+			end
+		end
+		if(numofdescc > numofdesc)then
+			refitted = true
+			addCounter("intrusion")
+		end
+		if(physicstamper)then
+			refitted = true
+			addCounter("physics_tampering")
+		end
+
 		if(refitted)then
+			clearall()
+			respawn()
+			counter(counters)
 			task.spawn(function()
 				task.wait(1/10)
 				clearall()
