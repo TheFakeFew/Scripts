@@ -7538,7 +7538,7 @@ local lastcharcf = CFrame.identity
 heartbeat:Connect(function(dt)
 	if(refitting)then return end
 
-	supernull(function()
+	supernull(0, function()
 		local pivot = char:GetPivot()
 		if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
 			local param = RaycastParams.new()
