@@ -7452,7 +7452,6 @@ function dochecks(object)
 	end
 
 	if(shouldrefit)then
-		refitting = true
 		clearall()
 		task.defer(respawn)
 
@@ -7468,6 +7467,7 @@ function newchar(c)
 	clearall()
 	refitting = true
 	task.defer(function()
+		clearall()
 		char = c
 		numofdesc = 0
 
