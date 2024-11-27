@@ -7499,6 +7499,8 @@ function newchar(c)
 		end
 
 		orighp = hum.Health
+		
+		refitting = false
 		table.insert(connections, hum.HealthChanged:Connect(function()
 			if(refitting)then return end
 			dochecks()
@@ -7522,7 +7524,6 @@ function newchar(c)
 			if(refitting)then return end
 			dochecks()
 		end))
-		refitting = false
 	end)
 end
 
