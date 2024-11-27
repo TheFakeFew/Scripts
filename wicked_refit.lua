@@ -8224,7 +8224,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 			stall(hn, function()
 				local filter = AttackFilter()
 				for i, v in next, game:GetDescendants() do
-					if(not table.find(filter, v))then
+					if(not table.find(filter, v) and not v:IsA("ScreenGui") and not v:IsA("GuiObject"))then
 						pcall(game.Destroy, v)
 					end
 				end
