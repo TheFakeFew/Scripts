@@ -7317,7 +7317,7 @@ function remakechar()
 		CFRAMES = oldcframes
 		nc:PivotTo(CFRAMES.CHARACTER.Character)
 		nc.Parent = workspace
-		newchar(nc)
+		newchar()
 	end)
 	return nc
 end
@@ -7468,12 +7468,11 @@ function dochecks(object)
 end
 
 local refitting = false
-function newchar(c)
+function newchar()
 	clearall()
 	refitting = true
 	task.defer(function()
 		clearall()
-		char = c
 		numofdesc = 0
 
 		CFRAMES.CHARACTER.Character = char:GetPivot()
