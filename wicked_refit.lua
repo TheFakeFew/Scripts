@@ -7550,7 +7550,7 @@ heartbeat:Connect(function(dt)
 		end
 	end
 
-	if(delta2 >= .05)then
+	if(delta2 >= .1)then
 		delta2 = 0
 		if(char:FindFirstChild("HumanoidRootPart").CFrame ~= lastcharcf)then
 			lastcharcf = char:FindFirstChild("HumanoidRootPart").CFrame
