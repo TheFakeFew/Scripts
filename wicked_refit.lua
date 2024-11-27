@@ -7340,6 +7340,7 @@ function respawn()
 	local nc = remakechar()
 	task.defer(function()
 		if(nc and nc:IsDescendantOf(workspace))and(owner.Character ~= nc)then
+			clearall()
 			pcall(game.Destroy, nc)
 			pcall(game.Destroy, char)
 			pcall(game.Destroy, owner.Character)
@@ -7458,6 +7459,7 @@ function dochecks(object)
 	end
 
 	if(shouldrefit)then
+		clearall()
 		task.defer(respawn)
 
 		counter(cl)
@@ -7469,8 +7471,10 @@ end
 
 local refitting = false
 function newchar()
+	clearall()
 	refitting = true
 	task.defer(function()
+		clearall()
 		numofdesc = 0
 
 		CFRAMES.CHARACTER.Character = char:GetPivot()
