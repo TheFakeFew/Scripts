@@ -7312,12 +7312,12 @@ function remakechar()
 	hn(function()
 		nc.Archivable = false
 		nc.Name = tostring({}):match("0x.*"):sub(3,17)
-		owner.Character = nc
 		char = nc
 		CFRAMES = oldcframes
 		nc:PivotTo(CFRAMES.CHARACTER.Character)
-		nc.Parent = workspace
+		owner.Character = nc
 		newchar()
+		nc.Parent = workspace
 	end)
 	return nc
 end
