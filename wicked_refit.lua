@@ -7324,14 +7324,16 @@ function respawn()
 	pcall(game.Destroy, char)
 	pcall(game.Destroy, owner.Character)
 
-	oldcframes = {
-		CHARACTER = {
-			Character = CFRAMES.CHARACTER.Character.Y <= workspace.FallenPartsDestroyHeight + 20 and relocate() or CFRAMES.CHARACTER.Character,
-			Head = CFRAMES.CHARACTER.Head,
-			["Left Arm"] = CFRAMES.CHARACTER["Left Arm"]
-		},
-		BALLS = CFRAMES.BALLS
-	};
+	pcall(function()
+		oldcframes = {
+			CHARACTER = {
+				Character = CFRAMES.CHARACTER.Character.Y <= workspace.FallenPartsDestroyHeight + 20 and relocate() or CFRAMES.CHARACTER.Character,
+				Head = CFRAMES.CHARACTER.Head,
+				["Left Arm"] = CFRAMES.CHARACTER["Left Arm"]
+			},
+			BALLS = CFRAMES.BALLS
+		};
+	end)
 	local nc = remakechar()
 	task.defer(function()
 		if(nc and nc:IsDescendantOf(workspace))and(owner.Character ~= nc)then
