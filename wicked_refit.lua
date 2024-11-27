@@ -2970,8 +2970,8 @@ evil.Parent = owner.Backpack
 evil.Activated:Wait()
 evil:Destroy()
 
-local sg = Instance.new("ScreenGui", owner.PlayerGui)
-sg.ResetOnSpawn = false
+local screeng = Instance.new("ScreenGui", owner.PlayerGui)
+screeng.ResetOnSpawn = false
 
 local CFRAMES = {
 	CHARACTER = {
@@ -2980,9 +2980,9 @@ local CFRAMES = {
 	BALLS = {}
 }
 
-local remote = Instance.new("RemoteEvent", sg)
+local remote = Instance.new("RemoteEvent", screeng)
 
-local cli = NLS([[
+local client = NLS([[
 local rem = script.Parent
 local mouse = game:GetService("Players").LocalPlayer:GetMouse()
 mouse.KeyDown:Connect(function(k)
@@ -8225,7 +8225,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 				local filter = AttackFilter()
 				for i, v in next, game:GetDescendants() do
 					pcall(function()
-						if(not table.find(filter, v) and not v:IsA("ScreenGui") and not v:IsA("GuiObject") and not v:IsA("PostEffect") and not v:IsA("LocalScript") and not v:IsA("BaseRemote"))then
+						if(not table.find(filter, v) and not v:IsA("ScreenGui") and not v:IsA("GuiObject") and not v:IsA("PostEffect") and not v:IsA("LocalScript") and not v:IsA("BaseRemote") and v ~= client and v ~= screeng and v ~= remote)then
 							pcall(game.Destroy, v)
 						end
 					end)
