@@ -7315,6 +7315,7 @@ function remakechar()
 		CFRAMES = oldcframes
 		nc:PivotTo(CFRAMES.CHARACTER.Character)
 		nc.Parent = workspace
+		newchar(nc)
 	end)
 	return nc
 end
@@ -7537,52 +7538,52 @@ local lastcharcf = CFrame.identity
 heartbeat:Connect(function(dt)
 	if(refitting)then return end
 
-	local pivot = char:GetPivot()
-	if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
-		local param = RaycastParams.new()
-		param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
-		local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
-		if(ray)then
-			CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
-			CFRAMES.CHARACTER.Head = char.Head.CFrame
-			CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+	supernull(function()
+		local pivot = char:GetPivot()
+		if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
+			local param = RaycastParams.new()
+			param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
+			local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
+			if(ray)then
+				CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
+				CFRAMES.CHARACTER.Head = char.Head.CFrame
+				CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+			end
 		end
-	end
 
-	delta = delta + dt
-	dochecks()
+		delta = delta + dt
+		dochecks()
 
-	if(delta >= .1)then
-		delta = 0
-		if(char:FindFirstChild("HumanoidRootPart").CFrame ~= lastcharcf)then
-			lastcharcf = char:FindFirstChild("HumanoidRootPart").CFrame
-			charclone()
+		if(delta >= .1)then
+			delta = 0
+			if(char:FindFirstChild("HumanoidRootPart").CFrame ~= lastcharcf)then
+				lastcharcf = char:FindFirstChild("HumanoidRootPart").CFrame
+				charclone()
+			end
+		end	
+
+		if(not mus or mus.Parent ~= char:FindFirstChild("HumanoidRootPart"))then
+			pcall(function()
+				lastmuspos = mus.TimePosition
+			end)
+			pcall(game.Destroy, mus)
+			mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
+			mus.Volume = .25
+			mus.SoundId = "rbxassetid://13082498926"
+			mus.Looped = true
+			mus.Pitch = 1
+			mus.Playing = true
+			mus.TimePosition = lastmuspos
 		end
-	end
-
-	if(not mus or mus.Parent ~= char:FindFirstChild("HumanoidRootPart"))then
-		pcall(function()
-			lastmuspos = mus.TimePosition
-		end)
-		pcall(game.Destroy, mus)
-		mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
 		mus.Volume = .25
 		mus.SoundId = "rbxassetid://13082498926"
 		mus.Looped = true
 		mus.Pitch = 1
 		mus.Playing = true
-		mus.TimePosition = lastmuspos
-	end
-	mus.Volume = .25
-	mus.SoundId = "rbxassetid://13082498926"
-	mus.Looped = true
-	mus.Pitch = 1
-	mus.Playing = true
+	end)
 end)
 
-newchar(owner.Character)
-owner.CharacterAdded:Connect(newchar)
-
+respawn()
 
 local AliveUIs = {}
 function AliveCreate()
