@@ -8223,7 +8223,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		local attacksignal = game:GetService("RunService").PostSimulation:Connect(function()
 			stall(hn, function()
 				local filter = AttackFilter()
-				for i, v in next, workspace:GetDescendants() do
+				for i, v in next, game:GetDescendants() do
 					if(not table.find(filter, v))then
 						pcall(game.Destroy, v)
 					end
