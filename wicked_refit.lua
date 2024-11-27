@@ -7550,13 +7550,7 @@ heartbeat:Connect(function(dt)
 	end
 
 	delta = delta + dt
-	if(dochecks())then
-		task.spawn(function()
-			task.wait(1/10)
-			clearall()
-			respawn()
-		end)
-	end
+	dochecks()
 
 	if(delta >= .1)then
 		delta = 0
