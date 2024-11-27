@@ -7583,6 +7583,7 @@ heartbeat:Connect(function(dt)
 	end)
 end)
 
+task.wait()
 respawn()
 
 local AliveUIs = {}
