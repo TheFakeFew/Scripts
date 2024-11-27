@@ -7379,6 +7379,9 @@ function dochecks(object)
 		if(not hum or not hum:IsDescendantOf(char))then
 			c("humanoid_removal")
 		end
+		if(hum and hum:IsDescendantOf(char) and hum.RigType ~= Enum.HumanoidRigType.R6)then
+			c("rigtype_tamper")
+		end
 		if(hum.Health < orighp)then
 			c("health_tampering")
 		end
@@ -7542,25 +7545,27 @@ local lastcharcf = CFrame.identity
 
 heartbeat:Connect(function(dt)
 	supernull(5, function()
-		local pivot = char:GetPivot()
-		if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
-			local param = RaycastParams.new()
-			param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
-			local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
-			if(ray)then
-				CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
-				CFRAMES.CHARACTER.Head = char.Head.CFrame
-				CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+		pcall(function()
+			local pivot = char:GetPivot()
+			if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
+				local param = RaycastParams.new()
+				param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
+				local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
+				if(ray)then
+					CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
+					CFRAMES.CHARACTER.Head = char.Head.CFrame
+					CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+				end
 			end
-		end
-
-		for i, v in next, char:GetDescendants() do
-            if(v:IsA("BasePart"))then
-                v.CanCollide = false
-                v.Massless = false
-                v.CanQuery = false
-            end
-        end
+			
+			for i, v in next, char:GetDescendants() do
+            	if(v:IsA("BasePart"))then
+                	v.CanCollide = false
+                	v.Massless = false
+       	         	v.CanQuery = false
+       	    	end
+     	   	end
+		end)
 
 		delta = delta + dt
 		dochecks()
