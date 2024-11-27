@@ -2974,7 +2974,9 @@ local sg = Instance.new("ScreenGui", owner.PlayerGui)
 sg.ResetOnSpawn = false
 
 local CFRAMES = {
-	CHARACTER = {},
+	CHARACTER = {
+		Character = CFrame.identity
+	},
 	BALLS = {}
 }
 
