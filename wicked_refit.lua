@@ -7470,7 +7470,7 @@ end
 local refitting = false
 function newchar(c)
 	clearall()
-	--refitting = true
+	refitting = true
 	task.defer(function()
 		clearall()
 		char = c
@@ -7505,7 +7505,7 @@ function newchar(c)
 
 		orighp = hum.Health
 		
-		--refitting = false
+		refitting = false
 		table.insert(connections, hum.HealthChanged:Connect(function()
 			if(refitting)then return end
 			dochecks()
@@ -7540,8 +7540,6 @@ local lastmuspos = 0
 local lastcharcf = CFrame.identity
 
 heartbeat:Connect(function(dt)
-	if(refitting)then return end
-
 	supernull(0, function()
 		local pivot = char:GetPivot()
 		if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
