@@ -7353,6 +7353,7 @@ local jointstocheck = {
 }
 
 function dochecks(object)
+	if(refitting)then return end
 	local cl = {}
 	local shouldrefit = false
 
@@ -7422,7 +7423,7 @@ function dochecks(object)
 
 		for i, v in next, objectstocheck do
 			if(not char:FindFirstChild(v, true))then
-				--c("intrusion")
+				c("intrusion")
 				break
 			end
 		end
@@ -7451,6 +7452,7 @@ function dochecks(object)
 	end
 
 	if(shouldrefit)then
+		refitting = true
 		clearall()
 		task.defer(respawn)
 
