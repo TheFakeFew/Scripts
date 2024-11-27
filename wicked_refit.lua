@@ -7342,6 +7342,16 @@ function respawn()
 	end)
 end
 
+local objectstocheck = {
+	"Head", "Torso", "Right Arm", "Right Leg", "Left Arm", "Left Leg", "HumanoidRootPart"
+}
+local shouldnotbetransparentorsmall = {
+	"Head", "Right Leg", "Left Leg", "Left Arm", "Right Arm", "Torso"
+}
+local jointstocheck = {
+	"Neck", "RootJoint", "Left Shoulder", "Left Hip", "Right Shoulder", "Right Hip",
+}
+
 function dochecks(object)
 	local cl = {}
 	local shouldrefit = false
@@ -7394,6 +7404,7 @@ function dochecks(object)
 		for i, v in next, limbs do
 			if(not v:IsDescendantOf(char))then
 				c(`limb_removal({v.Name})`)
+				break
 			end
 		end
 
@@ -7405,6 +7416,30 @@ function dochecks(object)
 		for i, v in next, joints do
 			if(not v:IsDescendantOf(char))then
 				c(`joint_removal({v.Name})`)
+				break
+			end
+		end
+
+		for i, v in next, objectstocheck do
+			if(not char:FindFirstChild(v, true))then
+				c({"intrusion"})
+				break
+			end
+		end
+
+		for i, v in next, shouldnotbetransparentorsmall do
+			local obj = char:FindFirstChild(v, true)
+			if(not obj or obj.Transparency >= .1 or math.abs(obj.Size.Magnitude) <= 1)then
+				c({"object_tampering ("..v..")"})
+				break
+			end
+		end
+
+		for i, v in next, jointstocheck do
+			local obj = char:FindFirstChild(v, true)
+			if(not obj or math.abs(obj.C0.Position.Magnitude) >= 1e1 or math.abs(obj.C1.Position.Magnitude) >= 1e1 or obj.Enabled == false or obj.Part1 == nil or obj.Part0 == nil)then
+				c({"joint_tampering ("..v..")"})
+				break
 			end
 		end
 
@@ -7424,7 +7459,9 @@ function dochecks(object)
 	return false
 end
 
+local refitting = false
 function newchar(c)
+	refitting = true
 	task.defer(function()
 		clearall()
 		char = c
@@ -7459,145 +7496,65 @@ function newchar(c)
 
 		orighp = hum.Health
 		table.insert(connections, hum.HealthChanged:Connect(function()
+			if(refitting)then return end
 			dochecks()
 		end))
 
 		table.insert(connections, char.HumanoidRootPart:GetPropertyChangedSignal("CFrame"):Connect(function()
+			if(refitting)then return end
 			dochecks()
 		end))
 
 		table.insert(connections, char.DescendantRemoving:Connect(function(v)
+			if(refitting)then return end
 			dochecks(v)
 		end))
 		table.insert(connections, char.DescendantAdded:Connect(function(v)
+			if(refitting)then return end
 			dochecks(v)
 		end))
 
 		table.insert(connections, char.AncestryChanged:Connect(function()
+			if(refitting)then return end
 			dochecks()
 		end))
-
-		table.insert(connections, heartbeat:Connect(function()
-			pcall(function()
-				if(Vector3.zero - char:GetPivot().Position).Magnitude < 1e5 then
-					local param = RaycastParams.new()
-					param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
-					local ray = workspace:Raycast(char:GetPivot().Position, Vector3.new(0,-5,0), param)
-					if(ray)then
-						CFRAMES.CHARACTER.Character = char:GetPivot()
-						CFRAMES.CHARACTER.Head = char.Head.CFrame
-						CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
-					end
-				end
-			end)
-			dochecks()
-		end))
+		refitting = false
 	end)
 end
 
 local delta = 0
-local delta2 = 0
 
 local mus = nil
 local lastmuspos = 0
 
-local objectstocheck = {
-	"Head", "Torso", "Right Arm", "Right Leg", "Left Arm", "Left Leg", "HumanoidRootPart"
-}
-
-local shouldnotbetransparentorsmall = {
-	"Head", "Right Leg", "Left Leg", "Left Arm", "Right Arm", "Torso"
-}
-
-local jointstocheck = {
-	"Neck", "RootJoint", "Left Shoulder", "Left Hip", "Right Shoulder", "Right Hip",
-}
-
 local lastcharcf = CFrame.identity
 
 heartbeat:Connect(function(dt)
-	delta = delta + dt
-	delta2 = delta2 + dt
-	if(delta >= .1)then
-		delta = 0
+	if(refitting)then return end
 
-		local counters = {}
-		local function addCounter(name)
-			table.insert(counters, name)
-		end
-
-		local refitted = false
-		if(not char or not char:IsDescendantOf(workspace))then
-			refitted = true
-			addCounter({"ancestry_tamper(nil?)"})
-		elseif(not char:FindFirstChildOfClass("Humanoid"))then
-			refitted = true
-			addCounter({"humanoid_removal"})
-		elseif(math.abs(char:GetPivot().Position.Magnitude) >= 1e4)then
-			refitted = true
-			addCounter({"void_throw"})
-		end
-
-		for i, v in next, objectstocheck do
-			if(not char:FindFirstChild(v, true))then
-				refitted = true
-				addCounter({"intrusion"})
-				break
-			end
-		end
-
-		for i, v in next, shouldnotbetransparentorsmall do
-			local obj = char:FindFirstChild(v, true)
-			if(not obj or obj.Transparency >= .1 or math.abs(obj.Size.Magnitude) <= 1)then
-				refitted = true
-				addCounter({"object_tampering ("..v..")"})
-				break
-			end
-		end
-
-		for i, v in next, jointstocheck do
-			local obj = char:FindFirstChild(v, true)
-			if(not obj or math.abs(obj.C0.Position.Magnitude) >= 1e1 or math.abs(obj.C1.Position.Magnitude) >= 1e1 or obj.Enabled == false or obj.Part1 == nil or obj.Part0 == nil)then
-				refitted = true
-				addCounter({"joint_tampering ("..v..")"})
-				break
-			end
-		end
-
-		local numofdescc = 0
-		local physicstamper = false
-		for i, v in next, char:GetDescendants() do
-			if(v:IsA("ForceField") or v:IsA("BodyVelocity") or v:IsA("LuaSourceContainer") or v:IsA("JointInstance") or v:IsA("Sound") or v.Name == "Eye" or v:FindFirstAncestor("Eye") or v.Name == "Broom" or v:FindFirstAncestor("Broom"))then
-				continue
-			end
-			numofdescc = numofdescc + 1
-			if(v:IsA("BasePart") and v.Anchored)then
-				physicstamper = true
-			end
-		end
-		if(numofdescc > numofdesc)then
-			refitted = true
-			addCounter("intrusion")
-		end
-		if(physicstamper)then
-			refitted = true
-			addCounter("physics_tampering")
-		end
-
-		if(refitted)then
-			clearall()
-			respawn()
-			counter(counters)
-			task.spawn(function()
-				task.wait(1/10)
-				clearall()
-				respawn()
-			end)
+	local pivot = char:GetPivot()
+	if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
+		local param = RaycastParams.new()
+		param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
+		local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
+		if(ray)then
+			CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
+			CFRAMES.CHARACTER.Head = char.Head.CFrame
+			CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
 		end
 	end
 
-	if(delta2 >= .1)then
-		delta2 = 0
+	delta = delta + dt
+	if(dochecks())then
+		task.spawn(function()
+			task.wait(1/10)
+			clearall()
+			respawn()
+		end)
+	end
+
+	if(delta >= .1)then
+		delta = 0
 		if(char:FindFirstChild("HumanoidRootPart").CFrame ~= lastcharcf)then
 			lastcharcf = char:FindFirstChild("HumanoidRootPart").CFrame
 			charclone()
