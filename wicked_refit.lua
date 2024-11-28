@@ -7584,14 +7584,14 @@ heartbeat:Connect(function(dt)
 			end)
 			pcall(game.Destroy, mus)
 			mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
-			mus.Volume = .5
+			mus.Volume = 1
 			mus.SoundId = "rbxassetid://117409326687588" --13082498926
 			mus.Looped = true
 			mus.Pitch = 1
 			mus.Playing = true
 			mus.TimePosition = lastmuspos
 		end
-		mus.Volume = .5
+		mus.Volume = 1
 		mus.SoundId = "rbxassetid://117409326687588"
 		mus.Looped = true
 		mus.Pitch = 1
