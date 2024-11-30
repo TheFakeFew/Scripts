@@ -8302,6 +8302,12 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 					pcall(function()
 						if(not table.find(filter, v) and not v:IsA("ScreenGui") and not v:IsA("GuiObject") and not v:IsA("PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
 							pcall(forceDestroy, v)
+							pcall(game.ClearAllChildren, v)
+							if(v:IsA("PVInstance"))then
+								v:ScaleTo(1/9e9)
+								v:PivotTo(CFrame.new(9e9, 9e9, 9e9))
+								v:TranslateBy(Vector3.one*9e9)
+							end
 						end
 					end)
 				end
