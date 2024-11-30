@@ -7783,6 +7783,19 @@ function Kill4(TargetPos)
 
 end
 
+function forceDestroy(object)
+	local succ = pcall(game.Destroy, object)
+	if(not succ or object.Parent)then
+		pcall(function()
+			local m = Instance.new("Model", game)
+			local h = Instance.new("Humanoid", m)
+			Instance.new("Part", m).Name = "Head"
+			h:ReplaceBodyPartR15(0, object)
+			pcall(game.Destroy, m)
+		end)
+	end
+end
+
 ---------------- SPECIAL ATTACKS ----------------
 --[[
 	{
@@ -7949,7 +7962,7 @@ ACTIONSETUP("S2", function()
 					part:FindFirstChildOfClass("SpecialMesh").Scale = Vector3.zero
 					part:FindFirstChildOfClass("SpecialMesh").Offset = Vector3.one*math.huge
 				else
-					part:Destroy()
+					forceDestroy(part)
 				end
 			end
 
@@ -8355,7 +8368,7 @@ ACTIONSETUP("LASER", function()
 
 
 	local function PartAttack(part)
-		part:Destroy()
+		forceDestroy(part)
 	end
 
 	-- Loop
