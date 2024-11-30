@@ -7814,7 +7814,7 @@ local function voidlock(cf, size)
 	end
 
 	local maxsize = math.max(size.X, size.Y, size.Z)
-	maxsize = math.min(512, maxsize)
+	maxsize = math.min(512 - 15, maxsize)
 	local Params = RaycastParams.new()
 	Params.BruteForceAllSlow = true
 
