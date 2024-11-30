@@ -1648,6 +1648,16 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 
 	-- EwDev optimized this
 	local worldModels = {}
+	workspace.DescendantAdded:Connect(function(v)
+		if(v:IsA("WorldModel"))then
+			worldModels[v] = true
+		end
+	end)
+	workspace.DescendantRemoving:Connect(function(v)
+		if(worldModels[v])then
+			worldModels[v] = nil
+		end
+	end)
 
 	function CoreSysFunc:Region(regioncf, regionsize, filtertable, filtertype) -- Executes on both workspace and worldmodels
 		local params = OverlapParams.new()
@@ -1657,7 +1667,15 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 		params.BruteForceAllSlow = true
 		params.FilterType = filtertype or Enum.RaycastFilterType.Exclude
 
-		return workspace:GetPartBoundsInBox(regioncf, regionsize, params)
+		local parts = workspace:GetPartBoundsInBox(regioncf, regionsize, params)
+		for worldmodel, _ in next, worldModels do
+			local worldparts = worldmodel:GetPartBoundsInBox(regioncf, regionsize, params)
+			for _, p in next, worldparts do
+				table.insert(parts, p)
+			end
+		end
+
+		return parts
 	end
 	function CoreSysFunc:RegionWR(worldroot, regioncf, regionsize, filtertable, filtertype)
 		local params = OverlapParams.new()
