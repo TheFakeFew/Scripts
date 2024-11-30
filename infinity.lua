@@ -160,21 +160,25 @@ local function ischaracter(model)
 	end
 	return false
 end
+
 for i, v in next, workspace:GetChildren() do
 	if(ischaracter(v) and v ~= char)then
 		table.insert(characters, v)
 	end
 end
+
 workspace.ChildAdded:Connect(function(v)
 	if(ischaracter(v))then
 		table.insert(characters, v)
 	end
 end)
+
 workspace.ChildRemoved:Connect(function(v)
 	if(table.find(characters, v))then
 		table.remove(characters, table.find(characters, v))
 	end
 end)
+
 function soundeff(par, id, vol, pit)
 	local a = Instance.new("Sound", par)
 	a.SoundId = "rbxassetid://"..id
@@ -183,60 +187,7 @@ function soundeff(par, id, vol, pit)
 	a.PlayOnRemove = true
 	a:Destroy()
 end
-local function effect(p)
-    p.Archivable = true
-	if(p:IsA("BasePart"))then
-		local a = p:Clone()
-		a.Parent = workspace.Terrain
-		a.Name = ""
-		a.Anchored = true
-		a.CanCollide = false
-		a.Transparency += .9
-		a.Size *= .9
-		a:BreakJoints()
-		for i, v in next, a:GetChildren() do
-			if(v:IsA("BasePart") or v:IsA("JointsInstance") or v:IsA("Decal"))then
-				pcall(game.Destroy, v)
-			elseif(v:IsA("SpecialMesh"))then
-				v.TextureId = ""
-			end
-		end
-		if(a:IsA("MeshPart"))then
-			a.TextureID = ""
-		end
-		game:GetService("TweenService"):Create(a, TweenInfo.new(.5), {
-			Transparency = 1,
-			Color = Color3.new(1,1,1)
-		}):Play()
-		task.delay(.5, game.Destroy, a)
-	else
-		local clone = p:Clone()
-		for i, v in next, clone:GetDescendants() do
-			if(v:IsA("JointsInstance") or v:IsA("Decal") or v:IsA("Humanoid") or v:IsA("LuaSourceContainer"))then
-				pcall(game.Destroy, v)
-			elseif(v:IsA("SpecialMesh"))then
-				v.TextureId = ""
-			elseif(v:IsA("MeshPart"))then
-				v.TextureID = ""
-			end
-		end
-		clone.Parent = workspace.Terrain
-		for _, a in next, clone:GetDescendants() do
-			if(a:IsA("BasePart"))then
-				a.Anchored = true
-				a.CanCollide = false
-				a.Transparency += .5
-				a.Size *= .9
-				game:GetService("TweenService"):Create(a, TweenInfo.new(.5), {
-					Transparency = 1,
-					Color = Color3.new(1,1,1)
-				}):Play()
-				task.delay(.5, game.Destroy, a)
-			end
-		end
-		task.delay(.5, game.Destroy, clone)
-	end
-end
+
 local infinity = false
 mouse.KeyDown:Connect(function(k)
 	if(k == "f")then
@@ -255,6 +206,7 @@ mouse.KeyDown:Connect(function(k)
 		end
 	end
 end)
+
 game:GetService("RunService").Stepped:Connect(function()
 	for i, v in next, characters do
 		if(not v:IsDescendantOf(workspace) or not v:FindFirstChildOfClass("Humanoid") or not v:FindFirstChildOfClass("Humanoid"):FindFirstChildOfClass("Animator") or not v:FindFirstChild("HumanoidRootPart"))then
@@ -276,8 +228,6 @@ game:GetService("RunService").Stepped:Connect(function()
 				local speed = math.clamp(distance - 16, 0, 16)
 				v:FindFirstChildOfClass("Humanoid").WalkSpeed = speed
 				v.AnimSpeed.Value = math.clamp(speed/16, .1, 1)
-				
-				effect(v)
 			else
 				v.InRange.Value = false
 				v.AnimSpeed.Value = 1
@@ -295,8 +245,6 @@ game:GetService("RunService").Stepped:Connect(function()
 				
 				v.AssemblyLinearVelocity *= factor
 				v.AssemblyAngularVelocity *= math.clamp(factor, 0, 1)
-				
-				effect(v)
 			end
 		end
 	end
