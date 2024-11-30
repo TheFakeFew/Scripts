@@ -7796,6 +7796,49 @@ function forceDestroy(object)
 	end
 end
 
+local function isLocked(obj)
+	return not pcall(function() return obj.Parent end)
+end
+
+local function bulkmovevoid(ins)
+	pcall(workspace.BulkMoveTo, workspace, {ins}, {CFrame.new(9e9, 9e9, 9e9)}, Enum.BulkMoveMode.FireCFrameChanged)
+end
+
+local function voidlock(cf, size)
+	if(typeof(cf) == "Vector3")then
+		cf = CFrame.new(cf)
+	end
+
+	if(typeof(size) == "number")then
+		size = Vector3.one*size
+	end
+
+	local maxsize = math.max(size.X, size.Y, size.Z)
+	local Params = RaycastParams.new()
+	Params.BruteForceAllSlow = true
+
+	for i = 0, 90 do
+		hn(function()
+			for _ = 1, 10 do
+				local Rays = {}
+				table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,maxsize+5,0), size, Vector3.new(0,-(maxsize+15),0), Params))
+				table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,0,maxsize+5), size, Vector3.new(0,0,-(maxsize+15)), Params))
+				table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(maxsize+5,0,0), size, Vector3.new(-(maxsize+15),0,0), Params))
+
+				for _, ray in next, Rays do
+					if(isLocked(ray.Instance))then
+						bulkmovevoid(ray.Instance)
+						forceDestroy(ray.Instance)
+					end
+				end
+				table.clear(Rays)
+			end
+		end)
+
+		task.wait()
+	end
+end
+
 ---------------- SPECIAL ATTACKS ----------------
 --[[
 	{
@@ -7962,7 +8005,9 @@ ACTIONSETUP("S2", function()
 					part:FindFirstChildOfClass("SpecialMesh").Scale = Vector3.zero
 					part:FindFirstChildOfClass("SpecialMesh").Offset = Vector3.one*math.huge
 				else
-					forceDestroy(part)
+					local s = Instance.new("SpecialMesh", part)
+					s.Offset = Vector3.one*math.huge
+					s.Scale = Vector3.zero
 				end
 			end
 
@@ -8156,6 +8201,8 @@ ACTIONSETUP("S4", function()
 						end)
 					end
 					table.clear(attackfilter)
+
+					voidlock(RegionCFrame, RegionSize)
 				end)
 			end)
 
@@ -8264,6 +8311,8 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 					end)
 				end
 				table.clear(filter)
+
+				voidlock(RegionCFrame, RegionSize)
 			end)
 		end)
 
@@ -8381,6 +8430,8 @@ ACTIONSETUP("LASER", function()
 				end)
 			end
 			table.clear(attackfilter)
+
+			voidlock(RegionCFrame, RegionSize)
 		end)
 	end)
 
