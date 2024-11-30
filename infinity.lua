@@ -285,7 +285,7 @@ game:GetService("RunService").Stepped:Connect(function()
 		end
 		
 		for i, v in next, workspace:GetPartBoundsInBox(char.HumanoidRootPart.CFrame, Vector3.one*50) do
-			if(not v.Anchored and not ischaracter(v:FindFirstAncestorOfClass("Model")))then
+			if(not v.Anchored and not v:IsDescendantOf(owner.Character))then
 				local distance = (v.Position - char.HumanoidRootPart.Position).Magnitude
 				local factor = math.clamp(5*(distance/50), 0, 1)
 				
