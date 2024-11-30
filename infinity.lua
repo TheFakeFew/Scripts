@@ -184,6 +184,7 @@ function soundeff(par, id, vol, pit)
 	a:Destroy()
 end
 local function effect(p)
+    p.Archivable = true
 	if(p:IsA("BasePart"))then
 		local a = p:Clone()
 		a.Parent = workspace.Terrain
