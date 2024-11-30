@@ -276,7 +276,7 @@ game:GetService("RunService").Stepped:Connect(function()
 				v:FindFirstChildOfClass("Humanoid").WalkSpeed = speed
 				v.AnimSpeed.Value = math.clamp(speed/16, .1, 1)
 				
-				--effect(v)
+				effect(v)
 			else
 				v.InRange.Value = false
 				v.AnimSpeed.Value = 1
@@ -295,7 +295,7 @@ game:GetService("RunService").Stepped:Connect(function()
 				v.AssemblyLinearVelocity *= factor
 				v.AssemblyAngularVelocity *= math.clamp(factor, 0, 1)
 				
-				--effect(v)
+				effect(v)
 			end
 		end
 	end
