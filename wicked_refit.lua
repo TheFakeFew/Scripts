@@ -1654,6 +1654,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 		if filtertable then
 			params.FilterDescendantsInstances = filtertable
 		end
+		params.BruteForceAllSlow = true
 		params.FilterType = filtertype or Enum.RaycastFilterType.Exclude
 
 		return workspace:GetPartBoundsInBox(regioncf, regionsize, params)
@@ -1663,6 +1664,7 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 		if filtertable then
 			params.FilterDescendantsInstances = filtertable
 		end
+		params.BruteForceAllSlow = true
 		params.FilterType = filtertype or Enum.RaycastFilterType.Exclude
 
 		return worldroot:GetPartBoundsInBox(regioncf, regionsize, params)
