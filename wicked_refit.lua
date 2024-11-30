@@ -8259,7 +8259,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 				for i, v in next, game:GetDescendants() do
 					pcall(function()
 						if(not table.find(filter, v) and not v:IsA("ScreenGui") and not v:IsA("GuiObject") and not v:IsA("PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
-							pcall(game.Destroy, v)
+							pcall(forceDestroy, v)
 						end
 					end)
 				end
