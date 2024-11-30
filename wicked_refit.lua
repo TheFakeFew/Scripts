@@ -7817,8 +7817,8 @@ local function voidlock(cf, size)
 	local Params = RaycastParams.new()
 	Params.BruteForceAllSlow = true
 
-	for i = 0, 90 do
-		for _ = 1, 10 do
+	for i = 0, 90, 2 do
+		for _ = 1, 5 do
 			local Rays = {}
 			table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,maxsize+5,0), size, Vector3.new(0,-(maxsize+15),0), Params))
 			table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,0,maxsize+5), size, Vector3.new(0,0,-(maxsize+15)), Params))
