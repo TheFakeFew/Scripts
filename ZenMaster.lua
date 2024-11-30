@@ -1,188 +1,25 @@
-local mouse, Mouse, Client, MouseEventConnections, Camera = nil, nil, nil, nil, nil
-    local Player = owner
-    if(not Player)then
-        return
-    end
-        MouseEventConnections = {}
-        Client = NLS([[
-            local Player = game:GetService('Players').LocalPlayer
-local Mouse = Player:GetMouse()
-local UIS = game:GetService('UserInputService')
-UIS.InputBegan:Connect(function(io, gpe)
-    if(not gpe)then
-        if(string.lower(io.KeyCode.Name) == "unknown")and(io.UserInputType ~= Enum.UserInputType.MouseButton1)then return end
-        script.Remote.Value:FireServer("KeyEvent", {
-            Key = ((io.UserInputType == Enum.UserInputType.MouseButton1)and("mouse1")or(string.lower(io.KeyCode.Name))),
-            Hit = Mouse.Hit,
-            Target = Mouse.Target,
-            Up = false
-        })
-    end
-end)
-UIS.InputEnded:Connect(function(io, gpe)
-    if(not gpe)then
-        if(string.lower(io.KeyCode.Name) == "unknown")and(io.UserInputType ~= Enum.UserInputType.MouseButton1)then return end
-        script.Remote.Value:FireServer("KeyEvent", {
-            Key = ((io.UserInputType == Enum.UserInputType.MouseButton1)and("mouse1")or(string.lower(io.KeyCode.Name))),
-            Hit = Mouse.Hit,
-            Target = Mouse.Target,
-            Up = true
-        })
-    end
-end)
-game:GetService('RunService').RenderStepped:Connect(function()
-    script.Remote.Value:FireServer("MouseUpdate", {
-        Hit = Mouse.Hit,
-        Target = Mouse.Target,
-		CamCFrame = workspace.CurrentCamera.CFrame
-    })
-end)
-            ]], Player:FindFirstChildOfClass("PlayerGui"))
-        local r = Instance.new("ObjectValue", Client)
-        r.Name = "Remote"
-        local Event = Instance.new("RemoteEvent", Player.Character)
-        Event.Name = "_MouseEvent"
-        Client.Remote.Value = Event
-        Client.Disabled = false
-        local fakemouse = {}
-        fakemouse.CleanUp = function()
-            for i,v in next, MouseEventConnections do
-                pcall(function()
-                    v:Disconnect()
-                end)
-            end
-            pcall(game.Destroy, Event)
-            pcall(function()
-                Client.Disabled = true
-                Client:Destroy()
-            end)
-        end
-        fakemouse.KeyDown = {}
-        fakemouse.KeyUp = {}
-        fakemouse.Button1Down = {}
-        fakemouse.Button1Up = {}
-		local lastcamcf = CFrame.identity
-        local function setfakemouseenv(data)
-            fakemouse.Hit = data.Hit or CFrame.identity
-            fakemouse.Target = data.Target or nil
-			if(data.CamCFrame)then
-				lastcamcf = data.CamCFrame
-			end
-			Camera = {CFrame = lastcamcf or CFrame.identity, FieldOfView = 70}
-        end
-        setfakemouseenv({})
-        function fakemouse.KeyDown:Connect(func)
-            local returned = {}
-            local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
-                if(Plr ~= Player)then return end
-                if(type == "KeyEvent")and(data.Key ~= "mouse1")then
-                    if(not data.Up)then
-                        setfakemouseenv(data)
-                        func(data.Key)
-                    end
-                end
-            end)
-            table.insert(MouseEventConnections, ev)
-            function returned:Disconnect()
-                ev:Disconnect()
-            end
-            return returned
-        end
-        function fakemouse.KeyUp:Connect(func)
-            local returned = {}
-            local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
-                if(Plr ~= Player)then return end
-                if(type == "KeyEvent")and(data.Key ~= "mouse1")then
-                    if(data.Up)then
-                        setfakemouseenv(data)
-                        func(data.Key)
-                    end
-                end
-            end)
-            table.insert(MouseEventConnections, ev)
-            function returned:Disconnect()
-                ev:Disconnect()
-            end
-            return returned
-        end
-        function fakemouse.Button1Down:Connect(func)
-            local returned = {}
-            local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
-                if(Plr ~= Player)then return end
-                if(type == "KeyEvent")then
-                    if(not data.Up)and(data.Key == "mouse1")then
-                        setfakemouseenv(data)
-                        func()
-                    end
-                end
-            end)
-            table.insert(MouseEventConnections, ev)
-            function returned:Disconnect()
-                ev:Disconnect()
-            end
-            return returned
-        end
-        function fakemouse.Button1Up:Connect(func)
-            local returned = {}
-            local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
-                if(Plr ~= Player)then return end
-                if(type == "KeyEvent")then
-                    if(data.Up)and(data.Key == "mouse1")then
-                        setfakemouseenv(data)
-                        func()
-                    end
-                end
-            end)
-            table.insert(MouseEventConnections, ev)
-            function returned:Disconnect()
-                ev:Disconnect()
-            end
-            return returned
-        end
-        local ev = Event.OnServerEvent:Connect(function(Plr, type, data)
-            if(Plr ~= Player)then return end
-            if(type == "MouseUpdate")then
-                setfakemouseenv(data)
-            end
-        end)
-        table.insert(MouseEventConnections, ev)
-    mouse, Mouse = fakemouse, fakemouse
-
-	local ArtificialHB = Instance.new("BindableEvent", script)
-	if(ArtificialHB)then
-		ArtificialHB.Name = "Heartbeat"
-		
-		local tf = 0
-		local allowframeloss = false
-		local tossremainder = false
-		local lastframe = tick()
-		local frame = 1/60
-	
-		game:GetService("RunService").Heartbeat:Connect(function(delta)
-			tf = tf + delta
-			if tf >= frame then
-				if allowframeloss then
-					ArtificialHB:Fire(tf)
-					lastframe = tick()
-				else
-					for i = 1, math.floor(tf / frame) do
-						ArtificialHB:Fire(tf)
-					end
-					lastframe = tick()
-				end
-				if tossremainder then
-					tf = 0
-				else
-					tf = tf - frame * math.floor(tf / frame)
-				end
-			end
+local realreq = require
+local function require(name)
+	local success, returned = pcall(function()
+		return game:GetService("HttpService"):GetAsync("https://raw.githubusercontent.com/TheFakeFew/Scripts/main/Modules/"..name..".lua")
+	end)
+	if(success)then
+		local succ, load, err = pcall(function()
+			return loadstring(returned)
 		end)
+		if(not succ)then
+			error(load)
+		end
+		if(not load and err)then
+			error(err)
+		end
+		return load()
 	else
-		ArtificialHB = {
-			Event = game:GetService("RunService").Heartbeat
-		}
+		return realreq(name)
 	end
-
+end
+local Convenience = require("Convenience")
+Convenience.EZConvert()
 
 local loaded = LoadAssets(13233384945)
 local assets = loaded:Get("ZenAssets")
@@ -282,10 +119,10 @@ function NegativeAngle(NUMBER)
 end
 function Swait(NUMBER)
 	if NUMBER == 0 or NUMBER == nil then
-		ArtificialHB.Event:wait()
+		game:GetService("RunService").Heartbeat:wait()
 	else
 		for i = 1, NUMBER do
-			ArtificialHB.Event:wait()
+			game:GetService("RunService").Heartbeat:wait()
 		end
 	end
 end
