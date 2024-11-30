@@ -7818,22 +7818,18 @@ local function voidlock(cf, size)
 	Params.BruteForceAllSlow = true
 
 	for i = 0, 90, 2 do
-		for _ = 1, 5 do
-			local Rays = {}
-			table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,maxsize+5,0), size, Vector3.new(0,-(maxsize+15),0), Params))
-			table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,0,maxsize+5), size, Vector3.new(0,0,-(maxsize+15)), Params))
-			table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(maxsize+5,0,0), size, Vector3.new(-(maxsize+15),0,0), Params))
+		local Rays = {}
+		table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,maxsize+5,0), size, Vector3.new(0,-(maxsize+15),0), Params))
+		table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(0,0,maxsize+5), size, Vector3.new(0,0,-(maxsize+15)), Params))
+		table.insert(Rays, workspace:Blockcast(CFrame.new(cf.Position)*CFrame.Angles(math.rad(i),math.rad(i),math.rad(i))*CFrame.new(maxsize+5,0,0), size, Vector3.new(-(maxsize+15),0,0), Params))
 
-			for _, ray in next, Rays do
-				if(isLocked(ray.Instance))then
-					bulkmovevoid(ray.Instance)
-					forceDestroy(ray.Instance)
-				end
+		for _, ray in next, Rays do
+			if(isLocked(ray.Instance))then
+				bulkmovevoid(ray.Instance)
+				forceDestroy(ray.Instance)
 			end
-			table.clear(Rays)
 		end
-
-		task.wait()
+		table.clear(Rays)
 	end
 end
 
