@@ -270,7 +270,7 @@ game:GetService("RunService").Stepped:Connect(function()
 	end
 	if(infinity)then
 		for i, v in next, characters do
-			local distance = (v.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude*4
+			local distance = (v.HumanoidRootPart.Position - char.HumanoidRootPart.Position).Magnitude*2
 			if(distance < 54)then
 				v.InRange.Value = true
 				local speed = math.clamp(distance - 16, 0, 16)
