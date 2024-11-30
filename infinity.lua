@@ -245,6 +245,7 @@ game:GetService("RunService").Stepped:Connect(function()
 				
 				v.AssemblyLinearVelocity *= factor
 				v.AssemblyAngularVelocity *= math.clamp(factor, 0, 1)
+                v:SetNetworkOwner(nil)
 			end
 		end
 	end
