@@ -149,13 +149,9 @@ end)
     mouse, Mouse = fakemouse, fakemouse
 
 
-local Player = nil
-if script:FindFirstAncestorWhichIsA("Model") then
-	Player = game:GetService("Players"):GetPlayerFromCharacter(script:FindFirstAncestorWhichIsA("Model"))
-elseif script:FindFirstAncestorWhichIsA("Player") then
-	Player = script:FindFirstAncestorWhichIsA("Player")
-end
+local Player = owner
 local char = Player.Character
+
 local characters = {}
 local function ischaracter(model)
 	if(not model)then return end
