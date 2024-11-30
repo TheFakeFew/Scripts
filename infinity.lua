@@ -289,7 +289,7 @@ game:GetService("RunService").Stepped:Connect(function()
 				local distance = (v.Position - char.HumanoidRootPart.Position).Magnitude
 				local factor = math.clamp(5*(distance/50), 0, 1)
 				
-				if(distance < 3)then
+				if(distance < 6)then
 					factor = -2
 				end
 				
