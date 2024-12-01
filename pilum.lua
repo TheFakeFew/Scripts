@@ -1903,10 +1903,6 @@ local LastTarget = nil
 
 function Update()
 
-	if math.random(-20,20)==20 and IsHost==true then
-		if not IsStudio then ContextActionService:UnbindAllActions() end
-	end
-
 	if Remote~=nil and Remote:IsDescendantOf(game) then
 		--FireServerStuff
 		local MouseH,target = GetMouseHit()
