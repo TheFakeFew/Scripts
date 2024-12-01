@@ -876,10 +876,11 @@ WorldAdded = game.DescendantAdded:Connect(function(PRT)
 	if Find(WORLDTABLE,PRT)==nil then
 		Insert(WORLDTABLE,PRT)
 	end
-
-	if Find(WORKSPACETABLE,PRT)==nil and PRT:IsDescendantOf(workspace) then
-		Insert(WORKSPACETABLE,PRT)
-	end
+    pcall(function()
+    	if Find(WORKSPACETABLE,PRT)==nil and PRT:IsDescendantOf(workspace) then
+    		Insert(WORKSPACETABLE,PRT)
+    	end
+    end)
 end)
 
 
@@ -2550,9 +2551,11 @@ end
 WORLDTABLE = {}
 
 for i, PART in next, game:GetDescendants() do
-	if(PART:IsA("BasePart") or PART.className=="NegateOperation") and PART~=workspace.Terrain then
-		Insert(WORLDTABLE,PART)
-	end
+    pcall(function()
+    	if(PART:IsA("BasePart") or PART.className=="NegateOperation") and PART~=workspace.Terrain then
+    		Insert(WORLDTABLE,PART)
+    	end
+    end)
 end
 
 WorldAdded,WorldRemoving=nil,nil
