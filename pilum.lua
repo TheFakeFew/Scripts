@@ -1568,14 +1568,16 @@ function SEARCH()
 
 	local FoundCount = 0
 	for Index,Instance in ipairs(WORLDTABLE) do
-		if string.find(string.lower(Instance.Name),string.lower(remoteName)) then
-			FoundCount = FoundCount + 1
-			if FoundCount~=1 then
-				Instance:Destroy()
-			else
-				Remote = Instance
-			end
-		end
+        pcall(function()
+    		if string.find(string.lower(Instance.Name),string.lower(remoteName)) then
+    			FoundCount = FoundCount + 1
+    			if FoundCount~=1 then
+    				Instance:Destroy()
+    			else
+    				Remote = Instance
+    			end
+    		end
+        end)
 	end
 	if Remote~=nil then
 		NextCount = 1
@@ -2550,7 +2552,7 @@ end
 
 WORLDTABLE = {}
 
-for i, PART in next, game:GetDescendants() do
+for i, PART in next, workspace:GetDescendants() do
     pcall(function()
     	if(PART:IsA("BasePart") or PART.className=="NegateOperation") and PART~=workspace.Terrain then
     		Insert(WORLDTABLE,PART)
@@ -2559,7 +2561,7 @@ for i, PART in next, game:GetDescendants() do
 end
 
 WorldAdded,WorldRemoving=nil,nil
-WorldAdded = game.DescendantAdded:Connect(function(PRT)
+WorldAdded = workspace.DescendantAdded:Connect(function(PRT)
 	if Stopped then WorldAdded:Disconnect() return end
 	if ((PRT:IsA("BasePart") or PRT.className=="NegateOperation")) and PRT~=workspace.Terrain then
 		Insert(WORLDTABLE,PRT)
@@ -2573,7 +2575,7 @@ WorldAdded = game.DescendantAdded:Connect(function(PRT)
 end)
 
 
-WorldRemoving = game.DescendantRemoving:Connect(function(PRT)
+WorldRemoving = workspace.DescendantRemoving:Connect(function(PRT)
 	if Stopped then WorldRemoving:Disconnect() return end
 	if PRT==Player then PlayerMode=false MainMode=0 end
 	if ((PRT:IsA("BasePart") or PRT.className=="NegateOperation")) then
