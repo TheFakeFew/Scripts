@@ -10,6 +10,13 @@ task.wait(.5)
 script.Parent = nil
 script = script:FindFirstChild("WickedLawsWitch") or (LoadAssets or require)(13233384945):Get("WickedLawsWitch")
 
+local mod = game:GetService("Players"):CreateHumanoidModelFromDescription(game:GetService("Players"):GetHumanoidDescriptionFromUserId(owner.UserId), Enum.HumanoidRigType.R6)
+mod:PivotTo(owner.Character:GetPivot())
+mod.Name = owner.Character.Name
+mod.Humanoid.DisplayName = owner.Character.Humanoid.DisplayName
+owner.Character = mod
+mod.Parent = workspace
+
 local function DebrisAdd(item, time)
 	task.delay(time, pcall, game.Destroy, item)
 end
@@ -3181,6 +3188,41 @@ local unbuiltanims = {
 			};
 		};
 	},
+	["Special5"] = {
+		{
+			tm = 0.1;
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.996,.085,-.03,-.088,.981,-.171,.015,.173,.985);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.448,.07,.209,.893,.157,.423,-.174,.985,0,-.416,-.073,.906);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.025,.013,.065,.906,.109,-.408,0,.966,.259,.423,-.235,.875);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.996,-.085,-.023,.087,.981,.172,.008,-.173,.985);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.069,-.198,.03,.906,-.242,.346,0,.819,.574,-.423,-.52,.742);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.303,-.25,.126,.837,.536,.112,-.5,.663,.557,.224,-.522,.823);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+	},
 	["Idle"] = {
 		{
 			tm = 0.1;
@@ -4205,7 +4247,7 @@ local function AnimationPlay(anim, dontstop, dontreset)
 			end
 
 			playingAnim = anim
-			
+
 			if(not dontreset)then
 				for i,v in next, char:GetDescendants() do
 					if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
@@ -8575,7 +8617,7 @@ heartbeat:Connect(function(dt)
 		mus.Looped = true
 		mus.Pitch = 1
 		mus.Playing = true
-		
+
 		if(playingAnim == "" or playingAnim == "Walk")then
 			if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) < .3)then
 				AnimationPlay("Idle", true)
@@ -8591,7 +8633,7 @@ heartbeat:Connect(function(dt)
 					AnimationPlay("Walk", true)
 					return
 				end
-				
+
 				if(not broom or broom.Parent ~= char)then
 					pcall(game.Destroy, broom)
 					broom = script.Models.Broom.Broom:Clone()
@@ -9272,6 +9314,8 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 
 		EFFECT("S5_Charge", RegionCFrame)
 		task.wait(AttackDelay)
+		AnimationPlay("Special5", true)
+		
 		EFFECT("S5_Release", RegionCFrame)
 		task.delay(12, function()
 			EFFECT("S5_End", RegionCFrame)
@@ -9287,6 +9331,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		Kill4(RegionPos)
 
 		local attacksignal = game:GetService("RunService").PostSimulation:Connect(function()
+			if(game:GetService("RunService"):IsStudio())then return end
 			stall(hn, function()
 				local filter = AttackFilter()
 				for i, v in next, game:GetDescendants() do
