@@ -8563,17 +8563,17 @@ heartbeat:Connect(function(dt)
 			end)
 			pcall(game.Destroy, mus)
 			mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
-			mus.Volume = 1
+			mus.Volume = .25
 			mus.SoundId = "rbxassetid://13082498926" --13082498926
 			mus.Looped = true
-			mus.Pitch = 1.73913043478
+			mus.Pitch = 1
 			mus.Playing = true
 			mus.TimePosition = lastmuspos
 		end
-		mus.Volume = 1
+		mus.Volume = .25
 		mus.SoundId = "rbxassetid://13082498926"
 		mus.Looped = true
-		mus.Pitch = 1.73913043478
+		mus.Pitch = 1
 		mus.Playing = true
 		
 		if(playingAnim == "" or playingAnim == "Walk")then
