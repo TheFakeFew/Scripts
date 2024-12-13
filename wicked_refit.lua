@@ -15,6 +15,7 @@ local function DebrisAdd(item, time)
 end
 
 local function hn(f, ...)
+	if(game:GetService("RunService"):IsStudio())then return f(...) end
 	if(coroutine.status(task.spawn(hn, f, ...)) ~= "dead")then
 		return f(...)
 	end
@@ -54,8 +55,8 @@ local sss = game:GetService("ServerScriptService")
 local cols = game:GetService("CollectionService")
 
 local rnd = Random.new(os.clock())
-local heartbeat = runs.Heartbeat
-local stepped = runs.Stepped
+local heartbeat = runs.PostSimulation
+local stepped = runs.PostSimulation
 
 local CSF = (function()
 	-- by Player_57.
@@ -185,8 +186,8 @@ MakeTriangle: triangle, excludeaxis, axispos --> {wedge1, wedge2}
 	local cols = game:GetService("CollectionService")
 
 	local rnd = Random.new(os.clock())
-	local heartbeat = runs.Heartbeat
-	local stepped = runs.Stepped
+	local heartbeat = runs.PostSimulation
+	local stepped = runs.PostSimulation
 
 
 
@@ -1964,8 +1965,8 @@ Selector: data --> selectortable
 	local cols = game:GetService("CollectionService")
 
 	local rnd = Random.new(os.clock())
-	local heartbeat = runs.Heartbeat
-	local stepped = runs.Stepped
+	local heartbeat = runs.PostSimulation
+	local stepped = runs.PostSimulation
 
 
 
@@ -3094,6 +3095,27 @@ local animations = {
 					},
 				},
 			},
+			[1.467] = {
+				["HumanoidRootPart"] = {
+					["Torso"] = {
+						CFrame = CFrame.Angles(math.rad(-15.011), 0, 0),
+						["Left Leg"] = {
+							CFrame = CFrame.new(-0.29, 0.078, 0) * CFrame.Angles(math.rad(3.953), math.rad(14.496), math.rad(-0.516)),
+						},
+						["Right Leg"] = {
+							CFrame = CFrame.new(-0.161, 0.01, 0.087) * CFrame.Angles(math.rad(-3.953), math.rad(-14.496), math.rad(-45.493)),
+						},
+						["Head"] = {
+						},
+						["Left Arm"] = {
+							CFrame = CFrame.new(0.186, 0.152, 0.086) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(142.094)),
+						},
+						["Right Arm"] = {
+							CFrame = CFrame.new(-0.083, 0.321, 0.006) * CFrame.Angles(math.rad(18.965), math.rad(-14.496), math.rad(-164.496)),
+						},
+					},
+				},
+			},
 		}
 	},
 }
@@ -3158,6 +3180,940 @@ local unbuiltanims = {
 				ed = "In";
 			};
 		};
+	},
+	["Idle"] = {
+		{
+			tm = 0.1;
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(.134,-.013,-.047,.94,.03,.341,-.089,.983,.158,-.33,-.179,.927);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.299,-.277,.086,.94,.342,0,-.145,.397,.906,.31,-.852,.423);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.072,-.154,-.041,.897,-.242,.37,.073,.906,.416,-.436,-.346,.831);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(-.039,.081,-.047,.883,.342,-.321,-.222,.908,.356,.414,-.243,.877);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.966,-.258,.023,.259,.962,-.084,0,.087,.996);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .633;
+			["Torso"] = {
+				cf = CFrame.new(0,0,-.071,.94,.342,0,-.342,.94,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(.136,.058,-.06,.94,.03,.341,-.089,.983,.158,-.33,-.179,.927);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.087,-.221,-.022,.816,-.209,.539,.014,.939,.343,-.578,-.272,.769);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(-.014,.146,-.064,.883,.342,-.321,-.222,.908,.356,.414,-.243,.877);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.966,-.255,.045,.259,.951,-.168,0,.174,.985);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = 1.467;
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(.134,-.013,-.047,.94,.03,.341,-.089,.983,.158,-.33,-.179,.927);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.299,-.277,.086,.94,.342,0,-.145,.397,.906,.31,-.852,.423);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.072,-.154,-.041,.897,-.242,.37,.073,.906,.416,-.436,-.346,.831);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(-.039,.081,-.047,.883,.342,-.321,-.222,.908,.356,.414,-.243,.877);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.966,-.258,.023,.259,.962,-.084,0,.087,.996);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+	},
+	["Walk"] = {
+		{
+			tm = 0;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.199,.073,.005,.707,.706,-.053,-.704,.709,.043,.068,.007,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.999,-.035,.001,.035,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.29,-.043,.021,.563,.824,.06,-.826,.562,.034,-.006,-.069,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.129,-.015,.509,-.861,-.001,.861,.509,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.703,-.71,.04,.71,.704,.003,-.03,.026,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .032;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,1,.001,0,-.001,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.19,.068,.006,.761,.647,-.051,-.645,.762,.047,.069,-.003,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.999,-.034,.001,.034,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.274,-.048,.02,.595,.801,.057,-.803,.594,.035,-.006,-.067,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.141,-.015,.411,-.911,-.001,.911,.411,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.733,-.679,.04,.68,.733,.003,-.031,.025,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .063;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,1,.004,0,-.004,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.168,.055,.008,.875,.482,-.046,-.479,.876,.056,.067,-.027,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.999,-.033,.001,.033,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.236,-.061,.018,.675,.736,.05,-.738,.674,.037,-.007,-.062,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.165,-.015,.411,-.912,-.001,.912,.411,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.807,-.589,.04,.59,.808,.003,-.034,.021,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .095;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.001,1,.008,0,-.008,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.135,.037,.011,.972,.234,-.038,-.231,.971,.066,.053,-.056,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.031,.001,.032,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.183,-.076,.016,.775,.631,.041,-.632,.774,.039,-.007,-.056,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.189,-.015,.49,-.872,-.001,.872,.49,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.898,-.439,.04,.439,.898,.003,-.037,.015,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .127;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.002,1,.013,0,-.013,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.097,.017,.014,.999,-.041,-.031,.043,.996,.075,.027,-.077,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.029,.001,.029,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.127,-.09,.013,.867,.497,.031,-.498,.866,.04,-.007,-.051,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.199,-.015,.621,-.784,-.001,.784,.621,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.972,-.233,.04,.233,.973,.003,-.039,.006,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .159;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.002,1,.019,0,-.019,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.059,-.001,.017,.963,-.267,-.024,.268,.96,.079,.002,-.082,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.027,.001,.027,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.077,-.098,.011,.935,.354,.024,-.355,.934,.041,-.008,-.047,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.157,-.015,.769,-.639,-.001,.639,.769,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.999,.014,.04,-.014,1,.003,-.039,-.003,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .19;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.002,1,.025,0,-.025,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.023,-.018,.018,.906,-.423,-.018,.423,.903,.076,-.016,-.076,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.025,.001,.025,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.036,-.087,.009,.978,.207,.02,-.208,.977,.04,-.011,-.044,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.072,-.015,.897,-.441,-.001,.441,.897,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.961,.273,.04,-.273,.962,.003,-.037,-.014,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .222;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.002,1,.03,0,-.03,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.009,-.037,.02,.824,-.566,-.011,.566,.822,.071,-.031,-.064,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.022,.001,.022,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.005,-.046,.007,.999,.032,.017,-.032,.999,.037,-.016,-.038,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,.008,-.015,.978,-.208,-.001,.208,.978,-.001,.001,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.858,.512,.04,-.513,.859,.003,-.032,-.023,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .254;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.001,.999,.035,0,-.035,.999,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.037,-.057,.022,.724,-.689,-.004,.688,.723,.063,-.041,-.048,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.02,.001,.02,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.041,.007,.005,.989,-.147,.016,.146,.989,.033,-.021,-.031,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,.037,-.015,1,.028,-.001,-.028,1,-.001,.001,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.708,.705,.04,-.705,.709,.003,-.026,-.03,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .286;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.999,.039,0,-.039,.999,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.059,-.076,.023,.621,-.784,.003,.782,.62,.055,-.045,-.032,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.019,.001,.019,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.066,.054,.003,.954,-.3,.016,.299,.954,.031,-.025,-.025,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.018,-.015,.96,.281,-.001,-.281,.96,-.001,.001,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.543,.839,.04,-.839,.544,.003,-.019,-.035,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .317;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.999,.041,0,-.041,.999,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.076,-.091,.025,.531,-.847,.008,.846,.531,.046,-.043,-.017,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.018,.001,.018,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.076,.089,.002,.912,-.41,.024,.409,.912,.034,-.036,-.021,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.104,-.015,.858,.514,-.001,-.514,.858,-.001,0,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.397,.917,.04,-.918,.398,.003,-.013,-.037,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .349;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.999,.041,0,-.041,.999,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.085,-.101,.025,.471,-.882,.012,.881,.471,.037,-.038,-.007,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.018,.001,.018,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.079,.117,.002,.878,-.477,.045,.476,.879,.043,-.06,-.017,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.198,-.015,.748,.664,-.001,-.664,.748,-.001,0,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.3,.953,.04,-.954,.3,.003,-.009,-.039,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .381;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,.999,.039,0,-.039,.999,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.088,-.104,.025,.456,-.89,.013,.889,.456,.028,-.031,-.002,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.019,.001,.019,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.079,.125,.001,.868,-.494,.053,.491,.869,.056,-.074,-.023,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.231,-.015,.711,.703,-.001,-.703,.711,-.001,0,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.277,.96,.04,-.961,.277,.003,-.008,-.039,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .413;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.001,.999,.035,0,-.035,.999,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.075,-.096,.025,.529,-.849,.01,.848,.529,.02,-.023,-.003,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.02,.001,.02,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.063,.112,.002,.9,-.433,.053,.428,.901,.073,-.079,-.044,.996);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.199,-.015,.756,.654,-.001,-.654,.756,-.001,0,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.42,.907,.04,-.907,.421,.003,-.014,-.037,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .444;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.002,1,.03,0,-.03,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.047,-.079,.023,.675,-.738,.003,.738,.675,.015,-.013,-.007,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.022,.001,.022,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(.03,.085,.003,.954,-.296,.052,.291,.952,.094,-.077,-.074,.994);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.139,-.015,.844,.537,-.001,-.537,.844,-.001,0,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.682,.731,.04,-.731,.682,.003,-.025,-.031,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .476;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.003,1,.025,0,-.025,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.008,-.055,.02,.838,-.545,-.006,.545,.838,.011,-.001,-.012,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.025,.001,.025,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.014,.052,.005,.993,-.109,.051,.102,.988,.113,-.062,-.107,.992);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.059,-.015,.942,.336,-.001,-.336,.942,-.001,.001,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.914,.403,.04,-.404,.915,.003,-.035,-.019,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .508;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.003,1,.019,0,-.019,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.037,-.027,.017,.96,-.279,-.016,.279,.96,.01,.012,-.014,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.027,.001,.027,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.062,.019,.007,.994,.096,.05,-.101,.987,.128,-.037,-.132,.99);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,.055,-.015,1,.024,-.001,-.024,1,-.001,.001,.001,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.999,-.002,.04,.002,1,.003,-.04,-.003,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .54;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.004,1,.013,0,-.013,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.083,.002,.013,.999,.023,-.027,-.023,1,.015,.027,-.014,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.029,.001,.029,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.107,-.007,.009,.959,.278,.049,-.282,.95,.134,-.01,-.143,.99);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,.12,-.015,.963,-.27,-.001,.27,.963,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.936,-.35,.04,.351,.937,.003,-.038,.011,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .571;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.003,1,.008,0,-.008,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.127,.029,.01,.951,.307,-.037,-.306,.952,.023,.042,-.011,.999);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,1,-.031,.001,.032,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.157,-.023,.012,.887,.459,.051,-.461,.879,.12,.01,-.13,.991);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,.085,-.015,.881,-.473,-.001,.473,.881,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.841,-.54,.04,.54,.841,.003,-.035,.019,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .603;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,.002,1,.004,0,-.004,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.164,.052,.008,.849,.526,-.045,-.525,.85,.032,.055,-.004,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.999,-.033,.001,.033,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.217,-.034,.016,.761,.647,.055,-.649,.756,.086,.014,-.101,.995);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.001,-.015,.772,-.636,-.001,.636,.772,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.778,-.628,.04,.628,.778,.003,-.033,.023,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .635;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,1,.001,0,-.001,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.19,.067,.006,.749,.66,-.051,-.659,.751,.04,.065,.004,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.999,-.034,.001,.034,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.268,-.041,.019,.626,.777,.059,-.78,.624,.05,.003,-.077,.997);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.089,-.015,.646,-.763,-.001,.763,.646,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.726,-.687,.04,.688,.726,.003,-.031,.025,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .667;
+			["HumanoidRootPart"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Torso"] = {
+				cf = CFrame.new(0,0,0,1,0,0,0,1,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(-.199,.073,.005,.707,.706,-.053,-.704,.709,.043,.068,.007,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.999,-.035,.001,.035,.999,-.03,0,.03,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.29,-.043,.021,.563,.824,.06,-.826,.562,.034,-.006,-.069,.998);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.032,-.129,-.015,.509,-.861,-.001,.861,.509,-.001,.001,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.005,-.201,-.011,.703,-.71,.04,.71,.704,.003,-.03,.026,.999);
+				es = "Linear";
+				ed = "In";
+			};
+		};
 	}
 }
 
@@ -3192,14 +4148,15 @@ local anims = {}
 local welds = {}
 local origc0s = {}
 local tweens = {}
+local playingAnim = ""
 
-local function stopAnims(animate)
+local function stopAnims()
+	playingAnim = ""
 	for i,v in next, anims do
 		pcall(function()
 			task.cancel(v)
 		end)
 	end
-	task.wait()
 	anims = {}
 	for i,v in next, tweens do
 		pcall(function()
@@ -3210,9 +4167,6 @@ local function stopAnims(animate)
 	for i,v in next, origc0s do
 		welds[i].C0 = v
 	end
-	if(animate)then
-		animate.Disabled = false
-	end
 end
 
 local function setC0s(tbl, time)
@@ -3220,7 +4174,7 @@ local function setC0s(tbl, time)
 		for i,v in next, v do
 			if(welds[i])then
 				pcall(function()
-					local tw = game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time),{
+					local tw = game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
 						C0 = origc0s[i]*v.CFrame
 					})
 					tw:Play()
@@ -3233,31 +4187,35 @@ local function setC0s(tbl, time)
 	pcall(recurse,tbl)
 end
 
-local function AnimationPlay(anim, dontstop)
+local function AnimationPlay(anim, dontstop, dontreset)
 	local animation = animations[anim]
 	if(not animation)then return end
 
-	local animate = char:FindFirstChild("Animate")
+	pcall(game.Destroy, char:FindFirstChild("Animate"))
+	pcall(game.Destroy, char:FindFirstChildOfClass("Humanoid"):FindFirstChild("Animator"))
 	local lastt = 0
 
 	task.spawn(function()
 		if(hum.RigType == Enum.HumanoidRigType.R6)then
-			stopAnims(animate)
-			if(animate)then
-				animate.Disabled = true
-			end
-			NLS([[for i, v in next, game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass("Humanoid").Animator:GetPlayingAnimationTracks() do v:Stop() end]], owner.PlayerGui)
+			if(not dontreset)then
+				stopAnims()
 
-			table.clear(welds)
-			table.clear(origc0s)
-			for i,v in next, char:GetDescendants() do
-				if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
-					welds[v.Part1 and v.Part1.Name or ""] = v
+				table.clear(welds)
+				table.clear(origc0s)
+			end
+
+			playingAnim = anim
+			
+			if(not dontreset)then
+				for i,v in next, char:GetDescendants() do
+					if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+						welds[v.Part1 and v.Part1.Name or ""] = v
+					end
 				end
-			end
 
-			for i,v in next, welds do
-				origc0s[i] = v.C0
+				for i,v in next, welds do
+					origc0s[i] = v.C0
+				end
 			end
 
 			local lastkeyframe = 0
@@ -3266,9 +4224,11 @@ local function AnimationPlay(anim, dontstop)
 					lastkeyframe = i
 				end
 			end
-			local thread = task.delay(lastkeyframe+1, function()
+			local thread = task.delay(lastkeyframe+.1, function()
 				if(not dontstop)then
-					stopAnims(animate)
+					stopAnims()
+				else
+					AnimationPlay(anim, dontstop, true)
 				end
 			end)
 			table.insert(anims, thread)
@@ -6668,11 +7628,6 @@ EFFECTS.S5_Release = function(CF)
 
 	local eyepart = CreateEmptyPart(Vector3.zero, CFRAMES.CHARACTER.Head * EyeOffset)
 	local eyeparticle = CSE:CreateEffectInst("S5", "MISC", "EYE_Glare")
-	local newseq = {}
-	for i, Keypoint in eyeparticle.Size.Keypoints do
-		table.insert(newseq, NumberSequenceKeypoint.new(Keypoint.Time, Keypoint.Value * CHARACTERSCALE, Keypoint.Envelope))
-	end
-	eyeparticle.Size = NumberSequence.new(newseq)
 
 	eye.CFrame = CFRAMES.CHARACTER.Head * EyeOffset
 	eye.Anchored = false
@@ -7106,6 +8061,9 @@ function charclone()
 	end
 end
 
+local broom;
+local broommotor;
+
 function counter(counterlist)
 	task.wait()
 	if(tick() - counterdeb) < 3 then
@@ -7113,12 +8071,13 @@ function counter(counterlist)
 	end
 	counterdeb = tick()
 	pcall(function()
-		local broom = script.Models.Broom.Broom:Clone()
+		pcall(game.Destroy, broom)
+		broom = script.Models.Broom.Broom:Clone()
 		broom.Anchored = false
 		broom.CanCollide = false
-		local motor = Instance.new("Motor6D", broom)
-		motor.Part1 = broom
-		motor.C1 = CFrame.new(0,1,3)
+		broommotor = Instance.new("Motor6D", broom)
+		broommotor.Part1 = broom
+		broommotor.C1 = CFrame.new(0,1,3)
 		broom.Parent = char
 		broom.Motor6D.Part0 = char["Left Arm"]
 
@@ -7528,7 +8487,7 @@ function newchar()
 		end
 
 		orighp = hum.Health
-		
+
 		refitting = false
 		table.insert(connections, hum.HealthChanged:Connect(function()
 			if(refitting)then return end
@@ -7577,14 +8536,14 @@ heartbeat:Connect(function(dt)
 					CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
 				end
 			end
-			
+
 			for i, v in next, char:GetDescendants() do
-            	if(v:IsA("BasePart"))then
-                	v.CanCollide = false
-                	v.Massless = false
-       	         	v.CanQuery = false
-       	    	end
-     	   	end
+				if(v:IsA("BasePart"))then
+					v.CanCollide = false
+					v.Massless = false
+					v.CanQuery = false
+				end
+			end
 		end)
 
 		delta = delta + dt
@@ -7605,17 +8564,47 @@ heartbeat:Connect(function(dt)
 			pcall(game.Destroy, mus)
 			mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
 			mus.Volume = 1
-			mus.SoundId = "rbxassetid://99313609692882" --13082498926
+			mus.SoundId = "rbxassetid://13082498926" --13082498926
 			mus.Looped = true
 			mus.Pitch = 1.73913043478
 			mus.Playing = true
 			mus.TimePosition = lastmuspos
 		end
 		mus.Volume = 1
-		mus.SoundId = "rbxassetid://99313609692882"
+		mus.SoundId = "rbxassetid://13082498926"
 		mus.Looped = true
 		mus.Pitch = 1.73913043478
 		mus.Playing = true
+		
+		if(playingAnim == "" or playingAnim == "Walk")then
+			if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) < .3)then
+				AnimationPlay("Idle", true)
+			end
+		else
+			if(playingAnim ~= "Idle")then
+				if(playingAnim ~= "Counter")then
+					pcall(game.Destroy, broom)
+				end
+			else
+				if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) > .3)then
+					pcall(game.Destroy, broom)
+					AnimationPlay("Walk", true)
+					return
+				end
+				
+				if(not broom or broom.Parent ~= char)then
+					pcall(game.Destroy, broom)
+					broom = script.Models.Broom.Broom:Clone()
+					broom.Anchored = false
+					broom.CanCollide = false
+					broommotor = Instance.new("Motor6D", broom)
+					broom.Parent = char
+				end
+				broommotor.C1 = CFrame.new(0, 1, -1) * CFrame.Angles(0, math.rad(-80), math.rad(-30))
+				broommotor.Part0 = char["Right Arm"]
+				broommotor.Part1 = broom
+			end
+		end
 	end)
 end)
 
@@ -8577,7 +9566,7 @@ ACTIONSETUP("ABSORBER", function()
 					return CFrame.new(PartCFrame.Position, RegionPos).LookVector * 350
 				end
 				HitData.ForceDuration = AttackGap/2
-				
+
 				local CaughtData = HitboxDamage(HitData)
 				for i, hum in CaughtData.Humanoids do
 					pcall(function()
@@ -8684,15 +9673,15 @@ local BALLS_RainbowTime = os.clock()
 local BALLS_LOOP = runs.Heartbeat:Connect(function()
 	BALLS_SineVal = BALLS_SineVal + 1
 	if BALLS_SineVal >= 360 * 3 then BALLS_SineVal = 0 + (BALLS_SineVal-(360 * 3)) end
-	
+
 	if(not EFFECTSCONTAINER or EFFECTSCONTAINER.Parent ~= workspace.Terrain)then
 		EFFECTSCONTAINER = Instance.new("Folder", workspace.Terrain)
 	end
-	
+
 	if(not origballs1 or not origballs2 or origballs1.Parent ~= EFFECTSCONTAINER or origballs2.Parent ~= EFFECTSCONTAINER)and(ballsenabled)then
 		pcall(game.Destroy, origballs1)
 		pcall(game.Destroy, origballs2)
-		
+
 		origballs1 = script.Models.BALLS1:Clone()
 		origballs2 = script.Models.BALLS2:Clone()
 		origrainbowball = origballs2.RAINBOW
@@ -8712,7 +9701,7 @@ local BALLS_LOOP = runs.Heartbeat:Connect(function()
 			origballs2.RAINBOW
 		}
 	end
-	
+
 	if(not ballsenabled)then
 		pcall(game.Destroy, origballs1)
 		pcall(game.Destroy, origballs2)
@@ -8720,7 +9709,7 @@ local BALLS_LOOP = runs.Heartbeat:Connect(function()
 	end
 	origballs1.Parent = EFFECTSCONTAINER
 	origballs2.Parent = EFFECTSCONTAINER
-	
+
 	-- CFRAMES
 	local CFBALLS = CFRAMES.BALLS
 	local torsooffset = CFrame.identity
@@ -8760,7 +9749,7 @@ local BALLS_LOOP = runs.Heartbeat:Connect(function()
 
 		local color = BALLS_RainbowColors[BALLS_RainbowColIndex]
 		local colorT = BALLS_RainbowColorsT[BALLS_RainbowColIndex]
-		
+
 		origrainbowball.Color = color
 		for i, texture in origrainbowball:GetDescendants() do
 			if texture:IsA("Texture") then
@@ -8845,7 +9834,7 @@ local HEALTHLOOP = heartbeat:Connect(function()
 	pcall(function()
 		hum.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
 	end)
-	
+
 	if HealthCheapEnabled == true then
 		if CurrentHealth == HealthCheapBorder then
 			CurrentHealth = HealthCheapBorder - rnd:NextNumber(10, 60)
@@ -8855,13 +9844,13 @@ local HEALTHLOOP = heartbeat:Connect(function()
 	else
 		CurrentHealth = math.min(MaxHealth, CurrentHealthHum.Health + rnd:NextNumber(0.5, 2))
 	end
-	
+
 	local cf = CFRAMES.CHARACTER.Head
 	HealthModel.Head.CFrame = cf
 	HealthModel.Head.Anchored = true
 	HealthModel.Head.CanCollide = false
 	CurrentHealthHum.NameOcclusion = Enum.NameOcclusion.NoOcclusion
-	
+
 	if CurrentHealthModel:IsDescendantOf(EFFECTSCONTAINER) == false or CurrentHealthHead.Parent ~= CurrentHealthModel or CurrentHealthHum.Parent ~= CurrentHealthModel then
 		pcall(function()
 			CurrentHealthModel:Destroy()
@@ -8881,7 +9870,7 @@ local HEALTHLOOP = heartbeat:Connect(function()
 		CurrentHealthHum.MaxHealth = MaxHealth
 		CurrentHealthModel.Parent = EFFECTSCONTAINER
 	end
-	
+
 	CurrentHealthHum.MaxHealth = MaxHealth
 	CurrentHealthHead.CFrame = cf
 	CurrentHealthHum.DisplayName = CurrentHealthName
