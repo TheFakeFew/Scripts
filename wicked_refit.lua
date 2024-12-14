@@ -3222,7 +3222,7 @@ local unbuiltanims = {
 	},
 	["Idle"] = {
 		{
-			tm = .334;
+			tm = .234;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -3255,7 +3255,7 @@ local unbuiltanims = {
 			};
 		};
 		{
-			tm = 1.167;
+			tm = 1.067;
 			["Torso"] = {
 				cf = CFrame.new(0,0,-.071,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -3283,7 +3283,7 @@ local unbuiltanims = {
 			};
 		};
 		{
-			tm = 2;
+			tm = 1.9;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
