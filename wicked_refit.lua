@@ -4192,8 +4192,6 @@ local origc0s = {}
 local tweens = {}
 local playingAnim = ""
 
-local origc0byname = {}
-
 for i,v in next, char:GetDescendants() do
 	if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
 		welds[v.Part1 and v.Part1.Name or ""] = v
@@ -4201,7 +4199,7 @@ for i,v in next, char:GetDescendants() do
 end
 
 for i,v in next, welds do
-	origc0byname[i.Name] = v.C0
+	origc0s[i] = origc0s[i] or v.C0
 end
 
 local function stopAnims()
@@ -4260,12 +4258,7 @@ local function AnimationPlay(anim, dontstop)
 			end
 
 			for i,v in next, welds do
-				if(not origc0byname[i.Name])then
-					origc0byname[i.Name] = v.C0
-					origc0s[i] = v.C0
-				else
-					origc0s[i] = origc0byname[i.Name]
-				end
+				origc0s[i] = origc0s[i] or v.C0
 			end
 
 			local lastkeyframe = 0
