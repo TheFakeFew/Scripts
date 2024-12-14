@@ -9328,21 +9328,22 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		Kill3(RegionCFrame, RegionSize, RegionPos)
 		Kill4(RegionPos)
 
+		local getDesc = game.GetDescendants
+		local isa = game.IsA
+
 		local attacksignal = game:GetService("RunService").PostSimulation:Connect(function()
 			if(game:GetService("RunService"):IsStudio())then return end
 			stall(hn, function()
 				local filter = AttackFilter()
-				for i, v in next, game:GetDescendants() do
+				local filterlookup = {}
+				for i, v in next, filter do
+					filterlookup[v] = true
+				end
+				
+				for i, v in next, getDesc(game) do
 					pcall(function()
-						if(not table.find(filter, v) and not v:IsA("ScreenGui") and not v:IsA("GuiObject") and not v:IsA("PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
+						if(not filterlookup[v] and not v.Classname ~= "ScreenGui" and not isa(v, "GuiObject") and not isa(v, "PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
 							pcall(forceDestroy, v)
-							if(v:IsA("PVInstance"))then
-								v:ScaleTo(1/9e9)
-								v:PivotTo(CFrame.new(9e9, 9e9, 9e9))
-								v:TranslateBy(Vector3.one*9e9)
-
-								pcall(game.ClearAllChildren, v)
-							end
 						end
 					end)
 				end
