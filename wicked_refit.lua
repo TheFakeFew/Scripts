@@ -4271,6 +4271,7 @@ local function AnimationPlay(anim, dontstop)
 					firstkeyframe = i
 				end
 			end
+			print(addedtime)
 
 			local thread = task.delay(lastkeyframe+addedtime, function()
 				if(not dontstop)then
