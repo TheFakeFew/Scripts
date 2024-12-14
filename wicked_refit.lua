@@ -4183,7 +4183,6 @@ local hum = nil
 local anims = {}
 local welds = {}
 local origc0s = {}
-local tweens = {}
 local playingAnim = ""
 
 for i,v in next, char:GetDescendants() do
@@ -4204,12 +4203,6 @@ local function stopAnims()
 		end)
 	end
 	anims = {}
-	for i,v in next, tweens do
-		pcall(function()
-			v:Cancel()
-		end)
-	end 
-	tweens = {}
 end
 
 local function setC0s(tbl, time)
@@ -4217,11 +4210,9 @@ local function setC0s(tbl, time)
 		for i,v in next, v do
 			if(welds[i])then
 				pcall(function()
-					local tw = game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
+					game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
 						C0 = origc0s[i]*v.CFrame
-					})
-					tw:Play()
-					table.insert(tweens,tw)
+					}):Play()
 				end)
 			end
 			pcall(recurse,v)
@@ -4265,7 +4256,7 @@ local function AnimationPlay(anim, dontstop)
 				table.insert(times, i)
 			end
 			table.sort(times, function(a, b) return a < b end)
-			
+
 			for i, v in next, times do
 				addedtime = v-lasttt
 				lasttt = v
@@ -4438,14 +4429,6 @@ function VOCAL(SoundName)
 	sound.Ended:Connect(function()
 		cfloop:Disconnect()
 	end)
-end
-
-function EWait(num) -- not be affected by fps
-	local num = num or 0
-	local t = os.clock()
-	repeat
-		heartbeat:Wait()
-	until os.clock() - t >= num
 end
 
 local CHARACTERSCALE = .5
