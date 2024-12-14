@@ -3124,7 +3124,7 @@ local animations = {
 local unbuiltanims = {
 	["Special"] = {
 		{
-			tm = 0.2;
+			tm = 0.1;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -3159,7 +3159,7 @@ local unbuiltanims = {
 	},
 	["SpecialCharge"] = {
 		{
-			tm = 0.2;
+			tm = 0.1;
 			["Left Leg"] = {
 				cf = CFrame.new(0,0,0,.966,0,.259,0,1,0,-.259,0,.966);
 				es = "Linear";
@@ -3219,7 +3219,7 @@ local unbuiltanims = {
 	},
 	["Idle"] = {
 		{
-			tm = .234;
+			tm = 0;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -3252,7 +3252,7 @@ local unbuiltanims = {
 			};
 		};
 		{
-			tm = 1.067;
+			tm = .833;
 			["Torso"] = {
 				cf = CFrame.new(0,0,-.071,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -3280,7 +3280,7 @@ local unbuiltanims = {
 			};
 		};
 		{
-			tm = 1.9;
+			tm = 1.666;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -4255,21 +4255,24 @@ local function AnimationPlay(anim, dontstop)
 				origc0s[i] = origc0s[i] or v.C0
 			end
 
+			local addedtime = 0
 			local lastkeyframe = 0
-			for i,v in next, animation.Keyframes do
+			local firstkeyframe = math.huge
+			local lasttt = 0
+			for i, v in next, animation.KeyFrames do
+				addedtime = i-lasttt
+				lasttt = i
+
 				if(i>lastkeyframe)then
 					lastkeyframe = i
 				end
-			end
-			
-			local firstkeyframe = math.huge
-			for i,v in next, animation.Keyframes do
+
 				if(i<firstkeyframe)then
 					firstkeyframe = i
 				end
 			end
 
-			local thread = task.delay(lastkeyframe, function()
+			local thread = task.delay(lastkeyframe+addedtime, function()
 				if(not dontstop)then
 					stopAnims()
 				else
