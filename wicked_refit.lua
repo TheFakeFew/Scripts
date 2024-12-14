@@ -4260,18 +4260,17 @@ local function AnimationPlay(anim, dontstop)
 			local firstkeyframe = math.huge
 			local lasttt = 0
 			for i, v in next, animation.Keyframes do
-				addedtime = i-lasttt
-				lasttt = i
-
 				if(i>lastkeyframe)then
 					lastkeyframe = i
+
+					addedtime = i-lasttt
+					lasttt = i
 				end
 
 				if(i<firstkeyframe)then
 					firstkeyframe = i
 				end
 			end
-			print(addedtime)
 
 			local thread = task.delay(lastkeyframe+addedtime, function()
 				if(not dontstop)then
