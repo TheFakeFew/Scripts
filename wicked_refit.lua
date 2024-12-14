@@ -3045,10 +3045,7 @@ local animations = {
 							CFrame = CFrame.Angles(math.rad(-15.011), 0, 0),
 						},
 						["Left Arm"] = {
-							CFrame = CFrame.new(-0.308, 0.183, 0.014) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(-82.907)),
-							["Broom"] = {
-								CFrame = CFrame.new(-0.76, 0.062, -0.432) * CFrame.Angles(math.rad(-154.469), math.rad(-72.536), math.rad(-142.437)),
-							},
+							CFrame = CFrame.new(-0.308, 0.183, 0.014) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(-82.907))
 						},
 						["Right Arm"] = {
 							CFrame = CFrame.new(0.3, 0, 0) * CFrame.Angles(math.rad(15.011), 0, math.rad(90.012)),
@@ -8129,6 +8126,7 @@ function counter(counterlist)
 		broommotor = Instance.new("Motor6D", broom)
 		broommotor.Part1 = broom
 		broommotor.C1 = CFrame.new(0,1,3)
+		broommotor.C0 = CFrame.new(-0.76, 0.062, -0.432) * CFrame.Angles(math.rad(-154.469), math.rad(-72.536), math.rad(-142.437))
 		broom.Parent = char
 		broom.Motor6D.Part0 = char["Left Arm"]
 
@@ -8652,6 +8650,7 @@ heartbeat:Connect(function(dt)
 					broom.Parent = char
 				end
 				broommotor.C1 = CFrame.new(0, 1, -1) * CFrame.Angles(0, math.rad(-80), math.rad(-30))
+				broommotor.C0 = CFrame.identity
 				broommotor.Part0 = char["Right Arm"]
 				broommotor.Part1 = broom
 			end
