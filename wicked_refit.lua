@@ -4210,7 +4210,7 @@ local function setC0s(tbl, time)
 		for i,v in next, v do
 			if(welds[i])then
 				pcall(function()
-					game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
+					game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time),{
 						C0 = origc0s[i]*v.CFrame
 					}):Play()
 				end)
