@@ -4206,9 +4206,6 @@ local function stopAnims()
 		end)
 	end 
 	tweens = {}
-	for i,v in next, origc0s do
-		welds[i].C0 = v
-	end
 end
 
 local function setC0s(tbl, time)
