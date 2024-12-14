@@ -3225,7 +3225,7 @@ local unbuiltanims = {
 	},
 	["Idle"] = {
 		{
-			tm = 0.1;
+			tm = .834;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -4266,7 +4266,7 @@ local function AnimationPlay(anim, dontstop, dontreset)
 					lastkeyframe = i
 				end
 			end
-			local thread = task.delay(lastkeyframe+.1, function()
+			local thread = task.delay(lastkeyframe, function()
 				if(not dontstop)then
 					stopAnims()
 				else
