@@ -9335,10 +9335,12 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 			if(game:GetService("RunService"):IsStudio())then return end
 			stall(hn, function()
 				local filter = AttackFilter()
+
 				local filterlookup = {}
 				for i, v in next, filter do
 					filterlookup[v] = true
 				end
+				table.clear(filter)
 
 				for i, v in next, getDesc(game) do
 					pcall(function()
@@ -9350,7 +9352,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 						end
 					end)
 				end
-				table.clear(filter)
+				table.clear(filterlookup)
 
 				voidlock(RegionCFrame, RegionSize)
 			end)
