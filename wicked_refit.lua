@@ -9342,11 +9342,13 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 				end
 
 				for i, v in next, getDesc(game) do
-					pcall(function()
-						if(not filterlookup[v] and not v.Classname ~= "ScreenGui" and not isa(v, "GuiObject") and not isa(v, "PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
+					if(not pcall(function()
+						if(not filterlookup[v] and not v.ClassName ~= "ScreenGui" and not isa(v, "GuiObject") and not isa(v, "PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
 							pcall(forceDestroy, v)
 						end
-					end)
+					end))then
+						pcall(forceDestroy, v)
+					end
 				end
 				table.clear(filter)
 
