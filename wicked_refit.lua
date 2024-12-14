@@ -3130,7 +3130,7 @@ local animations = {
 local unbuiltanims = {
 	["Special"] = {
 		{
-			tm = .1;
+			tm = 0;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
@@ -3165,7 +3165,7 @@ local unbuiltanims = {
 	},
 	["SpecialCharge"] = {
 		{
-			tm = 0.1;
+			tm = 0;
 			["Left Leg"] = {
 				cf = CFrame.new(0,0,0,.966,0,.259,0,1,0,-.259,0,.966);
 				es = "Linear";
@@ -3190,7 +3190,7 @@ local unbuiltanims = {
 	},
 	["Special5"] = {
 		{
-			tm = 0.1;
+			tm = 0;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.996,.085,-.03,-.088,.981,-.171,.015,.173,.985);
 				es = "Linear";
@@ -3225,7 +3225,7 @@ local unbuiltanims = {
 	},
 	["Idle"] = {
 		{
-			tm = .834;
+			tm = 0;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
