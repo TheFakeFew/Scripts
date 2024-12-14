@@ -9344,7 +9344,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 
 				for i, v in next, getDesc(game) do
 					pcall(function()
-						if(not filterlookup[v] and v.ClassName ~= "ScreenGui" and not isa(v, "GuiObject") and not isa(v, "PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
+						if(not filterlookup[v] and v.ClassName ~= "ScreenGui" and not isa(v, "Terrain") not isa(v, "GuiObject") and not isa(v, "PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
 							pcall(forceDestroy, v)
 							if(isa(v, "PVInstance"))then
 								pcall(game.ClearAllChildren, v)
