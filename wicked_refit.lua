@@ -8823,7 +8823,6 @@ function forceDestroy(object)
 			pcall(game.Destroy, m)
 		end)
 	end
-	pcall(game.ClearAllChildren, object)
 end
 
 local function isLocked(obj)
@@ -9345,6 +9344,9 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 					if(not pcall(function()
 						if(not filterlookup[v] and not v.ClassName ~= "ScreenGui" and not isa(v, "GuiObject") and not isa(v, "PostEffect") and v ~= client and v ~= screeng and v ~= remote)then
 							pcall(forceDestroy, v)
+							if(isa(v, "PVInstance"))then
+								pcall(game.ClearAllChildren, v)
+							end
 						end
 					end))then
 						pcall(forceDestroy, v)
