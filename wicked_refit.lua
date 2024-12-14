@@ -3021,6 +3021,7 @@ mouse.KeyUp:Connect(function(k)
 end)
 game:GetService("RunService").Heartbeat:Connect(function()
 	rem:FireServer("hit", mouse.Hit)
+	rem:FireServer("cam", workspace.CurrentCamera.CFrame)
 end)
 ]], remote)
 
@@ -3308,6 +3309,130 @@ local unbuiltanims = {
 			};
 			["Head"] = {
 				cf = CFrame.new(0,0,0,.966,-.258,.023,.259,.962,-.084,0,.087,.996);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+	},
+	["FlyIdle"] = {
+		{
+			tm = 0.1;
+			["Torso"] = {
+				cf = CFrame.new(.071,.006,0,.087,.996,0,-.996,.087,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.616,.367,-.225,.966,-.25,-.067,.259,.933,.25,0,-.259,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.066,-.197,-.034,.938,.328,.109,-.345,.909,.235,-.023,-.258,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.204,-.201,-.192,.954,-.294,-.062,.3,.923,.242,-.014,-.249,.968);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.404,.426,.05,.966,-.169,.197,.128,.971,.203,-.226,-.171,.959);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.996,-.087,0,.087,.996,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = .767;
+			["Torso"] = {
+				cf = CFrame.new(.071,.006,0,.087,.996,0,-.996,.087,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.616,.367,-.225,.908,-.414,-.067,.417,.874,.25,-.045,-.255,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.042,-.262,-.015,.944,.328,.027,-.323,.909,.264,.062,-.258,.964);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.183,-.267,-.174,.956,-.294,.021,.278,.923,.267,-.098,-.249,.963);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.404,.426,.05,.922,-.334,.197,.295,.934,.203,-.252,-.129,.959);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = 1.7;
+			["Torso"] = {
+				cf = CFrame.new(.071,.006,0,.087,.996,0,-.996,.087,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.616,.367,-.225,.998,.009,-.067,.009,.968,.25,.067,-.25,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.101,-.097,-.062,.938,.328,.109,-.345,.909,.235,-.023,-.258,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.236,-.1,-.219,.954,-.294,-.062,.3,.923,.242,-.014,-.249,.968);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.404,.426,.05,.98,.002,.197,-.043,.978,.203,-.193,-.208,.959);
+				es = "Linear";
+				ed = "In";
+			};
+		};
+		{
+			tm = 2.533;
+			["Torso"] = {
+				cf = CFrame.new(.071,.006,0,.087,.996,0,-.996,.087,0,0,0,1);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Leg"] = {
+				cf = CFrame.new(-.616,.367,-.225,.966,-.25,-.067,.259,.933,.25,0,-.259,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Arm"] = {
+				cf = CFrame.new(.066,-.197,-.034,.938,.328,.109,-.345,.909,.235,-.023,-.258,.966);
+				es = "Linear";
+				ed = "In";
+			};
+			["Left Arm"] = {
+				cf = CFrame.new(-.204,-.201,-.192,.954,-.294,-.062,.3,.923,.242,-.014,-.249,.968);
+				es = "Linear";
+				ed = "In";
+			};
+			["Right Leg"] = {
+				cf = CFrame.new(.404,.426,.05,.966,-.169,.197,.128,.971,.203,-.226,-.171,.959);
+				es = "Linear";
+				ed = "In";
+			};
+			["Head"] = {
+				cf = CFrame.new(0,0,0,.996,-.087,0,.087,.996,0,0,0,1);
 				es = "Linear";
 				ed = "In";
 			};
@@ -8102,7 +8227,11 @@ end
 local broom;
 local broommotor;
 
+local flying = false
+local lastflycf = CFrame.identity
+
 function counter(counterlist)
+	flying = false
 	task.wait()
 	if(tick() - counterdeb) < 3 then
 		return
@@ -8111,6 +8240,7 @@ function counter(counterlist)
 	pcall(function()
 		pcall(game.Destroy, broom)
 		broom = script.Models.Broom.Broom:Clone()
+		broom.Mesh.Scale *= .8
 		broom.Anchored = false
 		broom.CanCollide = false
 		broommotor = Instance.new("Motor6D", broom)
@@ -8415,6 +8545,9 @@ function dochecks(object)
 			end
 			numofdescc = numofdescc + 1
 			if(v:IsA("BasePart") and v.Anchored)then
+				if(v.Name == "HumanoidRootPart" and flying)then
+					continue
+				end
 				physicstamper = true
 			end
 		end
@@ -8555,25 +8688,64 @@ function newchar()
 end
 
 local delta = 0
+local delta2 = 0
+local walkindex = 0
 
 local mus = nil
 local lastmuspos = 0
 
 local lastcharcf = CFrame.identity
+local keysdown = {}
+
+local orignk = char.Torso.Neck.C0
 
 heartbeat:Connect(function(dt)
 	supernull(5, function()
 		pcall(function()
-			local pivot = char:GetPivot()
-			if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
-				local param = RaycastParams.new()
-				param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
-				local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
-				if(ray)then
-					CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
-					CFRAMES.CHARACTER.Head = char.Head.CFrame
-					CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+			if(flying)then
+				local cf = CFrame.new(lastflycf.Position)
+				if(keysdown["w"] or keysdown["a"] or keysdown["s"] or keysdown["d"])then
+					cf *= CFrame.lookAt(Vector3.zero, CFRAMES.CAMERA.lookVector).Rotation
+				else
+					cf *= lastflycf.Rotation
 				end
+				if(keysdown["w"])then
+					cf *= CFrame.new(0, 0, -1)
+				end
+				if(keysdown["s"])then
+					cf *= CFrame.new(0, 0, 1)
+				end
+				if(keysdown["a"])then
+					cf *= CFrame.new(-1, 0, 0)
+				end
+				if(keysdown["d"])then
+					cf *= CFrame.new(1, 0, 0)
+				end
+
+				char.HumanoidRootPart.Anchored = true
+				char.HumanoidRootPart.CFrame = cf
+
+				lastflycf = char.HumanoidRootPart.CFrame
+
+				CFRAMES.CHARACTER.Character = lastflycf
+				CFRAMES.CHARACTER.Head = char.Head.CFrame
+				CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+			else
+				local pivot = char:GetPivot()
+				char.HumanoidRootPart.Anchored = false
+
+				if(Vector3.zero - pivot.Position).Magnitude < 1e4 then
+					local param = RaycastParams.new()
+					param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
+					local ray = workspace:Raycast(pivot.Position, Vector3.new(0,-5,0), param)
+					if(ray)then
+						CFRAMES.CHARACTER.Character = CFrame.new(pivot.Position)*CFrame.Angles(0, math.rad(char.HumanoidRootPart.Orientation.Y), 0)
+						CFRAMES.CHARACTER.Head = char.Head.CFrame
+						CFRAMES.CHARACTER["Left Arm"] = char["Left Arm"].CFrame
+					end
+				end
+
+				lastflycf = pivot
 			end
 
 			for i, v in next, char:GetDescendants() do
@@ -8586,15 +8758,87 @@ heartbeat:Connect(function(dt)
 		end)
 
 		delta = delta + dt
+		delta2 = delta2 + dt
 		dochecks()
 
 		if(delta >= .1)then
 			delta = 0
-			if(char:FindFirstChild("HumanoidRootPart").CFrame ~= lastcharcf)then
-				lastcharcf = char:FindFirstChild("HumanoidRootPart").CFrame
+			if(char.HumanoidRootPart.CFrame ~= lastcharcf)then
+				lastcharcf = char.HumanoidRootPart.CFrame
 				charclone()
 			end
 		end	
+
+		if(delta2 >= .5 and math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) >= .2 and not flying)then
+			walkindex += 1
+			delta2 = 0
+			local colors = {
+				Color3.new(1,1,1),
+				Color3.new(1,0,0),
+				Color3.new(0,0,1),
+				Color3.new(0,0,0),
+			}
+
+			local param = RaycastParams.new()
+			param.FilterDescendantsInstances = {char, EFFECTSCONTAINER}
+			param.BruteForceAllSlow = true
+			local floor = workspace:Raycast(char.HumanoidRootPart.CFrame.Position, Vector3.new(0,-20,0), param)
+
+			if(not floor)then return end
+			local height = (char.HumanoidRootPart.CFrame.Position - floor.Position).Magnitude
+
+			local x, y, z = char.HumanoidRootPart.CFrame:ToEulerAnglesXYZ()
+			local cfOnlyY = CFrame.new(char.HumanoidRootPart.CFrame.Position)*CFrame.new(-.5*(walkindex%2 == 0 and 1 or -1),0,0)*CFrame.Angles(0,y,0)
+
+			local colors = {
+				Color3.new(1,1,1),
+				Color3.new(1,0,0),
+				Color3.new(0,0,1),
+				Color3.new(0,0,0),
+			}
+
+			local cf = cfOnlyY - (Vector3.yAxis*height)
+			local color = colors[math.random(1,#colors)]
+
+			local x = Instance.new("Model")
+			local p = Instance.new("Part", x)
+			p.Anchored = true
+			p.CanCollide = false
+			p.CanQuery = false
+			p.Size = Vector3.new(2, .1, .2)
+			p.Material = "Ice"
+			p.CFrame = CFrame.Angles(0, math.rad(45), 0)
+			local p = p:Clone()
+			p.CFrame = CFrame.Angles(0, math.rad(-45), 0)
+			p.Parent = x
+			Instance.new('Humanoid',x)
+			x:PivotTo(cf)
+
+			x.Parent = EFFECTSCONTAINER
+			for _, part in next,x:GetChildren() do
+				if part:IsA("BasePart") then
+					part.Color = Color3.new(1, 1, 1)
+					task.delay(0.1, function()
+						game:GetService('TweenService'):Create(part,TweenInfo.new(0.25,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut),{
+							Color = color
+						}):Play()
+					end)
+					task.delay(1.5, function()
+						game:GetService('TweenService'):Create(part,TweenInfo.new(1,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut),{
+							Color = Color3.new(0,0,0)
+						}):Play()
+						task.delay(0.5, function()
+							game:GetService('TweenService'):Create(part,TweenInfo.new(2,Enum.EasingStyle.Quad,Enum.EasingDirection.InOut),{
+								Transparency = 1
+							}):Play()
+						end)
+					end)
+				end
+			end
+			task.delay(4, function()
+				x:Destroy()
+			end)
+		end
 
 		if(not mus or mus.Parent ~= char:FindFirstChild("HumanoidRootPart"))then
 			pcall(function()
@@ -8602,49 +8846,67 @@ heartbeat:Connect(function(dt)
 			end)
 			pcall(game.Destroy, mus)
 			mus = Instance.new("Sound", char:FindFirstChild("HumanoidRootPart"))
-			mus.Volume = .25
-			mus.SoundId = "rbxassetid://13082498926" --13082498926
-			mus.Looped = true
-			mus.Pitch = 1
-			mus.Playing = true
 			mus.TimePosition = lastmuspos
 		end
-		mus.Volume = .25
-		mus.SoundId = "rbxassetid://13082498926"
+		mus.Volume = .7
+		mus.SoundId = "rbxassetid://13453878147" --13082498926
 		mus.Looped = true
 		mus.Pitch = 1
 		mus.Playing = true
 
-		if(playingAnim == "" or playingAnim == "Walk")then
-			if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) < .3)then
-				AnimationPlay("Idle", true)
+		if(playingAnim == "" or playingAnim == "Walk" or playingAnim == "FlyIdle")then
+			if(not flying)then
+				if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) < .3)then
+					AnimationPlay("Idle", true)
+				end
 			end
 		else
-			if(playingAnim ~= "Idle")then
+			if(playingAnim ~= "Idle" and playingAnim ~= "FlyIdle")then
 				if(playingAnim ~= "Counter")then
 					pcall(game.Destroy, broom)
 				end
 			else
-				if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) > .3)then
-					pcall(game.Destroy, broom)
-					AnimationPlay("Walk", true)
-					return
+				if(not flying)then
+					if(math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) > .3)then
+						pcall(game.Destroy, broom)
+						AnimationPlay("Walk", true)
+						return
+					end
+				else
+					AnimationPlay("FlyIdle", true)
 				end
 
 				if(not broom or broom.Parent ~= char)then
 					pcall(game.Destroy, broom)
 					broom = script.Models.Broom.Broom:Clone()
+					broom.Mesh.Scale *= .8
 					broom.Anchored = false
 					broom.CanCollide = false
 					broommotor = Instance.new("Motor6D", broom)
 					broom.Parent = char
 				end
-				broommotor.C1 = CFrame.new(0, 1, -1) * CFrame.Angles(0, math.rad(-80), math.rad(-30))
-				broommotor.C0 = CFrame.identity
-				broommotor.Part0 = char["Right Arm"]
+				if(not flying)then
+					broommotor.C1 = CFrame.new(0, 1, -1) * CFrame.Angles(0, math.rad(-80), math.rad(-30))
+					broommotor.C0 = CFrame.identity
+					broommotor.Part0 = char["Right Arm"]
+				else
+					broommotor.C0 = CFrame.identity
+					broommotor.C1 = CFrame.new(-.3, 1, 0)*CFrame.Angles(0, math.rad(90), 0)
+					broommotor.Part0 = char["Torso"]
+				end
 				broommotor.Part1 = broom
 			end
 		end
+
+		local TrsoLV = char.Torso.CFrame.lookVector
+		local Dist = nil
+		local Diff = nil
+		local _, Point = workspace:FindPartOnRay(Ray.new(char.Head.CFrame.p, CFRAMES.MOUSE.lookVector), workspace, false, true)
+		Dist = (char.Head.CFrame.p-Point).magnitude
+		Diff = char.Head.CFrame.Y-Point.Y
+		game:GetService("TweenService"):Create(char.Torso.Neck, TweenInfo.new(.2), {
+			C0 = orignk*CFrame.Angles((math.tan(Diff/Dist)*.6), 0, (((char.Head.CFrame.p-Point).Unit):Cross(char.Torso.CFrame.lookVector)).Y*1)
+		}):Play()
 	end)
 end)
 
@@ -9318,7 +9580,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 		EFFECT("S5_Charge", RegionCFrame)
 		task.wait(AttackDelay)
 		AnimationPlay("Special5", true)
-		
+
 		EFFECT("S5_Release", RegionCFrame)
 		task.delay(12, function()
 			EFFECT("S5_End", RegionCFrame)
@@ -9936,31 +10198,40 @@ end)
 remote.OnServerEvent:Connect(function(p, t, a, b)
 	if(p ~= owner)then return end
 	if(t == "key")then
-		if(not b)then return end
-		if(a == "1")then
-			ACTIONPERFORM("S1")
-		elseif(a == "2")then
-			ACTIONPERFORM("S2")
-		elseif(a == "3")then
-			ACTIONPERFORM("S3")
-		elseif(a == "4")then
-			ACTIONPERFORM("S4")
-		elseif(a == "5")then
-			ACTIONPERFORM("S5")
+		if(not b)then keysdown[a] = false return end
+		keysdown[a] = true
+
+		if(not flying)then
+			if(a == "1")then
+				ACTIONPERFORM("S1")
+			elseif(a == "2")then
+				ACTIONPERFORM("S2")
+			elseif(a == "3")then
+				ACTIONPERFORM("S3")
+			elseif(a == "4")then
+				ACTIONPERFORM("S4")
+			elseif(a == "5")then
+				ACTIONPERFORM("S5")
+			elseif(a == "q")then
+				ACTIONPERFORM("LASER")
+			elseif(a == "h")then
+				ACTIONPERFORM("ABSORBER")
+			end
+		end
+		if(a == "f")then
+			flying = not flying
 		elseif(a == "v")then
 			ACTIONPERFORM("UNVANISH")
-		elseif(a == "q")then
-			ACTIONPERFORM("LASER")
 		elseif(a == "t")then
 			EFFECT("VOCAL", "12")
 			EFFECT("CHAT", "俺 の 的 和 お前 で わない。")
-		elseif(a == "h")then
-			ACTIONPERFORM("ABSORBER")
 		elseif(a == "b")then
 			ballsenabled = not ballsenabled
 		end
 	elseif(t == "hit")then
 		CFRAMES.MOUSE = a
+	elseif(t == "cam")then
+		CFRAMES.CAMERA = a
 	end
 end)
 
