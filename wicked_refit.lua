@@ -4259,7 +4259,7 @@ local function AnimationPlay(anim, dontstop)
 			local lastkeyframe = 0
 			local firstkeyframe = math.huge
 			local lasttt = 0
-			for i, v in next, animation.KeyFrames do
+			for i, v in next, animation.Keyframes do
 				addedtime = i-lasttt
 				lasttt = i
 
