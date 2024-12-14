@@ -3124,7 +3124,7 @@ local animations = {
 local unbuiltanims = {
 	["Special"] = {
 		{
-			tm = 0.1;
+			tm = 0.2;
 			["Torso"] = {
 				cf = CFrame.new(0,0,0,.94,.342,0,-.342,.94,0,0,0,1);
 				es = "Linear";
