@@ -4184,13 +4184,25 @@ for i, v in next, unbuiltanims do
 	animations[i] = newanim
 end
 
-local char = nil
+local char = owner.Character
 local hum = nil
 local anims = {}
 local welds = {}
 local origc0s = {}
 local tweens = {}
 local playingAnim = ""
+
+local origc0byname = {}
+
+for i,v in next, char:GetDescendants() do
+	if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+		welds[v.Part1 and v.Part1.Name or ""] = v
+	end
+end
+
+for i,v in next, welds do
+	origc0byname[i.Name] = v.C0
+end
 
 local function stopAnims()
 	playingAnim = ""
@@ -4226,7 +4238,7 @@ local function setC0s(tbl, time)
 	pcall(recurse,tbl)
 end
 
-local function AnimationPlay(anim, dontstop, dontreset)
+local function AnimationPlay(anim, dontstop)
 	local animation = animations[anim]
 	if(not animation)then return end
 
@@ -4236,24 +4248,23 @@ local function AnimationPlay(anim, dontstop, dontreset)
 
 	task.spawn(function()
 		if(hum.RigType == Enum.HumanoidRigType.R6)then
-			if(not dontreset)then
-				stopAnims()
+			stopAnims()
 
-				table.clear(welds)
-				table.clear(origc0s)
-			end
-
+			table.clear(welds)
 			playingAnim = anim
 
-			if(not dontreset)then
-				for i,v in next, char:GetDescendants() do
-					if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
-						welds[v.Part1 and v.Part1.Name or ""] = v
-					end
+			for i,v in next, char:GetDescendants() do
+				if(v:IsA("JointInstance") and not v:FindFirstAncestorOfClass("Accessory"))then
+					welds[v.Part1 and v.Part1.Name or ""] = v
 				end
+			end
 
-				for i,v in next, welds do
+			for i,v in next, welds do
+				if(not origc0byname[i.Name])then
+					origc0byname[i.Name] = v.C0
 					origc0s[i] = v.C0
+				else
+					origc0s[i] = origc0byname[i.Name]
 				end
 			end
 
@@ -4275,7 +4286,7 @@ local function AnimationPlay(anim, dontstop, dontreset)
 				if(not dontstop)then
 					stopAnims()
 				else
-					AnimationPlay(anim, dontstop, true)
+					AnimationPlay(anim, dontstop)
 				end
 			end)
 			table.insert(anims, thread)
