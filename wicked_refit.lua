@@ -4259,16 +4259,23 @@ local function AnimationPlay(anim, dontstop)
 			local lastkeyframe = 0
 			local firstkeyframe = math.huge
 			local lasttt = 0
-			for i, v in next, animation.Keyframes do
-				if(i>lastkeyframe)then
-					lastkeyframe = i
+			local times = {}
 
-					addedtime = i-lasttt
-					lasttt = i
+			for i, v in next, animation.Keyframes do
+				table.insert(times, i)
+			end
+			table.sort(times, function(a, b) return a < b end)
+			
+			for i, v in next, times do
+				addedtime = v-lasttt
+				lasttt = v
+
+				if(v>lastkeyframe)then
+					lastkeyframe = v
 				end
 
 				if(i<firstkeyframe)then
-					firstkeyframe = i
+					firstkeyframe = v
 				end
 			end
 
