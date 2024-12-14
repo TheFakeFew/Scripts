@@ -4210,7 +4210,7 @@ local function setC0s(tbl, time)
 		for i,v in next, v do
 			if(welds[i])then
 				pcall(function()
-					game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time),{
+					game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
 						C0 = origc0s[i]*v.CFrame
 					}):Play()
 				end)
@@ -8812,16 +8812,21 @@ function Kill4(TargetPos)
 
 end
 
+local gdestroy, inew, smatch = game.Destroy, Instance.new, string.match
 function forceDestroy(object)
-	local succ = pcall(game.Destroy, object)
-	if(not succ or object.Parent)then
+	local succ, err = pcall(function()
+		object.Parent = nil
+	end)
+	if(smatch(err, "blocked member"))then
 		pcall(function()
-			local m = Instance.new("Model", game)
-			local h = Instance.new("Humanoid", m)
-			Instance.new("Part", m).Name = "Head"
+			local m = inew("Model", game)
+			local h = inew("Humanoid", m)
+			inew("Part", m).Name = "Head"
 			h:ReplaceBodyPartR15(0, object)
-			pcall(game.Destroy, m)
+			pcall(gdestroy, m)
 		end)
+	elseif(not smatch(err, "Cannot change"))then
+		pcall(gdestroy, object)
 	end
 end
 
