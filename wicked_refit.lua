@@ -3068,9 +3068,6 @@ local animations = {
 						},
 						["Left Arm"] = {
 							CFrame = CFrame.new(-0.308, 0.183, 0.014) * CFrame.Angles(math.rad(16.96), math.rad(-8.938), math.rad(-82.907)),
-							["Broom"] = {
-								CFrame = CFrame.new(-0.76, 0.062, -0.432) * CFrame.Angles(math.rad(-154.469), math.rad(-72.536), math.rad(-142.437)),
-							},
 						},
 						["Right Arm"] = {
 							CFrame = CFrame.new(0.3, 0, 0) * CFrame.Angles(math.rad(15.011), 0, math.rad(90.012)),
