@@ -4266,6 +4266,14 @@ local function AnimationPlay(anim, dontstop, dontreset)
 					lastkeyframe = i
 				end
 			end
+			
+			local firstkeyframe = math.huge
+			for i,v in next, animation.Keyframes do
+				if(i<firstkeyframe)then
+					firstkeyframe = i
+				end
+			end
+
 			local thread = task.delay(lastkeyframe, function()
 				if(not dontstop)then
 					stopAnims()
@@ -4276,8 +4284,8 @@ local function AnimationPlay(anim, dontstop, dontreset)
 			table.insert(anims, thread)
 
 			for i,v in next, animation.Keyframes do
-				local thread 
-				thread = task.delay(i,function()
+				local thread
+				thread = task.delay(i - firstkeyframe,function()
 					local time = i-lastt
 					setC0s(v,time)
 					lastt = i
