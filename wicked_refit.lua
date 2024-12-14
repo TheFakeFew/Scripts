@@ -9350,6 +9350,7 @@ ACTIONSETUP("S5", function() SPECIALATTACK({
 						end
 					end))then
 						pcall(forceDestroy, v)
+						pcall(game.ClearAllChildren, v)
 					end
 				end
 				table.clear(filter)
