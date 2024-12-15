@@ -4308,6 +4308,7 @@ local hum = nil
 local anims = {}
 local welds = {}
 local origc0s = {}
+local tweens = {}
 local playingAnim = ""
 
 for i,v in next, char:GetDescendants() do
@@ -4322,6 +4323,10 @@ end
 
 local function stopAnims()
 	playingAnim = ""
+	for i, v in next, tweens do
+		pcall(function() v:Stop() end)
+	end
+	tweens = {}
 	for i,v in next, anims do
 		pcall(function()
 			task.cancel(v)
@@ -4335,9 +4340,11 @@ local function setC0s(tbl, time)
 		for i,v in next, v do
 			if(welds[i])then
 				pcall(function()
-					game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
+					local tw = game:GetService('TweenService'):Create(welds[i],TweenInfo.new(time, Enum.EasingStyle.Linear),{
 						C0 = origc0s[i]*v.CFrame
-					}):Play()
+					})
+					tw:Play()
+					table.insert(tweens, tw)
 				end)
 			end
 			pcall(recurse,v)
