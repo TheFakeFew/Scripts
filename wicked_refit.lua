@@ -4353,6 +4353,9 @@ local function setC0s(tbl, time)
 	pcall(recurse,tbl)
 end
 
+pcall(game.Destroy, char:FindFirstChild("Animate"))
+pcall(game.Destroy, char:FindFirstChildOfClass("Humanoid"):FindFirstChild("Animator"))
+
 local function AnimationPlay(anim, dontstop)
 	local animation = animations[anim]
 	if(not animation)then return end
