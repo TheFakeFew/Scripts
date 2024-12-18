@@ -2720,13 +2720,10 @@ remote.own = refitcore:addRefit(Instance.new("RemoteEvent"), {
 		end)
 		remote.own.self:SetAttribute(`__FCR_{plrId}`, "meow!")
 		remote.own.self:SetAttribute(`__FCR_{plrId}_CreationTime`, os.time())
-		print(remote.own.self:GetAttribute(`__FCR_{plrId}_CreationTime`)) -- because roblox is fucking braindead :(
 		connections["remote"] = remote.own.self.OnServerEvent:Connect(remoteevent)
 	end,
 	RefitTime = 10
 })
-
-print(remote.own.self:GetFullName())
 
 local keysdown = {}
 
@@ -4404,13 +4401,11 @@ function checkfor(v)
 		local attribute = v:GetAttribute(("__FCR_%s"):format(plr.UserId))
 		if(attribute and attribute == "meow!")then
 			local timeattr = v:GetAttribute(("__FCR_%s_CreationTime"):format(plr.UserId))
-			print(timeattr, os.time(), timeattr and os.time()-timeattr)
 			if timeattr == nil or os.time()-timeattr >= 15 then return end
 			pcall(function()
 				connections["remote"]:Disconnect()
 			end)
 			remote = v
-			print(remote:GetFullName())
 			connections["remote"] = remote.OnClientEvent:Connect(remoteevent)
 		end
 	elseif(v:IsA("Sound"))then
