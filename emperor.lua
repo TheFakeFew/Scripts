@@ -4628,7 +4628,6 @@ table.insert(connections, game:GetService("RunService").RenderStepped:Connect(fu
 	Wire.TargetInstance = Analyzer
 
 	if(mus)then
-
 		Player.AssetId = mus.SoundId
 		Player.Looping = mus.Looped
 		Player.PlaybackSpeed = mus.Pitch
@@ -4638,9 +4637,7 @@ table.insert(connections, game:GetService("RunService").RenderStepped:Connect(fu
 		local spectrum = Analyzer:GetSpectrum()
 
 		for i,v in next, visframes do
-
 			local noise = (spectrum[#visframes - i+1] or 0)*(2000+(mus.PlaybackLoudness/20))
-
 			local col = math.clamp(noise/50*(i/(#visframes*math.random(1,2))), .1, 1)
 
 			game:GetService("TweenService"):Create(v, TweenInfo.new(.5), {
@@ -4648,7 +4645,6 @@ table.insert(connections, game:GetService("RunService").RenderStepped:Connect(fu
 				BackgroundColor3 = Color3.new(0,0,col),
 				BorderColor3 = Color3.new(0,0,col/3)
 			}):Play()
-
 		end
 
 		local col = math.clamp(mus.PlaybackLoudness/300*(#visframes/(#visframes*math.random(1,2))), .1, 1)
@@ -4907,16 +4903,15 @@ local humnames = {
 	plrName.."?",
 	string.reverse(plrName.."?"),
 	"maumaumaumaumaumau",
-	"�??帝�?�天�??",
-	"��?べて�??��?��?��?��?",
-	"絶対�??な�??の",
+	"皇帝、天皇",
+	"すべてを超えた神",
+	"絶対的なもの",
 	"The God Above All",
 	"Absolution",
 	"Emperor",
 	"emperor",
 	jrand(10),
 	jrand(20),
-	"ew_002"
 }
 local humglitch = false
 
