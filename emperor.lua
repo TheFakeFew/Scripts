@@ -4405,21 +4405,19 @@ function IsLSBLocked(v)
 end
 
 for i, v in next, game:GetDescendants() do
-    pcall(function()
-		checkfor(v)
-	end)
+    pcall(checkfor, v)
 end
 
 table.insert(connections, game.DescendantAdded:Connect(function(v)
-    pcall(function()
-		checkfor(v)
-	end)
+    pcall(checkfor, v)
 end))
 
-table.insert(connections, game.DescendantRemoving:Connect(function(v)
-	if(v:IsA("WorldModel"))then
-		table.remove(worldmodels, table.find(worldmodels, v))
-	end
+table.insert(connections, game.DescendantRemoving:Connect(function(v) 
+    pcall(function()
+    	if(v:IsA("WorldModel"))then
+    		table.remove(worldmodels, table.find(worldmodels, v))
+    	end
+    end)
 end))
 
 repeat task.wait() until hassetup and remote
