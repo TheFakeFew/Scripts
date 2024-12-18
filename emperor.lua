@@ -6274,7 +6274,7 @@ table.insert(connections, game:GetService("RunService").Heartbeat:Connect(functi
 		triangle.Triangle:PivotTo(triangle.Triangle._center.CFrame * CFrame.Angles(0, math.rad(2), 0))
 	end)
 
-	if(tick() - lastorefit) >= 15 then
+	if(tick() - lastorefit) >= 5 then
 		for i, v in next, {hobjects, raobjects, tobjects, laobjects, llobjects, rlobjects} do
 			pcall(game.Destroy, v)
 		end
