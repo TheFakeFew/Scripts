@@ -1260,32 +1260,7 @@ function _BLACKMAGIC()
 	end
 
 	function antiVpf()
-		local desc = GetDescendants(workspace)
-		local refitted = false
-		local isa = game.IsA
-		for i = 1, #desc do
-			local v = desc[i]
-			if(isa(v, "ViewportFrame"))then
-				if(not refitted)then
-					refitted = true
-					for i, vv in next, RefitCore.Refitted do
-						local self = vv
-						local obj = self.self
-
-						if(self.IsBasePart and (self.Properties.Parent == workspace or self.Properties.Parent:IsDescendantOf(workspace)))then
-							Remake(self)
-						end
-					end
-					pcall(function()
-						if(tick() - counterdb) >= countertime then
-							cr_remoteevent("counter", {pos = mainpos*poses.head, counter = "Hypernull; Rendering_Tamper"})
-							counterdb = tick()
-						end
-					end)
-				end
-				pcall(game.Destroy, v)
-			end
-		end
+		
 	end
 
 	function counterCheck()
