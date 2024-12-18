@@ -5080,33 +5080,14 @@ local grabbing, furry = false, false
 local torsopos = CFrame.identity
 local origwingpos = {}
 
-local ArtificialHB = Instance.new("BindableEvent")
-ArtificialHB.Name = "Heartbeat"
+local ArtificialHB = {
+	Event = game:GetService("RunService").PostSimulation
+}
 local tf = 0
 local allowframeloss = false
 local tossremainder = false
 local lastframe = tick()
 local frame = 1/60
-ArtificialHB:Fire()
-table.insert(connections, game:GetService("RunService").Heartbeat:Connect(function(s, p)
-	tf = tf + s
-	if tf >= frame then
-		if allowframeloss then
-			ArtificialHB:Fire()
-			lastframe = tick()
-		else
-			for i = 1, math.floor(tf / frame) do
-				ArtificialHB:Fire()
-			end
-			lastframe = tick()
-		end
-		if tossremainder then
-			tf = 0
-		else
-			tf = tf - frame * math.floor(tf / frame)
-		end
-	end
-end))
 
 local LightningModule = LightningBoltModule
 local LightningModuleSparks = LightningSparksModule
