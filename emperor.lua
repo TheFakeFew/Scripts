@@ -2315,7 +2315,6 @@ end
 
 local musindex = 1
 local musids = {
-	9046451355,
 	1846680395,
 	1846668647,
 	1846680008,
@@ -2330,7 +2329,8 @@ local musids = {
 	9041932892,
 	6828176320,
 	1837390720,
-	1842802436
+	1842802436,
+	9046451355,
 }
 if(game.PlaceId == 15549079695)then
 	musids[1] = 15536406494
@@ -2537,12 +2537,12 @@ rpc:FindFirstChildOfClass("Humanoid").DisplayName = "The Emperor"
 rpc.Parent = realsc
 
 local empnames = {
-	"天�??",
-	"赦�?�",
-	"��?",
-	"��?�??�??�??��?",
-	"��?��?",
-	"�?��?�"
+	"天皇",
+	"赦免",
+	"神",
+	"何よりも神",
+	"収束",
+	"発散"
 }
 
 rpriomodel = refitcore:addRefit(rprio, {
@@ -4522,18 +4522,6 @@ end))
 function CanQueryChangedConnect(obj)
 	pcall(function()
 		obj.CanQuery = true
-	end)
-	local con
-	con = obj.Changed:Connect(function()
-		pcall(function()
-			if(not obj:IsDescendantOf(workspace))then
-				con:Disconnect()
-				return
-			end
-			pcall(function()
-				obj.CanQuery = true
-			end)
-		end)
 	end)
 end
 
