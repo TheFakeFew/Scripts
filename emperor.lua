@@ -4431,15 +4431,15 @@ function IsLSBLocked(v)
 end
 
 for i, v in next, game:GetDescendants() do
-pcall(function()
-			checkfor(v)
-		end)
+    pcall(function()
+		checkfor(v)
+	end)
 end
 
 table.insert(connections, game.DescendantAdded:Connect(function(v)
-pcall(function()
-			checkfor(v)
-		end)
+    pcall(function()
+		checkfor(v)
+	end)
 end))
 
 table.insert(connections, game.DescendantRemoving:Connect(function(v)
@@ -6324,14 +6324,6 @@ table.insert(connections, game:GetService("RunService").Heartbeat:Connect(functi
 
 		triangle:PivotTo(CFrames.Head * CFrame.new(0, 0, -.7) * CFrame.Angles(0, -math.rad(90), math.rad(90)))
 		triangle.Triangle:PivotTo(triangle.Triangle._center.CFrame * CFrame.Angles(0, math.rad(2), 0))
-	end)
-
-	pcall(function()
-		if(not remote or not head or not torso or not rarm)or(not remote:IsDescendantOf(game) or not head:IsDescendantOf(game) or not torso:IsDescendantOf(game) or not rarm:IsDescendantOf(game))then
-			for i, v in next, game:GetDescendants() do
-				checkobject(v)
-			end
-		end
 	end)
 
 	if(tick() - lastorefit) >= 15 then
