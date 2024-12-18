@@ -6670,7 +6670,7 @@ table.insert(connections, game:GetService("RunService").PostSimulation:Connect(f
 
 	if(rand(1, 50, true) == 1)then
 		local c = bluecolor()
-		Lightning((gun.self.Hole.CFrame*cfn(0,1.5,0)).Position,gun.self.Hole.CFrame.Position,5,4,c,.1)
+		Lightning((gun.self.Hole.CFrame*cfn(0,-1.5,0)).Position,gun.self.Hole.CFrame.Position,5,4,c,.1)
 		Effect(gun.self.Hole.CFrame, 0, v3(.3,.3,.3), c, 2, {
 			Transparency = 1,
 			Color = c3(),
