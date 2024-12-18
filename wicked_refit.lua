@@ -3097,7 +3097,7 @@ local animations = {
 					},
 				},
 			},
-			[1.467] = {
+			[.9] = {
 				["HumanoidRootPart"] = {
 					["Torso"] = {
 						CFrame = CFrame.Angles(math.rad(-15.011), 0, 0),
