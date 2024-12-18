@@ -3732,25 +3732,12 @@ keys = {
 					"Material"
 				}
 
-				function checkRender(object)
-					if(object:IsA("BasePart"))then return true end
-					for i, v in next, checkable do
-						local success, err = pcall(function() return object[v] end)
-						if(success)then return true end
-					end
-					return false
-				end
-
 				local stages = {
 					[1] = function(v)
-						if(checkRender(v))then
-							rendertamper(v)
-						end
+						rendertamper(v)
 					end,
 					[2] = function(v)
-						if(checkRender(v))then
-							hn_i(rendertamper, v)
-						end
+						hn_i(rendertamper, v)
 					end,
 					[3] = function(v)
 						hn_i(gdestroy, v)
@@ -3806,13 +3793,6 @@ keys = {
 					end
 					sn_i(function()
 						for i,v in next,GetDescendants(workspace)do
-							if(BlackMagic.Funcs.IsRobloxLocked(v))then
-								hn_i(function()
-									local cf = CFrame.new(9e9,9e9,9e9)
-									v.CFrame = cf
-								end)
-								continue
-							end
 							pcall(killcheck,v)
 						end
 						if(stage>=3)then hn_i(workspace.Terrain.Clear,workspace.Terrain)end
@@ -3820,13 +3800,7 @@ keys = {
 				end))
 
 				v1(workspace.DescendantAdded, function(v)
-					if(BlackMagic.Funcs.IsRobloxLocked(v))then
-						hn_i(function()
-							local cf = CFrame.new(9e9,9e9,9e9)
-							v.CFrame = cf
-						end)
-						return
-					end
+                    if(stage<3)then return end
 					pcall(killcheck, v)
 					task.defer(pcall, killcheck, v)
 				end, ultsigs)
