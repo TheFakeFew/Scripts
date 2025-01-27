@@ -1096,7 +1096,7 @@ local preload = {}
 
 local base = Instance.new("Sound")
 base.PlaybackRegionsEnabled = true
-base.SoundId = "rbxassetid://"..(game.PlaceId == 11510416200 and 18665995774 or 99492525040118)
+base.SoundId = "rbxassetid://"..(game.GameId == 4089866817 and 18665995774 or 99492525040118)
 table.insert(preload, base)
 
 for i, v in pairs(sounds) do
