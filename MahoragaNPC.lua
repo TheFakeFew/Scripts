@@ -1909,7 +1909,7 @@ local function hp_change(newhp)
 		end
 
 		if(not adaptdebounce and hploss ~= 0)then
-			sound(raga:FindFirstChildOfClass("Humanoid").RootPart, game.PlaceId == 11510416200 and 74152281603818 or 112517706425993, 1, 1)
+			sound(raga:FindFirstChildOfClass("Humanoid").RootPart, game.GameId == 4089866817 and 74152281603818 or 112517706425993, 1, 1)
 
 			adaptdebounce = true
 			task.delay(.6, function()
