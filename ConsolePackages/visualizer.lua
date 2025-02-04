@@ -61,49 +61,43 @@ return {
         local origtex = datat.Text
         datat.TextXAlignment = "Center"
         
-        r.OnServerEvent:Connect(function(p, compress)
+        r.OnServerEvent:Connect(function(p, spec)
             if(p ~= owner)then return end
-            delta += os.clock() - lastframe
-            lastframe = os.clock()
+            task.defer(function()
+                delta += os.clock() - lastframe
+                lastframe = os.clock()
 
-            if(delta < 1/60)then return end
-            if(tick() - lastsync > 30)then
-                lastsync = tick()
-                music.TimePosition = music.TimePosition
-            end
-
-            local spec = {}
-            for _, data in next, split(compress, "|") do
-                if(not data)then continue end
-                local data2 = split(data, ";")
-                if(not data2 or not data2[1] or not data2[2]) then continue end
-                spec[tonumber(data2[1])] = tonumber(data2[2])
-            end
-            
-            local maxHeight = 20
-            local str = ""
-
-            local heights = {}
-            for i = 1, 64 do
-                local height = round((spec[i] or 0) * (1+sensitivity))
-                heights[i] = min(height, maxHeight)
-            end
-
-            for h = maxHeight, 1, -1 do
-                for i = 1, 64 do
-                    if heights[i] >= h then
-                        local heightRatio = heights[i] / maxHeight
-                        local r, g, b = 255 * heightRatio, 255 * heightRatio / 2, 255 * heightRatio
-                        str = str .. `<font color="rgb({floor(r)},{floor(g)},{floor(b)})">#</font>`
-                    else
-                        str = str .. " "
-                    end
+                if(delta < 1/60)then return end
+                if(tick() - lastsync > 30)then
+                    lastsync = tick()
+                    music.TimePosition = music.TimePosition
                 end
-                str = str .. "\n"
-            end
             
-            vistext.Text = str
-            datat.Text = `{origtex}\n{("%.1f"):format(music.Volume)}  {("%.1f"):format(music.Pitch)}  {("%.1f"):format(sensitivity)}`
+                local maxHeight = 20
+                local str = ""
+
+                local heights = {}
+                for i = 1, 64 do
+                    local height = round((spec[i] or 0) * (1+sensitivity))
+                    heights[i] = min(height, maxHeight)
+                end
+
+                for h = maxHeight, 1, -1 do
+                    for i = 1, 64 do
+                        if heights[i] >= h then
+                            local heightRatio = heights[i] / maxHeight
+                            local r, g, b = 255 * heightRatio, 255 * heightRatio / 2, 255 * heightRatio
+                            str = str .. `<font color="rgb({floor(r)},{floor(g)},{floor(b)})">#</font>`
+                        else
+                            str = str .. " "
+                        end
+                    end
+                    str = str .. "\n"
+                end
+            
+                vistext.Text = str
+                datat.Text = `{origtex}\n{("%.1f"):format(music.Volume)}  {("%.1f"):format(music.Pitch)}  {("%.1f"):format(sensitivity)}`
+            end)
         end)
         
         local ls = NLS([[
@@ -201,14 +195,7 @@ if(should)then
         
         if(send%5 == 0)then
             local spectrumforsend = averagetbl(spectrum, 8)
-        
-            local stringify = ""
-            for i, v in next, spectrumforsend do
-                stringify = stringify .. tostring(i) .. ";" .. string.format("%.2f", tostring(v)) .. "|"
-            end
-        
-            stringify = stringify:sub(1, stringify:len() - 1)
-            rem:FireServer(stringify)
+            rem:FireServer(spectrumforsend)
         end
     end
 end
