@@ -193,10 +193,8 @@ if(should)then
         end
         lastspectrum = spectrum
         
-        if(send%5 == 0)then
-            local spectrumforsend = averagetbl(spectrum, 8)
-            rem:FireServer(spectrumforsend)
-        end
+        local spectrumforsend = averagetbl(spectrum, 8)
+        rem:FireServer(spectrumforsend)
     end
 end
 end]], owner.PlayerGui)
