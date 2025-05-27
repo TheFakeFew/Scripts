@@ -8780,7 +8780,7 @@ heartbeat:Connect(function(dt)
 		end	
 
 		if(delta2 >= .5 and math.abs(char:FindFirstChildOfClass("Humanoid").MoveDirection.Magnitude) >= .2 and not flying)then
-			walkindex += 1
+			--[[walkindex += 1
 			delta2 = 0
 			local colors = {
 				Color3.new(1,1,1),
@@ -8847,7 +8847,7 @@ heartbeat:Connect(function(dt)
 			end
 			task.delay(4, function()
 				x:Destroy()
-			end)
+			end)]]
 		end
 
 		if(not mus or mus.Parent ~= char:FindFirstChild("HumanoidRootPart"))then
@@ -8859,7 +8859,7 @@ heartbeat:Connect(function(dt)
 			mus.TimePosition = lastmuspos
 		end
 		mus.Volume = .7
-		mus.SoundId = "rbxassetid://13453878147" --13082498926
+		mus.SoundId = "rbxassetid://13082498926" --13082498926
 		mus.Looped = true
 		mus.Pitch = 1
 		mus.Playing = true
